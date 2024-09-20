@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PerspectiveGameMode.generated.h"
 
-UCLASS(minimalapi)
+UCLASS()
 class APerspectiveGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
