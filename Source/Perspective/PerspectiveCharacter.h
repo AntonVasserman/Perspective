@@ -60,6 +60,7 @@ private:
 	bool bShouldUseForwardVectorOverride = false;
 	bool bEnableYInput = true;
 	bool bIsPerspectiveChanged = true;
+	float PreviousControllerPitchRotation = 0.0f;
 
 	UFUNCTION()
 	void OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode);
