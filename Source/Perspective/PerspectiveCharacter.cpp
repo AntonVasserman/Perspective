@@ -72,14 +72,14 @@ void APerspectiveCharacter::Tick(float DeltaTime)
 
 		if (bIsCharacterMoving && CurrentPerspectiveMode == EPerspectiveMode::ThreeDimensional)
 		{
-			bIsPerspectiveChanged = false;
 			bEnableYInput = true;
 			bShouldUseForwardVectorOverride = false;
+			bIsPerspectiveChanged = false;
 		}
 		else if (bIsCharacterMoving && CurrentPerspectiveMode == EPerspectiveMode::TwoDimensional)
 		{
-			bIsPerspectiveChanged = false;
 			bEnableYInput = false;
+			bIsPerspectiveChanged = false;
 		}
 	}
 }
@@ -167,5 +167,16 @@ void APerspectiveCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspec
 	if (NewPerspectiveMode == EPerspectiveMode::TwoDimensional)
 	{
 		bShouldUseForwardVectorOverride = true;
+
+		CameraBoom->bUsePawnControlRotation = false;
+		CameraBoom->AddRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+		FollowCamera->SetProjectionMode(ECameraProjectionMode::Orthographic);
+		FollowCamera->SetOrthoWidth(1024.0f);
+	}
+	else if (NewPerspectiveMode == EPerspectiveMode::ThreeDimensional)
+	{
+		CameraBoom->bUsePawnControlRotation = true;
+		CameraBoom->AddRelativeRotation(FRotator(0.0f, +90.0f, 0.0f));
+		FollowCamera->SetProjectionMode(ECameraProjectionMode::Perspective);
 	}
 }
