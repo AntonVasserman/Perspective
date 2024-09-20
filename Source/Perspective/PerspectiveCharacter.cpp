@@ -7,9 +7,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
-#include "InputActionValue.h"
 #include "PerspectiveModeWorldSubsystem.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -67,125 +64,75 @@ void APerspectiveCharacter::Tick(float DeltaTime)
 
 	if (bIsPerspectiveChanged)
 	{
-		const EPerspectiveMode CurrentPerspectiveMode = GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->GetMode();
-		const bool bIsCharacterMoving = GetCharacterMovement()->Velocity.X == 0.f && GetCharacterMovement()->Velocity.Y == 0.f; 
-
-		if (bIsCharacterMoving && CurrentPerspectiveMode == EPerspectiveMode::ThreeDimensional)
+		if (IsMoving())
 		{
-			bEnableYInput = true;
-			bShouldUseForwardVectorOverride = false;
-			bIsPerspectiveChanged = false;
-		}
-		else if (bIsCharacterMoving && CurrentPerspectiveMode == EPerspectiveMode::TwoDimensional)
-		{
-			bEnableYInput = false;
-			bIsPerspectiveChanged = false;
+			switch (GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->GetMode())
+			{
+			case EPerspectiveMode::TwoDimensional:
+				bIsPerspectiveChanged = false;
+				break;
+			case EPerspectiveMode::ThreeDimensional:
+				bShouldUseForwardVectorOverride = false;
+				bIsPerspectiveChanged = false;
+				break;
+			}
 		}
 	}
 }
 
-void APerspectiveCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+FVector APerspectiveCharacter::GetForwardVector() const
 {
-	// Add Input Mapping Context
-	if (const APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	if (bShouldUseForwardVectorOverride)
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-		}
+		return ForwardVectorOverride;
 	}
-	
-	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-		// Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APerspectiveCharacter::Move);
 
-		// Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APerspectiveCharacter::Look);
-	}
-	else
-	{
-		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
-	}
+	// find out which way is forward
+	const FRotator Rotation = Controller->GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+	const FRotationMatrix YawRotationMatrix(YawRotation);
+
+	// get forward vector
+	return YawRotationMatrix.GetUnitAxis(EAxis::X);
 }
 
-void APerspectiveCharacter::Move(const FInputActionValue& Value)
+FVector APerspectiveCharacter::GetRightVector() const
 {
-	// input is a Vector2D
-	const FVector2D MovementVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
+	if (bShouldUseForwardVectorOverride)
 	{
-		FVector ForwardVector;
-		FVector RightVector;
-
-		if (bShouldUseForwardVectorOverride)
-		{
-			ForwardVector = ForwardVectorOverride;
-			RightVector = ForwardVectorOverride;
-		}
-		else
-		{
-			// find out which way is forward
-			const FRotator Rotation = Controller->GetControlRotation();
-			const FRotator YawRotation(0, Rotation.Yaw, 0);
-			const FRotationMatrix YawRotationMatrix(YawRotation);
-
-			// get forward vector
-			ForwardVector = YawRotationMatrix.GetUnitAxis(EAxis::X);
-	
-			// get right vector 
-			RightVector = YawRotationMatrix.GetUnitAxis(EAxis::Y);
-		}
-		
-		if (bEnableYInput)
-		{
-			AddMovementInput(ForwardVector, MovementVector.Y);
-		}
-		
-		AddMovementInput(RightVector, MovementVector.X);
+		return ForwardVectorOverride;
 	}
-}
 
-void APerspectiveCharacter::Look(const FInputActionValue& Value)
-{
-	// input is a Vector2D
-	const FVector2D LookAxisVector = Value.Get<FVector2D>();
+	// find out which way is forward
+	const FRotator Rotation = Controller->GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+	const FRotationMatrix YawRotationMatrix(YawRotation);
 
-	if (Controller != nullptr)
-	{
-		// add yaw and pitch input to controller
-		AddControllerYawInput(LookAxisVector.X);
-		AddControllerPitchInput(LookAxisVector.Y);
-	}
+	// get right vector 
+	return YawRotationMatrix.GetUnitAxis(EAxis::Y);
 }
 
 void APerspectiveCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode)
 {
 	bIsPerspectiveChanged = true;
 
-	if (NewPerspectiveMode == EPerspectiveMode::TwoDimensional)
+	switch (NewPerspectiveMode)
 	{
+	case EPerspectiveMode::TwoDimensional:
 		bShouldUseForwardVectorOverride = true;
 
-		// Save previous Pitch rotation to restore it upon exiting 2D mode
-		PreviousControllerPitchRotation = Controller->GetControlRotation().Pitch;
-		
 		CameraBoom->bUsePawnControlRotation = false;
 		CameraBoom->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 		CameraBoom->bInheritYaw = false;
 
 		FollowCamera->SetProjectionMode(ECameraProjectionMode::Orthographic);
 		FollowCamera->SetOrthoWidth(1024.0f); // Increase the Orthographic width, we have to do it here only after the projection mode has changed
-	}
-	else if (NewPerspectiveMode == EPerspectiveMode::ThreeDimensional)
-	{
+		break;
+	case EPerspectiveMode::ThreeDimensional:
 		FollowCamera->SetProjectionMode(ECameraProjectionMode::Perspective);
 
 		CameraBoom->bUsePawnControlRotation = true;
 		CameraBoom->bInheritYaw = true;
-
-		// Restore the previous Pitch rotation
-		Controller->SetControlRotation(FRotator(PreviousControllerPitchRotation, 0.f, 0.f));
+		break;
 	}
 }
