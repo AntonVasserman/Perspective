@@ -72,14 +72,14 @@ void APerspectiveCharacter::Tick(float DeltaTime)
 
 		if (bIsCharacterMoving && CurrentPerspectiveMode == EPerspectiveMode::ThreeDimensional)
 		{
-			bIsPerspectiveChanged = false;
 			bEnableYInput = true;
 			bShouldUseForwardVectorOverride = false;
+			bIsPerspectiveChanged = false;
 		}
 		else if (bIsCharacterMoving && CurrentPerspectiveMode == EPerspectiveMode::TwoDimensional)
 		{
-			bIsPerspectiveChanged = false;
 			bEnableYInput = false;
+			bIsPerspectiveChanged = false;
 		}
 	}
 }
@@ -167,5 +167,25 @@ void APerspectiveCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspec
 	if (NewPerspectiveMode == EPerspectiveMode::TwoDimensional)
 	{
 		bShouldUseForwardVectorOverride = true;
+
+		// Save previous Pitch rotation to restore it upon exiting 2D mode
+		PreviousControllerPitchRotation = Controller->GetControlRotation().Pitch;
+		
+		CameraBoom->bUsePawnControlRotation = false;
+		CameraBoom->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+		CameraBoom->bInheritYaw = false;
+
+		FollowCamera->SetProjectionMode(ECameraProjectionMode::Orthographic);
+		FollowCamera->SetOrthoWidth(1024.0f); // Increase the Orthographic width, we have to do it here only after the projection mode has changed
+	}
+	else if (NewPerspectiveMode == EPerspectiveMode::ThreeDimensional)
+	{
+		FollowCamera->SetProjectionMode(ECameraProjectionMode::Perspective);
+
+		CameraBoom->bUsePawnControlRotation = true;
+		CameraBoom->bInheritYaw = true;
+
+		// Restore the previous Pitch rotation
+		Controller->SetControlRotation(FRotator(PreviousControllerPitchRotation, 0.f, 0.f));
 	}
 }
