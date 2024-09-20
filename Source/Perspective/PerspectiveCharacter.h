@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Enums/PerspectiveMode.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Logging/LogMacros.h"
 #include "PerspectiveCharacter.generated.h"
 
@@ -26,24 +27,16 @@ class APerspectiveCharacter : public ACharacter
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* JumpAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* MoveAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* LookAction;
 
 public:
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	APerspectiveCharacter();
+
+	FVector GetForwardVector() const;
+	FVector GetRightVector() const;
+	FORCEINLINE bool IsMoving() const { return GetCharacterMovement()->Velocity.X == 0.f && GetCharacterMovement()->Velocity.Y == 0.f; }
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -51,16 +44,10 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	void Move(const FInputActionValue& Value);
-	void Look(const FInputActionValue& Value);
 
 private:
 	bool bShouldUseForwardVectorOverride = false;
-	bool bEnableYInput = true;
 	bool bIsPerspectiveChanged = true;
-	float PreviousControllerPitchRotation = 0.0f;
 
 	UFUNCTION()
 	void OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode);
