@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Enums/PerspectiveMode.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "PerspectiveCharacter.generated.h"
@@ -48,10 +49,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector ForwardVectorOverride = FVector(1.0f, 0.0f, 0.0f);
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+
+private:
+	bool bShouldUseForwardVectorOverride = false;
+	bool bEnableYInput = true;
+	bool bIsPerspectiveChanged = true;
+
+	UFUNCTION()
+	void OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode);
 };
 

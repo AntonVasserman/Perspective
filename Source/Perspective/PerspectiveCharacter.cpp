@@ -56,6 +56,32 @@ void APerspectiveCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	UPerspectiveModeWorldSubsystem* PerspectiveModeWorldSubsystem = GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>();
+	PerspectiveModeWorldSubsystem->OnPerspectiveModeChanged.AddDynamic(this, &APerspectiveCharacter::OnPerspectiveModeChanged);
+}
+
+void APerspectiveCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (bIsPerspectiveChanged)
+	{
+		const EPerspectiveMode CurrentPerspectiveMode = GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->GetMode();
+		const bool bIsCharacterMoving = GetCharacterMovement()->Velocity.X == 0.f && GetCharacterMovement()->Velocity.Y == 0.f; 
+
+		if (bIsCharacterMoving && CurrentPerspectiveMode == EPerspectiveMode::ThreeDimensional)
+		{
+			bIsPerspectiveChanged = false;
+			bEnableYInput = true;
+			bShouldUseForwardVectorOverride = false;
+		}
+		else if (bIsCharacterMoving && CurrentPerspectiveMode == EPerspectiveMode::TwoDimensional)
+		{
+			bIsPerspectiveChanged = false;
+			bEnableYInput = false;
+		}
+	}
 }
 
 void APerspectiveCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -90,30 +116,34 @@ void APerspectiveCharacter::Move(const FInputActionValue& Value)
 
 	if (Controller != nullptr)
 	{
-		// Get the current perspective mode (2D/3D)
-		const EPerspectiveMode CurrentPerspectiveMode = GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->GetMode();
+		FVector ForwardVector;
+		FVector RightVector;
 
-		if (CurrentPerspectiveMode == EPerspectiveMode::ThreeDimensional)
+		if (bShouldUseForwardVectorOverride)
+		{
+			ForwardVector = ForwardVectorOverride;
+			RightVector = ForwardVectorOverride;
+		}
+		else
 		{
 			// find out which way is forward
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
+			const FRotationMatrix YawRotationMatrix(YawRotation);
 
 			// get forward vector
-			const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+			ForwardVector = YawRotationMatrix.GetUnitAxis(EAxis::X);
 	
 			// get right vector 
-			const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-			// add movement 
-			AddMovementInput(ForwardDirection, MovementVector.Y);
-			AddMovementInput(RightDirection, MovementVector.X);
+			RightVector = YawRotationMatrix.GetUnitAxis(EAxis::Y);
 		}
-		else if (CurrentPerspectiveMode == EPerspectiveMode::TwoDimensional)
+		
+		if (bEnableYInput)
 		{
-			AddMovementInput(ForwardVectorOverride, MovementVector.Y);
-			AddMovementInput(ForwardVectorOverride, MovementVector.X);
+			AddMovementInput(ForwardVector, MovementVector.Y);
 		}
+		
+		AddMovementInput(RightVector, MovementVector.X);
 	}
 }
 
@@ -127,5 +157,15 @@ void APerspectiveCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void APerspectiveCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode)
+{
+	bIsPerspectiveChanged = true;
+
+	if (NewPerspectiveMode == EPerspectiveMode::TwoDimensional)
+	{
+		bShouldUseForwardVectorOverride = true;
 	}
 }
