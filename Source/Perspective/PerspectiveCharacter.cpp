@@ -8,6 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
 #include "PerspectiveModeWorldSubsystem.h"
+#include "Kismet/KismetMathLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -122,7 +123,8 @@ void APerspectiveCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspec
 		bShouldUseForwardVectorOverride = true;
 
 		CameraBoom->bUsePawnControlRotation = false;
-		CameraBoom->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+		CameraBoom->SetRelativeRotation(UKismetMathLibrary::MakeRotFromX(ForwardVectorOverride));
+		CameraBoom->AddRelativeRotation(FRotator(0.f, -90.f, 0.f));
 		CameraBoom->bInheritYaw = false;
 
 		FollowCamera->SetProjectionMode(ECameraProjectionMode::Orthographic);
