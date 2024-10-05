@@ -37,6 +37,7 @@ public:
 	FVector GetForwardVector() const;
 	FVector GetRightVector() const;
 	FORCEINLINE bool IsMoving() const { return GetCharacterMovement()->Velocity.X == 0.f && GetCharacterMovement()->Velocity.Y == 0.f; }
+	FORCEINLINE void SetForwardVectorOverride (const FVector& ForwardVector) { ForwardVectorOverride = ForwardVector; }
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

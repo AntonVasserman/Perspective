@@ -3,7 +3,11 @@
 
 #include "PRSBoxModeChanger.h"
 
+#include "PerspectiveCharacter.h"
+#include "PerspectiveModeWorldSubsystem.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 APRSBoxModeChanger::APRSBoxModeChanger()
 {
@@ -49,12 +53,32 @@ APRSBoxModeChanger::APRSBoxModeChanger()
 	BottomBoxComp->SetRelativeLocation(FVector(0.f, 0.f, -PanelLength));
 	BottomBoxComp->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f));
 	BottomBoxComp->AttachToComponent(CenterBoxComp.Get(), FAttachmentTransformRules::KeepRelativeTransform);
+
+	// Setup Box Components Mappings
+	BoxComponentToDirectionMapping =
+	{
+		{FrontBoxComp.Get(), EDirection::Front},
+		{BackBoxComp.Get(), EDirection::Back},
+		{RightBoxComp.Get(), EDirection::Right},
+		{LeftBoxComp.Get(), EDirection::Left},
+		{TopBoxComp.Get(), EDirection::Top},
+		{BottomBoxComp.Get(), EDirection::Bottom},
+	};
 }
 
 void APRSBoxModeChanger::BeginPlay()
 {
 	Super::BeginPlay();
 
+	CenterBoxComp->OnComponentBeginOverlap.AddDynamic(this, &APRSBoxModeChanger::CenterBoxCompOnComponentBeginOverlap);
+	CenterBoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSBoxModeChanger::CenterBoxCompOnComponentEndOverlap);
+	FrontBoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSBoxModeChanger::BoxCompOnComponentEndOverlap);
+	BackBoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSBoxModeChanger::BoxCompOnComponentEndOverlap);
+	RightBoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSBoxModeChanger::BoxCompOnComponentEndOverlap);
+	LeftBoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSBoxModeChanger::BoxCompOnComponentEndOverlap);
+	TopBoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSBoxModeChanger::BoxCompOnComponentEndOverlap);
+	BottomBoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSBoxModeChanger::BoxCompOnComponentEndOverlap);
+	
 	// TODO PRS: remove
 	CenterBoxComp->SetHiddenInGame(false);
 	FrontBoxComp->SetHiddenInGame(false);
@@ -64,6 +88,78 @@ void APRSBoxModeChanger::BeginPlay()
 	TopBoxComp->SetHiddenInGame(false);
 	BottomBoxComp->SetHiddenInGame(false);
 	//
+}
+
+void APRSBoxModeChanger::CenterBoxCompOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!IsValid(Cast<APerspectiveCharacter>(OtherActor)))
+	{
+		return;
+	}
+	
+	bIsTouchingInsideBox = true;
+}
+
+void APRSBoxModeChanger::CenterBoxCompOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (!IsValid(Cast<APerspectiveCharacter>(OtherActor)))
+	{
+		return;
+	}
+
+	bIsTouchingInsideBox = false;
+}
+
+void APRSBoxModeChanger::BoxCompOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (APerspectiveCharacter* PRSCharacter = Cast<APerspectiveCharacter>(OtherActor);
+		IsValid(PRSCharacter))
+	{
+		if (UBoxComponent* BoxComp = Cast<UBoxComponent>(OverlappedComponent);
+			IsValid(BoxComp))
+		{
+			InternalBoxComponentOnComponentEndOverlap(BoxComp, PRSCharacter);
+		}
+	}
+}
+
+void APRSBoxModeChanger::InternalBoxComponentOnComponentEndOverlap(const UBoxComponent* OverlappedBoxComponent, APerspectiveCharacter* PRSCharacter)
+{
+	// Get Box Direction
+	const EDirection Direction = *BoxComponentToDirectionMapping.Find(OverlappedBoxComponent);
+	
+	// Entered box
+	if (!bIsInsideBox && bIsTouchingInsideBox)
+	{
+		bIsInsideBox = true;
+		EnterDirection = Direction;
+		UE_LOG(LogTemp, Warning, TEXT("Entered from: %hhd"), Direction);
+	}
+	else if (bIsInsideBox && !bIsTouchingInsideBox) // Exited box
+	{
+		bIsInsideBox = false;
+		EnterDirection = Direction;
+		UE_LOG(LogTemp, Warning, TEXT("Exited from: %hhd"), Direction);
+
+		// Exit from the same direction entered
+		if (EnterDirection == ExitDirection)
+		{
+			return;
+		}
+
+		// TODO: Implement special Top/Bottom Logic
+		if (ExitDirection == EDirection:: Top || ExitDirection == EDirection:: Bottom)
+		{
+			return;
+		}
+		
+		PRSCharacter->SetForwardVectorOverride(OverlappedBoxComponent->GetForwardVector());
+		GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->Switch();
+		UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
+	}
 }
 
 void APRSBoxModeChanger::Tick(float DeltaTime)

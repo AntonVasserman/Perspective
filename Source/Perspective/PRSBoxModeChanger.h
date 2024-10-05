@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PRSBoxModeChanger.generated.h"
 
+class APerspectiveCharacter;
 class UBoxComponent;
 
 UCLASS()
@@ -20,10 +21,38 @@ public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 protected:
+	enum class EDirection : uint8
+	{
+		None,
+		Front,
+		Back,
+		Right,
+		Left,
+		Top,
+		Bottom,
+	};
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
+	USoundCue* PerspectiveModeChangedSoundCue;
+	
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void CenterBoxCompOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void CenterBoxCompOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UFUNCTION()
+	void BoxCompOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
 	const float PanelLength = 100.f;
+	bool bIsInsideBox = false;
+	bool bIsTouchingInsideBox = false;
+	EDirection EnterDirection;
+	EDirection ExitDirection;
+
+	TMap<UBoxComponent*, EDirection> BoxComponentToDirectionMapping;
+	
 	TWeakObjectPtr<UBoxComponent> CenterBoxComp;
 	TWeakObjectPtr<UBoxComponent> FrontBoxComp;
 	TWeakObjectPtr<UBoxComponent> BackBoxComp;
@@ -31,4 +60,6 @@ private:
 	TWeakObjectPtr<UBoxComponent> LeftBoxComp;
 	TWeakObjectPtr<UBoxComponent> TopBoxComp;
 	TWeakObjectPtr<UBoxComponent> BottomBoxComp;
+
+	void InternalBoxComponentOnComponentEndOverlap(const UBoxComponent* OverlappedBoxComponent, APerspectiveCharacter* PRSCharacter);
 };
