@@ -64,6 +64,15 @@ APRSBoxModeChanger::APRSBoxModeChanger()
 		{TopBoxComp.Get(), EDirection::Top},
 		{BottomBoxComp.Get(), EDirection::Bottom},
 	};
+	DirectionToBoxComponentMapping =
+	{
+		{EDirection::Front, FrontBoxComp.Get()},
+		{EDirection::Back, BackBoxComp.Get()},
+		{EDirection::Right, RightBoxComp.Get()},
+		{EDirection::Left, LeftBoxComp.Get()},
+		{EDirection::Top, TopBoxComp.Get()},
+		{EDirection::Bottom, BottomBoxComp.Get()},
+	};
 }
 
 void APRSBoxModeChanger::BeginPlay()
@@ -141,7 +150,7 @@ void APRSBoxModeChanger::InternalBoxComponentOnComponentEndOverlap(const UBoxCom
 	else if (bIsInsideBox && !bIsTouchingInsideBox) // Exited box
 	{
 		bIsInsideBox = false;
-		EnterDirection = Direction;
+		ExitDirection = Direction;
 		UE_LOG(LogTemp, Warning, TEXT("Exited from: %hhd"), Direction);
 
 		// Exit from the same direction entered
@@ -150,15 +159,21 @@ void APRSBoxModeChanger::InternalBoxComponentOnComponentEndOverlap(const UBoxCom
 			return;
 		}
 
-		// TODO: Implement special Top/Bottom Logic
 		if (ExitDirection == EDirection:: Top || ExitDirection == EDirection:: Bottom)
 		{
-			return;
+			if (EnterDirection != EDirection:: Top && EnterDirection != EDirection:: Bottom)
+			{
+				PRSCharacter->SetForwardVectorOverride((*DirectionToBoxComponentMapping.Find(EnterDirection))->GetForwardVector() * -1);
+				GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->Switch();
+				UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
+			}
 		}
-		
-		PRSCharacter->SetForwardVectorOverride(OverlappedBoxComponent->GetForwardVector());
-		GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->Switch();
-		UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
+		else
+		{
+			PRSCharacter->SetForwardVectorOverride(OverlappedBoxComponent->GetForwardVector());
+			GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->Switch();
+			UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
+		}
 	}
 }
 

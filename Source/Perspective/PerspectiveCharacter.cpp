@@ -63,18 +63,18 @@ void APerspectiveCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsPerspectiveChanged)
+	if (bIsPerspectiveChangedRequiresHandling)
 	{
-		if (IsMoving())
+		if (!IsMoving())
 		{
 			switch (GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->GetMode())
 			{
 			case EPerspectiveMode::TwoDimensional:
-				bIsPerspectiveChanged = false;
+				bIsPerspectiveChangedRequiresHandling = false;
 				break;
 			case EPerspectiveMode::ThreeDimensional:
 				bShouldUseForwardVectorOverride = false;
-				bIsPerspectiveChanged = false;
+				bIsPerspectiveChangedRequiresHandling = false;
 				break;
 			}
 		}
@@ -115,7 +115,7 @@ FVector APerspectiveCharacter::GetRightVector() const
 
 void APerspectiveCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode)
 {
-	bIsPerspectiveChanged = true;
+	bIsPerspectiveChangedRequiresHandling = true;
 
 	switch (NewPerspectiveMode)
 	{

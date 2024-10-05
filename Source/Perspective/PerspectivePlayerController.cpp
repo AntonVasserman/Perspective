@@ -25,24 +25,6 @@ void APerspectivePlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsPerspectiveChanged)
-	{
-		if (const APerspectiveCharacter* ControllerCharacter = Cast<APerspectiveCharacter>(GetCharacter());
-			ControllerCharacter != nullptr && ControllerCharacter->IsMoving())
-		{
-			switch (GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->GetMode())
-			{
-			case EPerspectiveMode::TwoDimensional:
-				bEnableYInput = false;
-				break;
-			case EPerspectiveMode::ThreeDimensional:
-				bEnableYInput = true;
-				break;
-			}
-
-			bIsPerspectiveChanged = false;
-		}
-	}
 }
 
 void APerspectivePlayerController::SetupInputComponent()
@@ -52,20 +34,41 @@ void APerspectivePlayerController::SetupInputComponent()
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APerspectivePlayerController::RequestLookAction);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APerspectivePlayerController::RequestMoveAction);
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &APerspectivePlayerController::RequestMoveActionCompleted);
 }
 
 void APerspectivePlayerController::RequestMoveAction(const FInputActionValue& InputActionValue)
 {
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
+	const float MovementVectorX = bIsPerspectiveChangedRequiresHandling ? FMath::Abs(MovementVector.X) : MovementVector.X;
+	const float MovementVectorY = MovementVector.Y;
 
 	if (APerspectiveCharacter* ControllerCharacter = Cast<APerspectiveCharacter>(GetCharacter()))
 	{
 		if (bEnableYInput)
 		{
-			ControllerCharacter->AddMovementInput(ControllerCharacter->GetForwardVector(), MovementVector.Y);
+			ControllerCharacter->AddMovementInput(ControllerCharacter->GetForwardVector(), MovementVectorY);
 		}
 		
-		ControllerCharacter->AddMovementInput(ControllerCharacter->GetRightVector(), MovementVector.X);
+		ControllerCharacter->AddMovementInput(ControllerCharacter->GetRightVector(), MovementVectorX);
+	}
+}
+
+void APerspectivePlayerController::RequestMoveActionCompleted()
+{
+	if (bIsPerspectiveChangedRequiresHandling)
+	{
+		switch (GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->GetMode())
+		{
+		case EPerspectiveMode::TwoDimensional:
+			bEnableYInput = false;
+			break;
+		case EPerspectiveMode::ThreeDimensional:
+			bEnableYInput = true;
+			break;
+		}
+
+		bIsPerspectiveChangedRequiresHandling = false;
 	}
 }
 
@@ -79,16 +82,16 @@ void APerspectivePlayerController::RequestLookAction(const FInputActionValue& In
 
 void APerspectivePlayerController::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode)
 {
-	bIsPerspectiveChanged = true;
+	bIsPerspectiveChangedRequiresHandling = true;
 
 	switch (NewPerspectiveMode)
 	{
 	case EPerspectiveMode::TwoDimensional:
-		// Save previous Pitch rotation to restore it upon exiting 2D mode
+			// Save previous Pitch rotation to restore it upon exiting 2D mode
 			PreviousControllerPitchRotation = GetControlRotation().Pitch;
 		break;
 	case EPerspectiveMode::ThreeDimensional:
-		// Restore the previous Pitch rotation
+			// Restore the previous Pitch rotation
 			SetControlRotation(FRotator(PreviousControllerPitchRotation, 0.f, 0.f));
 		break;
 	}

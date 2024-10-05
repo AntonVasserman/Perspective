@@ -45,13 +45,14 @@ protected:
 	void BoxCompOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
-	const float PanelLength = 100.f;
+	const float PanelLength = 50.f;
 	bool bIsInsideBox = false;
 	bool bIsTouchingInsideBox = false;
 	EDirection EnterDirection;
 	EDirection ExitDirection;
 
 	TMap<UBoxComponent*, EDirection> BoxComponentToDirectionMapping;
+	TMap<EDirection, UBoxComponent*> DirectionToBoxComponentMapping;
 	
 	TWeakObjectPtr<UBoxComponent> CenterBoxComp;
 	TWeakObjectPtr<UBoxComponent> FrontBoxComp;

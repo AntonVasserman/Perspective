@@ -36,13 +36,14 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
-	
+
 	void RequestMoveAction(const FInputActionValue& InputActionValue);
+	void RequestMoveActionCompleted();
 	void RequestLookAction(const FInputActionValue& InputActionValue);
 
 private:
 	bool bEnableYInput = true;
-	bool bIsPerspectiveChanged = true;
+	bool bIsPerspectiveChangedRequiresHandling = false;
 	float PreviousControllerPitchRotation = 0.0f;
 
 	UFUNCTION()
