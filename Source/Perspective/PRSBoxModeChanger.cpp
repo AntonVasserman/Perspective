@@ -3,8 +3,8 @@
 
 #include "PRSBoxModeChanger.h"
 
-#include "PerspectiveCharacter.h"
-#include "PerspectiveModeWorldSubsystem.h"
+#include "PRSCharacter.h"
+#include "PRSModeWorldSubsystem.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
@@ -15,42 +15,42 @@ APRSBoxModeChanger::APRSBoxModeChanger()
 
 	// Setup Box Components
 	CenterBoxComp = CreateDefaultSubobject<UBoxComponent>("Center Box Component");
-	CenterBoxComp->SetBoxExtent(FVector(PanelLength - 1.f, PanelLength - 1.f, PanelLength - 1.f));
+	CenterBoxComp->SetBoxExtent(FVector(PanelLength, PanelLength, PanelLength));
 	SetRootComponent(CenterBoxComp.Get());
 
 	FrontBoxComp = CreateDefaultSubobject<UBoxComponent>("Front Box Component");
-	FrontBoxComp->SetBoxExtent(FVector(1.f, PanelLength - 1.f, PanelLength - 1.f));
-	FrontBoxComp->SetRelativeLocation(FVector(PanelLength, 0.f, 0.f));
+	FrontBoxComp->SetBoxExtent(FVector(1.f, PanelLength, PanelLength));
+	FrontBoxComp->SetRelativeLocation(FVector(PanelLength + 1.f, 0.f, 0.f));
 	FrontBoxComp->SetRelativeRotation(FRotator::ZeroRotator);
 	FrontBoxComp->AttachToComponent(CenterBoxComp.Get(), FAttachmentTransformRules::KeepRelativeTransform);
 
 	BackBoxComp = CreateDefaultSubobject<UBoxComponent>("Back Box Component");
-	BackBoxComp->SetBoxExtent(FVector(1.f, PanelLength - 1.f, PanelLength - 1.f));
-	BackBoxComp->SetRelativeLocation(FVector(-PanelLength, 0.f, 0.f));
+	BackBoxComp->SetBoxExtent(FVector(1.f, PanelLength, PanelLength));
+	BackBoxComp->SetRelativeLocation(FVector(-PanelLength - 1.f, 0.f, 0.f));
 	BackBoxComp->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
 	BackBoxComp->AttachToComponent(CenterBoxComp.Get(), FAttachmentTransformRules::KeepRelativeTransform);
 
 	RightBoxComp = CreateDefaultSubobject<UBoxComponent>("Right Box Component");
-	RightBoxComp->SetBoxExtent(FVector(1.f, PanelLength - 1.f, PanelLength - 1.f));
-	RightBoxComp->SetRelativeLocation(FVector(0.f, PanelLength, 0.f));
+	RightBoxComp->SetBoxExtent(FVector(1.f, PanelLength, PanelLength));
+	RightBoxComp->SetRelativeLocation(FVector(0.f, PanelLength + 1.f, 0.f));
 	RightBoxComp->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
 	RightBoxComp->AttachToComponent(CenterBoxComp.Get(), FAttachmentTransformRules::KeepRelativeTransform);
 
 	LeftBoxComp = CreateDefaultSubobject<UBoxComponent>("Left Box Component");
-	LeftBoxComp->SetBoxExtent(FVector(1.f, PanelLength - 1.f, PanelLength - 1.f));
-	LeftBoxComp->SetRelativeLocation(FVector(0.f, -PanelLength, 0.f));
+	LeftBoxComp->SetBoxExtent(FVector(1.f, PanelLength, PanelLength));
+	LeftBoxComp->SetRelativeLocation(FVector(0.f, -PanelLength - 1.f, 0.f));
 	LeftBoxComp->SetRelativeRotation(FRotator(0.f, 270.f, 0.f));
 	LeftBoxComp->AttachToComponent(CenterBoxComp.Get(), FAttachmentTransformRules::KeepRelativeTransform);
 
 	TopBoxComp = CreateDefaultSubobject<UBoxComponent>("Top Box Component");
-	TopBoxComp->SetBoxExtent(FVector(1.f, PanelLength - 1.f, PanelLength - 1.f));
-	TopBoxComp->SetRelativeLocation(FVector(0.f, 0.f, PanelLength));
+	TopBoxComp->SetBoxExtent(FVector(1.f, PanelLength, PanelLength));
+	TopBoxComp->SetRelativeLocation(FVector(0.f, 0.f, PanelLength + 1.f));
 	TopBoxComp->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
 	TopBoxComp->AttachToComponent(CenterBoxComp.Get(), FAttachmentTransformRules::KeepRelativeTransform);
 
 	BottomBoxComp = CreateDefaultSubobject<UBoxComponent>("Bottom Box Component");
-	BottomBoxComp->SetBoxExtent(FVector(1.f, PanelLength - 1.f, PanelLength - 1.f));
-	BottomBoxComp->SetRelativeLocation(FVector(0.f, 0.f, -PanelLength));
+	BottomBoxComp->SetBoxExtent(FVector(1.f, PanelLength, PanelLength));
+	BottomBoxComp->SetRelativeLocation(FVector(0.f, 0.f, -PanelLength - 1.f));
 	BottomBoxComp->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f));
 	BottomBoxComp->AttachToComponent(CenterBoxComp.Get(), FAttachmentTransformRules::KeepRelativeTransform);
 
@@ -102,7 +102,7 @@ void APRSBoxModeChanger::BeginPlay()
 void APRSBoxModeChanger::CenterBoxCompOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!IsValid(Cast<APerspectiveCharacter>(OtherActor)))
+	if (!IsValid(Cast<APRSCharacter>(OtherActor)))
 	{
 		return;
 	}
@@ -113,7 +113,7 @@ void APRSBoxModeChanger::CenterBoxCompOnComponentBeginOverlap(UPrimitiveComponen
 void APRSBoxModeChanger::CenterBoxCompOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (!IsValid(Cast<APerspectiveCharacter>(OtherActor)))
+	if (!IsValid(Cast<APRSCharacter>(OtherActor)))
 	{
 		return;
 	}
@@ -124,7 +124,7 @@ void APRSBoxModeChanger::CenterBoxCompOnComponentEndOverlap(UPrimitiveComponent*
 void APRSBoxModeChanger::BoxCompOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (APerspectiveCharacter* PRSCharacter = Cast<APerspectiveCharacter>(OtherActor);
+	if (APRSCharacter* PRSCharacter = Cast<APRSCharacter>(OtherActor);
 		IsValid(PRSCharacter))
 	{
 		if (UBoxComponent* BoxComp = Cast<UBoxComponent>(OverlappedComponent);
@@ -135,7 +135,7 @@ void APRSBoxModeChanger::BoxCompOnComponentEndOverlap(UPrimitiveComponent* Overl
 	}
 }
 
-void APRSBoxModeChanger::InternalBoxComponentOnComponentEndOverlap(const UBoxComponent* OverlappedBoxComponent, APerspectiveCharacter* PRSCharacter)
+void APRSBoxModeChanger::InternalBoxComponentOnComponentEndOverlap(const UBoxComponent* OverlappedBoxComponent, APRSCharacter* PRSCharacter)
 {
 	// Get Box Direction
 	const EDirection Direction = *BoxComponentToDirectionMapping.Find(OverlappedBoxComponent);
@@ -164,14 +164,14 @@ void APRSBoxModeChanger::InternalBoxComponentOnComponentEndOverlap(const UBoxCom
 			if (EnterDirection != EDirection:: Top && EnterDirection != EDirection:: Bottom)
 			{
 				PRSCharacter->SetForwardVectorOverride((*DirectionToBoxComponentMapping.Find(EnterDirection))->GetForwardVector() * -1);
-				GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->Switch();
+				GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->Switch();
 				UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
 			}
 		}
 		else
 		{
 			PRSCharacter->SetForwardVectorOverride(OverlappedBoxComponent->GetForwardVector());
-			GetWorld()->GetSubsystem<UPerspectiveModeWorldSubsystem>()->Switch();
+			GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->Switch();
 			UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
 		}
 	}

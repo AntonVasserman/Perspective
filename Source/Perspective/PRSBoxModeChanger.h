@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PRSBoxModeChanger.generated.h"
 
-class APerspectiveCharacter;
+class APRSCharacter;
 class UBoxComponent;
 
 UCLASS()
@@ -62,5 +62,5 @@ private:
 	TWeakObjectPtr<UBoxComponent> TopBoxComp;
 	TWeakObjectPtr<UBoxComponent> BottomBoxComp;
 
-	void InternalBoxComponentOnComponentEndOverlap(const UBoxComponent* OverlappedBoxComponent, APerspectiveCharacter* PRSCharacter);
+	void InternalBoxComponentOnComponentEndOverlap(const UBoxComponent* OverlappedBoxComponent, APRSCharacter* PRSCharacter);
 };
