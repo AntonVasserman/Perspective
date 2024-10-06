@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "PRSBoxModeChanger.generated.h"
 
-class APRSCharacter;
 class UBoxComponent;
 
 UCLASS()
@@ -17,50 +16,22 @@ class PERSPECTIVE_API APRSBoxModeChanger : public AActor
 public:	
 	APRSBoxModeChanger();
 
-	virtual void Tick(float DeltaTime) override;
-	virtual void OnConstruction(const FTransform& Transform) override;
-
 protected:
-	enum class EDirection : uint8
-	{
-		None,
-		Front,
-		Back,
-		Right,
-		Left,
-		Top,
-		Bottom,
-	};
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* BoxComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
 	USoundCue* PerspectiveModeChangedSoundCue;
-	
+
 	virtual void BeginPlay() override;
+	
+	UFUNCTION()
+	void BoxComponentOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
-	void CenterBoxCompOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	UFUNCTION()
-	void CenterBoxCompOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-	UFUNCTION()
-	void BoxCompOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	void BoxComponentOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
-	const float PanelLength = 50.f;
-	bool bIsInsideBox = false;
-	bool bIsTouchingInsideBox = false;
-	EDirection EnterDirection;
-	EDirection ExitDirection;
-
-	TMap<UBoxComponent*, EDirection> BoxComponentToDirectionMapping;
-	TMap<EDirection, UBoxComponent*> DirectionToBoxComponentMapping;
-	
-	TWeakObjectPtr<UBoxComponent> CenterBoxComp;
-	TWeakObjectPtr<UBoxComponent> FrontBoxComp;
-	TWeakObjectPtr<UBoxComponent> BackBoxComp;
-	TWeakObjectPtr<UBoxComponent> RightBoxComp;
-	TWeakObjectPtr<UBoxComponent> LeftBoxComp;
-	TWeakObjectPtr<UBoxComponent> TopBoxComp;
-	TWeakObjectPtr<UBoxComponent> BottomBoxComp;
-
-	void InternalBoxComponentOnComponentEndOverlap(const UBoxComponent* OverlappedBoxComponent, APRSCharacter* PRSCharacter);
+	FVector EnterVector = FVector::ZeroVector;
+	FVector ExitVector = FVector::ZeroVector;
 };
