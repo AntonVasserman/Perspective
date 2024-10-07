@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "PRSPlayerController.generated.h"
 
+class APRSCharacter;
 class UInputAction;
 class UInputMappingContext;
 
@@ -32,8 +33,9 @@ class PERSPECTIVE_API APRSPlayerController : public APlayerController
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
+	virtual void OnPossess(APawn* aPawn) override;
 	virtual void SetupInputComponent() override;
+	virtual void Tick(float DeltaTime) override;
 
 	void RequestMoveAction(const FInputActionValue& InputActionValue);
 	void RequestMoveActionCompleted();
@@ -43,6 +45,7 @@ private:
 	bool bEnableYInput = true;
 	bool bIsPerspectiveChangedRequiresHandling = false;
 	float PreviousControllerPitchRotation = 0.0f;
+	TWeakObjectPtr<APRSCharacter> PossessedCharacter;
 
 	UFUNCTION()
 	void OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode);

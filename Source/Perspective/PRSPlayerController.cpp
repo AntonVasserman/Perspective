@@ -21,10 +21,11 @@ void APRSPlayerController::BeginPlay()
 	PerspectiveModeWorldSubsystem->OnPerspectiveModeChanged.AddDynamic(this, &APRSPlayerController::OnPerspectiveModeChanged);
 }
 
-void APRSPlayerController::Tick(float DeltaTime)
+void APRSPlayerController::OnPossess(APawn* aPawn)
 {
-	Super::Tick(DeltaTime);
+	Super::OnPossess(aPawn);
 
+	PossessedCharacter = Cast<APRSCharacter>(aPawn);
 }
 
 void APRSPlayerController::SetupInputComponent()
@@ -37,21 +38,24 @@ void APRSPlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &APRSPlayerController::RequestMoveActionCompleted);
 }
 
+void APRSPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
 void APRSPlayerController::RequestMoveAction(const FInputActionValue& InputActionValue)
 {
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
 	const float MovementVectorX = bIsPerspectiveChangedRequiresHandling ? FMath::Abs(MovementVector.X) : MovementVector.X;
 	const float MovementVectorY = MovementVector.Y;
-
-	if (APRSCharacter* ControllerCharacter = Cast<APRSCharacter>(GetCharacter()))
+	
+	if (bEnableYInput)
 	{
-		if (bEnableYInput)
-		{
-			ControllerCharacter->AddMovementInput(ControllerCharacter->GetForwardVector(), MovementVectorY);
-		}
-		
-		ControllerCharacter->AddMovementInput(ControllerCharacter->GetRightVector(), MovementVectorX);
+		PossessedCharacter->AddMovementInput(PossessedCharacter->GetForwardVector(), MovementVectorY);
 	}
+	
+	PossessedCharacter->AddMovementInput(PossessedCharacter->GetRightVector(), MovementVectorX);
 }
 
 void APRSPlayerController::RequestMoveActionCompleted()
@@ -84,15 +88,14 @@ void APRSPlayerController::OnPerspectiveModeChanged(EPerspectiveMode NewPerspect
 {
 	bIsPerspectiveChangedRequiresHandling = true;
 
-	switch (NewPerspectiveMode)
+	if (NewPerspectiveMode == EPerspectiveMode::TwoDimensional)
 	{
-	case EPerspectiveMode::TwoDimensional:
-			// Save previous Pitch rotation to restore it upon exiting 2D mode
-			PreviousControllerPitchRotation = GetControlRotation().Pitch;
-		break;
-	case EPerspectiveMode::ThreeDimensional:
-			// Restore the previous Pitch rotation
-			SetControlRotation(FRotator(PreviousControllerPitchRotation, 0.f, 0.f));
-		break;
+		// Save previous Pitch rotation to restore it upon exiting 2D mode
+		PreviousControllerPitchRotation = GetControlRotation().Pitch;
+	}
+	else
+	{
+		// Restore the previous Pitch rotation
+		SetControlRotation(FRotator(PreviousControllerPitchRotation, PossessedCharacter->GetActorRotation().Yaw, 0.f));
 	}
 }
