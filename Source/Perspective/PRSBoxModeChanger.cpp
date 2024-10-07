@@ -34,6 +34,8 @@ void APRSBoxModeChanger::BoxComponentOnComponentBeginOverlap(UPrimitiveComponent
 	}
 
 	EnterVector = SweepResult.ImpactNormal * -1;
+
+	UE_LOG(LogTemp, Warning, TEXT("Entered from direction: %s"), *EnterVector.ToString());
 }
 
 void APRSBoxModeChanger::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -46,8 +48,8 @@ void APRSBoxModeChanger::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* 
 	}
 
 	// BoxComp
-	FVector RelativeLocation = PRSCharacter->GetActorLocation() - BoxComp->GetComponentLocation();
-	FVector NormalizedRelativeLocation = RelativeLocation / BoxComp->GetScaledBoxExtent();
+	const FVector RelativeLocation = PRSCharacter->GetActorLocation() - BoxComp->GetComponentLocation();
+	const FVector NormalizedRelativeLocation = RelativeLocation / BoxComp->GetScaledBoxExtent();
 
 	if (FMath::Abs(NormalizedRelativeLocation.X) > FMath::Abs(NormalizedRelativeLocation.Y) &&
 		FMath::Abs(NormalizedRelativeLocation.X) > FMath::Abs(NormalizedRelativeLocation.Z)) // Front or Back
@@ -64,6 +66,8 @@ void APRSBoxModeChanger::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* 
 		ExitVector = NormalizedRelativeLocation.Z > 0 ? FVector(0.f, 0.f, 1.f) : FVector(0.f, 0.f, -1.f);
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("Exited from direction: %s"), *ExitVector.ToString());
+	
 	// Exit from the same direction entered
 	if (EnterVector == ExitVector)
 	{
