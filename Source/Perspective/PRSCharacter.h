@@ -9,6 +9,7 @@
 #include "Logging/LogMacros.h"
 #include "PRSCharacter.generated.h"
 
+class IInteractable;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -29,13 +30,13 @@ class APRSCharacter : public ACharacter
 	UCameraComponent* FollowCamera;
 
 public:
-	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
 	APRSCharacter();
 
 	FVector GetForwardVector() const;
 	FVector GetRightVector() const;
+	void Interact();
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE bool IsMoving() const { return GetCharacterMovement()->Velocity.X != 0.f || GetCharacterMovement()->Velocity.Y != 0.f; }
 	FORCEINLINE void SetForwardVectorOverride (const FVector& ForwardVector) { ForwardVectorOverride = ForwardVector; }
 
@@ -49,8 +50,10 @@ protected:
 private:
 	bool bShouldUseForwardVectorOverride = false;
 	bool bIsPerspectiveChangedRequiresHandling = false;
+	IInteractable* InteractableActor = nullptr;
 
 	UFUNCTION()
 	void OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode);
+	void LineTraceForInteractableActor();
 };
 

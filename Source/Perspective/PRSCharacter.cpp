@@ -1,16 +1,26 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "PRSCharacter.h"
-#include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "DrawDebugHelpers.h"
+#include "Engine/LocalPlayer.h"
+#include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
-#include "PRSModeWorldSubsystem.h"
+#include "Interfaces/Interactable.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "PRSModeWorldSubsystem.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+
+static TAutoConsoleVariable<bool> CVarDisplayTraceLine(
+	TEXT("Perspective.Character.Debug.DisplayTraceLine"),
+	false,
+	TEXT("Display Trace Line"),
+	ECVF_Default);
 
 APRSCharacter::APRSCharacter()
 {
@@ -63,20 +73,19 @@ void APRSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsPerspectiveChangedRequiresHandling)
+	LineTraceForInteractableActor();
+	
+	if (bIsPerspectiveChangedRequiresHandling && !IsMoving())
 	{
-		if (!IsMoving())
+		if (const EPerspectiveMode PerspectiveMode = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->GetMode();
+			PerspectiveMode == EPerspectiveMode::TwoDimensional)
 		{
-			switch (GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->GetMode())
-			{
-			case EPerspectiveMode::TwoDimensional:
-				bIsPerspectiveChangedRequiresHandling = false;
-				break;
-			case EPerspectiveMode::ThreeDimensional:
-				bShouldUseForwardVectorOverride = false;
-				bIsPerspectiveChangedRequiresHandling = false;
-				break;
-			}
+			bIsPerspectiveChangedRequiresHandling = false;
+		}
+		else if (PerspectiveMode == EPerspectiveMode::ThreeDimensional)
+		{
+			bShouldUseForwardVectorOverride = false;
+			bIsPerspectiveChangedRequiresHandling = false;
 		}
 	}
 }
@@ -113,6 +122,15 @@ FVector APRSCharacter::GetRightVector() const
 	return YawRotationMatrix.GetUnitAxis(EAxis::Y);
 }
 
+void APRSCharacter::Interact()
+{
+	UE_LOG(LogTemp, Warning, TEXT("APRSCharacter::Interact"));
+	if (InteractableActor != nullptr)
+	{
+		InteractableActor->Interacted();
+	}
+}
+
 void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode)
 {
 	bIsPerspectiveChangedRequiresHandling = true;
@@ -136,5 +154,61 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 		CameraBoom->bUsePawnControlRotation = true;
 		CameraBoom->bInheritYaw = true;
 		break;
+	}
+}
+
+void APRSCharacter::LineTraceForInteractableActor()
+{
+	// Get the start and end points for the line trace
+	const float TraceUnits = 150.f;
+	const float TraceZOffset = 50.f;
+	const FVector Start = GetActorLocation() + FVector(0.f, 0.f, TraceZOffset);
+	const FVector End = Start + GetActorForwardVector() * TraceUnits; // Trace 150 units forward
+
+	FHitResult HitResult;
+
+	// Line trace parameters
+	FCollisionQueryParams TraceParams(FName(TEXT("Trace")), true, this);
+	TraceParams.bReturnPhysicalMaterial = false;
+	TraceParams.bTraceComplex = true;
+
+	// Perform the line trace
+	const bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, TraceParams);
+
+	if (bHit)
+	{
+		if (AActor* HitActor = HitResult.GetActor();
+			IsValid(HitActor) && HitActor->Implements<UInteractable>())
+		{
+#if ENABLE_DRAW_DEBUG
+			if (CVarDisplayTraceLine->GetBool())
+			{
+				DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.f, 0, 1.f);
+			}
+#endif
+			InteractableActor = Cast<IInteractable>(HitActor);
+			return;
+		}
+
+#if ENABLE_DRAW_DEBUG
+		if (CVarDisplayTraceLine->GetBool())
+		{
+			DrawDebugLine(GetWorld(), Start, End, FColor::Yellow, false, 0.f, 0, 1.f);
+		}
+#endif
+	}
+	else
+	{
+#if ENABLE_DRAW_DEBUG
+		if (CVarDisplayTraceLine->GetBool())
+		{
+			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 0.f, 0, 1.f);
+		}
+#endif
+	}
+
+	if (InteractableActor != nullptr)
+	{
+		InteractableActor = nullptr;
 	}
 }

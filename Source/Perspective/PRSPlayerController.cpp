@@ -36,6 +36,7 @@ void APRSPlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestLookAction);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestMoveAction);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &APRSPlayerController::RequestMoveActionCompleted);
+	EnhancedInputComponent->BindAction(InteractionAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestInteractionAction);
 }
 
 void APRSPlayerController::Tick(float DeltaTime)
@@ -82,6 +83,12 @@ void APRSPlayerController::RequestLookAction(const FInputActionValue& InputActio
 	
 	AddYawInput(LookVector.X * BaseLookRightRate * GetWorld()->GetDeltaSeconds());
 	AddPitchInput(LookVector.Y * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}
+
+void APRSPlayerController::RequestInteractionAction()
+{
+	UE_LOG(LogTemp, Warning, TEXT("APRSPlayerController::RequestInteractionAction"));
+	PossessedCharacter->Interact();
 }
 
 void APRSPlayerController::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode)

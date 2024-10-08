@@ -25,6 +25,9 @@ class PERSPECTIVE_API APRSPlayerController : public APlayerController
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* InteractionAction;
+	
 	UPROPERTY(EditAnywhere, Category= Look)
 	float BaseLookUpRate = 90.0f;
 
@@ -40,6 +43,7 @@ protected:
 	void RequestMoveAction(const FInputActionValue& InputActionValue);
 	void RequestMoveActionCompleted();
 	void RequestLookAction(const FInputActionValue& InputActionValue);
+	void RequestInteractionAction();
 
 private:
 	bool bEnableYInput = true;
