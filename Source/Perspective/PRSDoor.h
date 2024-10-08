@@ -31,4 +31,5 @@ private:
 	bool bIsOpen = false;
 	float OpenDuration = 1.f;
 	float PassedOpenDuration = 0.f;
+	FVector OriginalScale3D = FVector(1.0f, 1.0f, 1.0f);
 };

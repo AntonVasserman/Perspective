@@ -20,5 +20,4 @@ public:
 
 	APRSInteractableButton();
 	virtual void Interacted() override;
-
 };

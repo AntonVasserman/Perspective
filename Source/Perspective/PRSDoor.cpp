@@ -19,6 +19,8 @@ void APRSDoor::BeginPlay()
 	{
 		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSDoor::Open);
 	}
+
+	OriginalScale3D = GetActorScale3D();
 }
 
 void APRSDoor::Open()
@@ -35,8 +37,8 @@ void APRSDoor::Tick(float DeltaTime)
 	{
 		PassedOpenDuration += DeltaTime;
 		PassedOpenDuration = FMath::Clamp(PassedOpenDuration, 0.f, OpenDuration);
-		const float NewActorYScale = FMath::Lerp(1.f, 0.f, PassedOpenDuration / OpenDuration);
-		SetActorScale3D(FVector(1.f, NewActorYScale, 1.f));
+		const float NewActorYScale = FMath::Lerp(OriginalScale3D.Y, 0.f, PassedOpenDuration / OpenDuration);
+		SetActorScale3D(FVector(OriginalScale3D.X, NewActorYScale, OriginalScale3D.Z));
 	}
 }
 
