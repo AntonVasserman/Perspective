@@ -123,7 +123,9 @@ void APRSCharacter::Interact()
 	UE_LOG(LogTemp, Warning, TEXT("APRSCharacter::Interact"));
 	if (InteractableActor != nullptr)
 	{
-		InteractableActor->Interacted();
+		// TODO: Disable Controller Input while interacting (Maybe enable input, once interacted notified)
+		// TODO: Add Blend between Interaction and Movement, so we can move after interacted notified with normal animation
+		PlayInteractionMontage();
 	}
 }
 
@@ -212,4 +214,46 @@ void APRSCharacter::LineTraceForInteractableActor()
 	{
 		InteractableActor = nullptr;
 	}
+}
+
+void APRSCharacter::OnMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted)
+{
+	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+	{
+		AnimInstance->OnPlayMontageNotifyBegin.RemoveDynamic(this, &APRSCharacter::OnNotifyBeginReceived);
+	}
+}
+
+void APRSCharacter::OnNotifyBeginReceived(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
+{
+	if (NotifyName == FName("Interacted"))
+	{
+		// We do the check again, in case the player somehow moved away from the interactable actor
+		if (InteractableActor != nullptr)
+		{
+			InteractableActor->Interacted();
+		}
+	}
+}
+
+bool APRSCharacter::PlayInteractionMontage()
+{
+	const bool bPlayedSuccessfully = PlayAnimMontage(InteractionAnimMontage, 1.f) > 0.f;
+
+	if (bPlayedSuccessfully)
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+		if (!MontageEndedDelegate.IsBound())
+		{
+			// TODO (Refactor): Try to move this to Begin play
+			MontageEndedDelegate.BindUObject(this, &APRSCharacter::OnMontageEnded);
+		}
+
+		AnimInstance->Montage_SetEndDelegate(MontageEndedDelegate, InteractionAnimMontage);
+		
+		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &APRSCharacter::OnNotifyBeginReceived);
+	}
+
+	return bPlayedSuccessfully;
 }

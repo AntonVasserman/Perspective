@@ -23,10 +23,10 @@ class APRSCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
 public:
@@ -42,6 +42,10 @@ public:
 	FORCEINLINE void SetForwardVectorOverride (const FVector& ForwardVector) { ForwardVectorOverride = ForwardVector; }
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	UAnimMontage* InteractionAnimMontage;
+	FOnMontageEnded MontageEndedDelegate;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector ForwardVectorOverride = FVector(1.0f, 0.0f, 0.0f);
 
@@ -56,5 +60,9 @@ private:
 	UFUNCTION()
 	void OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode);
 	void LineTraceForInteractableActor();
+	void OnMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted);
+	UFUNCTION()
+	void OnNotifyBeginReceived(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
+	bool PlayInteractionMontage();
 };
 
