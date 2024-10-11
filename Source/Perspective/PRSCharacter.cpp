@@ -45,12 +45,14 @@ APRSCharacter::APRSCharacter()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 200.0f; // The camera follows at this distance behind the character
+	CameraBoom->SocketOffset = FVector(0.f, 75.f, 70.f);
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 }
 
@@ -135,7 +137,8 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 		bShouldUseForwardVectorOverride = true;
 		bUseControllerRotationYaw = false;
 		GetCharacterMovement()->bOrientRotationToMovement = true;
-		
+
+		CameraBoom->SocketOffset = FVector(0.f, 0.f, 0.f);
 		CameraBoom->bUsePawnControlRotation = false;
 		CameraBoom->SetRelativeRotation(UKismetMathLibrary::MakeRotFromX(ForwardVectorOverride));
 		CameraBoom->AddRelativeRotation(FRotator(0.f, -90.f, 0.f));
@@ -149,6 +152,7 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 
 		CameraBoom->bUsePawnControlRotation = true;
 		CameraBoom->bInheritYaw = true;
+		CameraBoom->SocketOffset = FVector(0.f, 75.f, 70.f);
 		
 		GetCharacterMovement()->bOrientRotationToMovement = false;
 		bUseControllerRotationYaw = true;
@@ -159,8 +163,8 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 void APRSCharacter::LineTraceForInteractableActor()
 {
 	// Get the start and end points for the line trace
-	const float TraceUnits = 150.f;
-	const float TraceZOffset = 50.f;
+	constexpr float TraceUnits = 150.f;
+	constexpr float TraceZOffset = 50.f;
 	const FVector Start = GetActorLocation() + FVector(0.f, 0.f, TraceZOffset);
 	const FVector End = Start + GetActorForwardVector() * TraceUnits; // Trace 150 units forward
 
@@ -172,9 +176,7 @@ void APRSCharacter::LineTraceForInteractableActor()
 	TraceParams.bTraceComplex = true;
 
 	// Perform the line trace
-	const bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, TraceParams);
-
-	if (bHit)
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, TraceParams))
 	{
 		if (AActor* HitActor = HitResult.GetActor();
 			IsValid(HitActor) && HitActor->Implements<UInteractable>())

@@ -32,10 +32,10 @@ class PERSPECTIVE_API APRSPlayerController : public APlayerController
 	float BackwardMovementMultiplier = 0.5f;
 	
 	UPROPERTY(EditAnywhere, Category=Look)
-	float BaseLookUpRate = 30.0f;
+	float BaseLookUpRate = 45.0f;
 
 	UPROPERTY(EditAnywhere, Category= Look)
-	float BaseLookRightRate = 30.0f;
+	float BaseLookRightRate = 45.0f;
 
 	UPROPERTY(EditAnywhere, Category= Look)
 	float LookMultiplierForMoveControls = 1.5f;
