@@ -27,16 +27,22 @@ class PERSPECTIVE_API APRSPlayerController : public APlayerController
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* InteractionAction;
+
+	UPROPERTY(EditAnywhere, Category=Movement)
+	float BackwardMovementMultiplier = 0.5f;
 	
-	UPROPERTY(EditAnywhere, Category= Look)
-	float BaseLookUpRate = 90.0f;
+	UPROPERTY(EditAnywhere, Category=Look)
+	float BaseLookUpRate = 30.0f;
 
 	UPROPERTY(EditAnywhere, Category= Look)
-	float BaseLookRightRate = 90.0f;
+	float BaseLookRightRate = 30.0f;
 
+	UPROPERTY(EditAnywhere, Category= Look)
+	float LookMultiplierForMoveControls = 1.5f;
+	
 protected:
 	virtual void BeginPlay() override;
-	virtual void OnPossess(APawn* aPawn) override;
+	virtual void OnPossess(APawn* InPawn) override;
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaTime) override;
 

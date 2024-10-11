@@ -32,6 +32,7 @@ class APRSCharacter : public ACharacter
 public:
 	APRSCharacter();
 
+	// TODO: Consider overriding the 'GetActorForwardVector' instead.
 	FVector GetForwardVector() const;
 	FVector GetRightVector() const;
 	void Interact();

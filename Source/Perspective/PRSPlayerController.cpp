@@ -21,11 +21,11 @@ void APRSPlayerController::BeginPlay()
 	PerspectiveModeWorldSubsystem->OnPerspectiveModeChanged.AddDynamic(this, &APRSPlayerController::OnPerspectiveModeChanged);
 }
 
-void APRSPlayerController::OnPossess(APawn* aPawn)
+void APRSPlayerController::OnPossess(APawn* InPawn)
 {
-	Super::OnPossess(aPawn);
+	Super::OnPossess(InPawn);
 
-	PossessedCharacter = Cast<APRSCharacter>(aPawn);
+	PossessedCharacter = Cast<APRSCharacter>(InPawn);
 }
 
 void APRSPlayerController::SetupInputComponent()
@@ -51,12 +51,22 @@ void APRSPlayerController::RequestMoveAction(const FInputActionValue& InputActio
 	const float MovementVectorX = bIsPerspectiveChangedRequiresHandling ? FMath::Abs(MovementVector.X) : MovementVector.X;
 	const float MovementVectorY = MovementVector.Y;
 	
-	if (bEnableYInput)
+	if (bEnableYInput) // 3D
 	{
-		PossessedCharacter->AddMovementInput(PossessedCharacter->GetForwardVector(), MovementVectorY);
+		const float InputToApply = MovementVectorY >= 0.f ? MovementVectorY : MovementVectorY * BackwardMovementMultiplier;
+		PossessedCharacter->AddMovementInput(PossessedCharacter->GetForwardVector(), InputToApply);
+		AddYawInput(MovementVector.X * BaseLookRightRate * LookMultiplierForMoveControls * GetWorld()->GetDeltaSeconds());
+	}
+	else // 2D
+	{
+		PossessedCharacter->AddMovementInput(PossessedCharacter->GetRightVector(), MovementVectorX);
+		// const FVector V = PossessedCharacter->GetForwardVector() * FMath::Sign(MovementVectorX);
+		// UE_LOG(LogTemp, Warning, TEXT("(%f, %f, %f)"), V.X, V.Y, V.Z);
+		// PossessedCharacter->SetActorRotation(FRotationMatrix::MakeFromX(V).Rotator());
 	}
 	
-	PossessedCharacter->AddMovementInput(PossessedCharacter->GetRightVector(), MovementVectorX);
+	// PossessedCharacter->AddMovementInput(PossessedCharacter->GetRightVector(), MovementVectorX);
+	// AddYawInput(MovementVector.X * BaseLookRightRate * GetWorld()->GetDeltaSeconds());
 }
 
 void APRSPlayerController::RequestMoveActionCompleted()
@@ -79,6 +89,11 @@ void APRSPlayerController::RequestMoveActionCompleted()
 
 void APRSPlayerController::RequestLookAction(const FInputActionValue& InputActionValue)
 {
+	if (!bEnableYInput)
+	{
+		return;
+	}
+
 	const FVector2D LookVector = InputActionValue.Get<FVector2D>();
 	
 	AddYawInput(LookVector.X * BaseLookRightRate * GetWorld()->GetDeltaSeconds());

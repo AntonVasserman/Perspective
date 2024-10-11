@@ -12,7 +12,6 @@
 #include "Interfaces/Interactable.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "PRSModeWorldSubsystem.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -24,16 +23,14 @@ static TAutoConsoleVariable<bool> CVarDisplayTraceLine(
 
 APRSCharacter::APRSCharacter()
 {
-	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 		
-	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
 
 	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
@@ -55,9 +52,6 @@ APRSCharacter::APRSCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
 void APRSCharacter::BeginPlay()
@@ -139,7 +133,9 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 	{
 	case EPerspectiveMode::TwoDimensional:
 		bShouldUseForwardVectorOverride = true;
-
+		bUseControllerRotationYaw = false;
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		
 		CameraBoom->bUsePawnControlRotation = false;
 		CameraBoom->SetRelativeRotation(UKismetMathLibrary::MakeRotFromX(ForwardVectorOverride));
 		CameraBoom->AddRelativeRotation(FRotator(0.f, -90.f, 0.f));
@@ -153,6 +149,9 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 
 		CameraBoom->bUsePawnControlRotation = true;
 		CameraBoom->bInheritYaw = true;
+		
+		GetCharacterMovement()->bOrientRotationToMovement = false;
+		bUseControllerRotationYaw = true;
 		break;
 	}
 }

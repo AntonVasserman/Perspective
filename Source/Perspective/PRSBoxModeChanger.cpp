@@ -77,15 +77,16 @@ void APRSBoxModeChanger::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* 
 	if (ExitVector.Z != 0.f && EnterVector.Z == 0.f)
 	{
 		PRSCharacter->SetForwardVectorOverride(EnterVector * -1);
+		GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->Switch();
+		UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
 	}
 	else if (ExitVector.Z == 0.f)
 	{
 		PRSCharacter->SetForwardVectorOverride(ExitVector);
+		GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->Switch();
+		UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
 	}
 
-	GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->Switch();
-	UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
-	
 	// Cleanup vectors
 	EnterVector = FVector::ZeroVector;
 	ExitVector = FVector::ZeroVector;
