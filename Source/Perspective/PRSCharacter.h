@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Logging/LogMacros.h"
+
 #include "PRSCharacter.generated.h"
 
 class IInteractable;
@@ -16,7 +17,7 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogPRSCharacter, Log, All);
 
 UCLASS(config=Game)
 class APRSCharacter : public ACharacter
@@ -31,13 +32,18 @@ class APRSCharacter : public ACharacter
 
 public:
 	APRSCharacter();
-
-	// TODO: Consider overriding the 'GetActorForwardVector' instead.
-	FVector GetForwardVector() const;
-	FVector GetRightVector() const;
+	
+	FVector GetActorForwardVector() const;
+	FVector GetActorRightVector() const;
 	void Interact();
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE bool CanMove() const { return !IsInteracting(); }
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE bool CanRotate() const { return !IsInteracting(); }
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE bool IsInteracting() const { return bInteracting; }
 	FORCEINLINE bool IsMoving() const { return GetCharacterMovement()->Velocity.X != 0.f || GetCharacterMovement()->Velocity.Y != 0.f; }
 	FORCEINLINE void SetForwardVectorOverride (const FVector& ForwardVector) { ForwardVectorOverride = ForwardVector; }
 
@@ -56,6 +62,7 @@ private:
 	bool bShouldUseForwardVectorOverride = false;
 	bool bIsPerspectiveChangedRequiresHandling = false;
 	IInteractable* InteractableActor = nullptr;
+	bool bInteracting = false;
 
 	UFUNCTION()
 	void OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode);

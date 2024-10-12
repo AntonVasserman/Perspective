@@ -87,16 +87,6 @@ void APRSMultiPanelModeChanger::BeginPlay()
 	LeftBoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSMultiPanelModeChanger::BoxCompOnComponentEndOverlap);
 	TopBoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSMultiPanelModeChanger::BoxCompOnComponentEndOverlap);
 	BottomBoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSMultiPanelModeChanger::BoxCompOnComponentEndOverlap);
-	
-	// TODO PRS: remove
-	CenterBoxComp->SetHiddenInGame(false);
-	FrontBoxComp->SetHiddenInGame(false);
-	BackBoxComp->SetHiddenInGame(false);
-	RightBoxComp->SetHiddenInGame(false);
-	LeftBoxComp->SetHiddenInGame(false);
-	TopBoxComp->SetHiddenInGame(false);
-	BottomBoxComp->SetHiddenInGame(false);
-	//
 }
 
 void APRSMultiPanelModeChanger::CenterBoxCompOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
