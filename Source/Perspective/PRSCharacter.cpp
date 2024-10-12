@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "PRSCharacter.h"
+
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "DrawDebugHelpers.h"
@@ -13,7 +14,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "PRSModeWorldSubsystem.h"
 
-DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+DEFINE_LOG_CATEGORY(LogPRSCharacter);
 
 static TAutoConsoleVariable<bool> CVarDisplayTraceLine(
 	TEXT("Perspective.Character.Debug.DisplayTraceLine"),
@@ -54,6 +55,28 @@ APRSCharacter::APRSCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	MontageEndedDelegate.BindUObject(this, &APRSCharacter::OnMontageEnded);
+}
+
+FVector APRSCharacter::GetActorForwardVector() const
+{
+	if (bShouldUseForwardVectorOverride)
+	{
+		return ForwardVectorOverride;
+	}
+
+	return ACharacter::GetActorForwardVector();
+}
+
+FVector APRSCharacter::GetActorRightVector() const
+{
+	if (bShouldUseForwardVectorOverride)
+	{
+		return ForwardVectorOverride;
+	}
+
+	return ACharacter::GetActorRightVector();
 }
 
 void APRSCharacter::BeginPlay()
@@ -86,46 +109,17 @@ void APRSCharacter::Tick(float DeltaTime)
 	}
 }
 
-FVector APRSCharacter::GetForwardVector() const
-{
-	if (bShouldUseForwardVectorOverride)
-	{
-		return ForwardVectorOverride;
-	}
-
-	// find out which way is forward
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
-	const FRotationMatrix YawRotationMatrix(YawRotation);
-
-	// get forward vector
-	return YawRotationMatrix.GetUnitAxis(EAxis::X);
-}
-
-FVector APRSCharacter::GetRightVector() const
-{
-	if (bShouldUseForwardVectorOverride)
-	{
-		return ForwardVectorOverride;
-	}
-
-	// find out which way is forward
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
-	const FRotationMatrix YawRotationMatrix(YawRotation);
-
-	// get right vector 
-	return YawRotationMatrix.GetUnitAxis(EAxis::Y);
-}
-
 void APRSCharacter::Interact()
 {
-	UE_LOG(LogTemp, Warning, TEXT("APRSCharacter::Interact"));
 	if (InteractableActor != nullptr)
 	{
-		// TODO: Disable Controller Input while interacting (Maybe enable input, once interacted notified)
-		// TODO: Add Blend between Interaction and Movement, so we can move after interacted notified with normal animation
-		PlayInteractionMontage();
+		bInteracting = true;
+		
+		// In case the interaction montage fails allow interaction 
+		if(!PlayInteractionMontage())
+		{
+			bInteracting = false;
+		}
 	}
 }
 
@@ -133,9 +127,8 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 {
 	bIsPerspectiveChangedRequiresHandling = true;
 
-	switch (NewPerspectiveMode)
+	if (NewPerspectiveMode == EPerspectiveMode::TwoDimensional)
 	{
-	case EPerspectiveMode::TwoDimensional:
 		bShouldUseForwardVectorOverride = true;
 		bUseControllerRotationYaw = false;
 		GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -146,11 +139,14 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 		CameraBoom->AddRelativeRotation(FRotator(0.f, -90.f, 0.f));
 		CameraBoom->bInheritYaw = false;
 
+		FollowCamera->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
 		FollowCamera->SetProjectionMode(ECameraProjectionMode::Orthographic);
 		FollowCamera->SetOrthoWidth(1024.0f); // Increase the Orthographic width, we have to do it here only after the projection mode has changed
-		break;
-	case EPerspectiveMode::ThreeDimensional:
+	}
+	else if (NewPerspectiveMode == EPerspectiveMode::ThreeDimensional)
+	{
 		FollowCamera->SetProjectionMode(ECameraProjectionMode::Perspective);
+		FollowCamera->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
 
 		CameraBoom->bUsePawnControlRotation = true;
 		CameraBoom->bInheritYaw = true;
@@ -158,7 +154,6 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 		
 		GetCharacterMovement()->bOrientRotationToMovement = false;
 		bUseControllerRotationYaw = true;
-		break;
 	}
 }
 
@@ -170,15 +165,13 @@ void APRSCharacter::LineTraceForInteractableActor()
 	const FVector Start = GetActorLocation() + FVector(0.f, 0.f, TraceZOffset);
 	const FVector End = Start + GetActorForwardVector() * TraceUnits; // Trace 150 units forward
 
-	FHitResult HitResult;
-
 	// Line trace parameters
 	FCollisionQueryParams TraceParams(FName(TEXT("Trace")), true, this);
 	TraceParams.bReturnPhysicalMaterial = false;
 	TraceParams.bTraceComplex = true;
 
 	// Perform the line trace
-	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, TraceParams))
+	if (FHitResult HitResult; GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, TraceParams))
 	{
 		if (AActor* HitActor = HitResult.GetActor();
 			IsValid(HitActor) && HitActor->Implements<UInteractable>())
@@ -218,10 +211,7 @@ void APRSCharacter::LineTraceForInteractableActor()
 
 void APRSCharacter::OnMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted)
 {
-	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
-	{
-		AnimInstance->OnPlayMontageNotifyBegin.RemoveDynamic(this, &APRSCharacter::OnNotifyBeginReceived);
-	}
+	GetMesh()->GetAnimInstance()->OnPlayMontageNotifyBegin.RemoveDynamic(this, &APRSCharacter::OnNotifyBeginReceived);
 }
 
 void APRSCharacter::OnNotifyBeginReceived(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
@@ -233,6 +223,8 @@ void APRSCharacter::OnNotifyBeginReceived(FName NotifyName, const FBranchingPoin
 		{
 			InteractableActor->Interacted();
 		}
+
+		bInteracting = false;
 	}
 }
 
@@ -243,15 +235,7 @@ bool APRSCharacter::PlayInteractionMontage()
 	if (bPlayedSuccessfully)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-
-		if (!MontageEndedDelegate.IsBound())
-		{
-			// TODO (Refactor): Try to move this to Begin play
-			MontageEndedDelegate.BindUObject(this, &APRSCharacter::OnMontageEnded);
-		}
-
 		AnimInstance->Montage_SetEndDelegate(MontageEndedDelegate, InteractionAnimMontage);
-		
 		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &APRSCharacter::OnNotifyBeginReceived);
 	}
 

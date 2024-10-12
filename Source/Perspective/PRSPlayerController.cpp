@@ -47,6 +47,11 @@ void APRSPlayerController::Tick(float DeltaTime)
 
 void APRSPlayerController::RequestMoveAction(const FInputActionValue& InputActionValue)
 {
+	if (!PossessedCharacter->CanMove())
+	{
+		return;
+	}
+	
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
 	const float MovementVectorX = bIsPerspectiveChangedRequiresHandling ? FMath::Abs(MovementVector.X) : MovementVector.X;
 	const float MovementVectorY = MovementVector.Y;
@@ -54,12 +59,12 @@ void APRSPlayerController::RequestMoveAction(const FInputActionValue& InputActio
 	if (bEnableYInput) // 3D
 	{
 		const float InputToApply = MovementVectorY >= 0.f ? MovementVectorY : MovementVectorY * BackwardMovementMultiplier;
-		PossessedCharacter->AddMovementInput(PossessedCharacter->GetForwardVector(), InputToApply);
+		PossessedCharacter->AddMovementInput(PossessedCharacter->GetActorForwardVector(), InputToApply);
 		AddYawInput(MovementVector.X * BaseLookRightRate * LookMultiplierForMoveControls * GetWorld()->GetDeltaSeconds());
 	}
 	else // 2D
 	{
-		PossessedCharacter->AddMovementInput(PossessedCharacter->GetRightVector(), MovementVectorX);
+		PossessedCharacter->AddMovementInput(PossessedCharacter->GetActorRightVector(), MovementVectorX);
 		// const FVector V = PossessedCharacter->GetForwardVector() * FMath::Sign(MovementVectorX);
 		// UE_LOG(LogTemp, Warning, TEXT("(%f, %f, %f)"), V.X, V.Y, V.Z);
 		// PossessedCharacter->SetActorRotation(FRotationMatrix::MakeFromX(V).Rotator());
@@ -89,7 +94,7 @@ void APRSPlayerController::RequestMoveActionCompleted()
 
 void APRSPlayerController::RequestLookAction(const FInputActionValue& InputActionValue)
 {
-	if (!bEnableYInput)
+	if (!PossessedCharacter->CanRotate() || !bEnableYInput)
 	{
 		return;
 	}
