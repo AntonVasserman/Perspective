@@ -29,6 +29,7 @@ protected:
 
 private:
 	bool bIsOpen = false;
+	// TODO: Since this Door is currenlty only for prototyping, transfer this open logic into Blueprints using a Timeline
 	float OpenDuration = 1.f;
 	float PassedOpenDuration = 0.f;
 	FVector OriginalScale3D = FVector(1.0f, 1.0f, 1.0f);

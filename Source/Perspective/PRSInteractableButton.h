@@ -9,15 +9,28 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonPressed);
 
+class UUserWidget;
+
 UCLASS()
 class PERSPECTIVE_API APRSInteractableButton : public AActor, public IInteractable
 {
 	GENERATED_BODY()
-	
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnButtonPressed OnButtonPressed;
 
 	APRSInteractableButton();
+	
+	virtual void TickActor(float DeltaTime, ELevelTick TickType, FActorTickFunction& ThisTickFunction) override;
+	
+	virtual void DisableInteraction() override;
+	virtual void EnableInteraction() override;
 	virtual void Interacted() override;
+	FORCEINLINE virtual bool IsInteractable() override { return bInteractable && !bPressed; }
+
+private:
+	bool bInteractable = false;
+	bool bPressed = false;
+	bool bRePressable = false;
 };
