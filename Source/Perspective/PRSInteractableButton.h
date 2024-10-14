@@ -28,9 +28,14 @@ public:
 	virtual void EnableInteraction() override;
 	virtual void Interacted() override;
 	FORCEINLINE virtual bool IsInteractable() override { return bInteractable && !bPressed; }
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void ResetButton() { bPressed = false; }
 
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bRePressable = false;
+	
 private:
 	bool bInteractable = false;
 	bool bPressed = false;
-	bool bRePressable = false;
 };
