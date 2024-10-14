@@ -17,5 +17,8 @@ class PERSPECTIVE_API IInteractable
 	GENERATED_BODY()
 
 public:
+	virtual void DisableInteraction() = 0;
+	virtual void EnableInteraction() = 0;
 	virtual void Interacted() = 0;
+	virtual bool IsInteractable() = 0;
 };

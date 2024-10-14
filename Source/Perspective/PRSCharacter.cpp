@@ -92,6 +92,7 @@ void APRSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// TODO: Switch line tracing in favor of trigger boxes
 	LineTraceForInteractableActor();
 	
 	if (bIsPerspectiveChangedRequiresHandling && !IsMoving())
@@ -111,7 +112,7 @@ void APRSCharacter::Tick(float DeltaTime)
 
 void APRSCharacter::Interact()
 {
-	if (InteractableActor != nullptr)
+	if (InteractableActor != nullptr && InteractableActor->IsInteractable())
 	{
 		bInteracting = true;
 		
@@ -183,6 +184,7 @@ void APRSCharacter::LineTraceForInteractableActor()
 			}
 #endif
 			InteractableActor = Cast<IInteractable>(HitActor);
+			InteractableActor->EnableInteraction();
 			return;
 		}
 
@@ -205,6 +207,7 @@ void APRSCharacter::LineTraceForInteractableActor()
 
 	if (InteractableActor != nullptr)
 	{
+		InteractableActor->DisableInteraction();
 		InteractableActor = nullptr;
 	}
 }
