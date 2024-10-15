@@ -1,27 +1,26 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "PRSSlidingDoor.h"
 
-#include "PRSDoor.h"
+#include "Perspective/PRSInteractableButton.h"
 
-#include "PRSInteractableButton.h"
-
-APRSDoor::APRSDoor()
+APRSSlidingDoor::APRSSlidingDoor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
 }
 
-void APRSDoor::BeginPlay()
+void APRSSlidingDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
 	if (InteractableButton != nullptr)
 	{
-		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSDoor::OnButtonPressed);
+		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSSlidingDoor::OnButtonPressed);
 	}
 }
 
-void APRSDoor::OnButtonPressed()
+void APRSSlidingDoor::OnButtonPressed()
 {
 	switch (CurrentState)
 	{

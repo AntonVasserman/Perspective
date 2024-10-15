@@ -4,38 +4,37 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PRSDoor.generated.h"
+#include "PRSRotatingDoor.generated.h"
 
 UENUM(BlueprintType)
-enum class EDoorState : uint8
+enum class ERotationState : uint8
 {
-	Closed,
-	Opening,
-	Open,
-	Closing
+	Static,
+	Rotating,
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDoorStateChanged, EDoorState, NewDoorState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRotationStateChanged, ERotationState, NewRotationState);
 
 class APRSInteractableButton;
 
+// TODO: Consolidate this and Sliding Door into one parent class
 UCLASS()
-class PERSPECTIVE_API APRSDoor : public AActor
+class PERSPECTIVE_API APRSRotatingDoor : public AActor
 {
 	GENERATED_BODY()
 	
 public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FOnDoorStateChanged OnDoorStateChanged;
+	FOnRotationStateChanged OnRotationStateChanged;
 	
-	APRSDoor();
+	APRSRotatingDoor();
 
 protected:
 	UPROPERTY(BlueprintReadWrite)
-	EDoorState CurrentState = EDoorState::Closed;
+	ERotationState CurrentState = ERotationState::Static;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	APRSInteractableButton* InteractableButton = nullptr;
-
+	
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
