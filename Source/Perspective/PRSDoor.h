@@ -6,6 +6,17 @@
 #include "GameFramework/Actor.h"
 #include "PRSDoor.generated.h"
 
+UENUM(BlueprintType)
+enum class EDoorState : uint8
+{
+	Closed,
+	Opening,
+	Open,
+	Closing
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDoorStateChanged, EDoorState, NewDoorState);
+
 class APRSInteractableButton;
 
 UCLASS()
@@ -13,24 +24,20 @@ class PERSPECTIVE_API APRSDoor : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnDoorStateChanged OnDoorStateChanged;
+	
 	APRSDoor();
 
-	virtual void Tick(float DeltaTime) override;
-
 protected:
+	UPROPERTY(BlueprintReadWrite)
+	EDoorState CurrentState = EDoorState::Closed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	APRSInteractableButton* InteractableButton = nullptr;
 
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	virtual void Open();
-
-private:
-	bool bIsOpen = false;
-	// TODO: Since this Door is currenlty only for prototyping, transfer this open logic into Blueprints using a Timeline
-	float OpenDuration = 1.f;
-	float PassedOpenDuration = 0.f;
-	FVector OriginalScale3D = FVector(1.0f, 1.0f, 1.0f);
+	virtual void OnButtonPressed();
 };

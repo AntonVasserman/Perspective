@@ -17,28 +17,26 @@ void APRSDoor::BeginPlay()
 
 	if (InteractableButton != nullptr)
 	{
-		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSDoor::Open);
+		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSDoor::OnButtonPressed);
 	}
-
-	OriginalScale3D = GetActorScale3D();
 }
 
-void APRSDoor::Open()
+void APRSDoor::OnButtonPressed()
 {
-	UE_LOG(LogTemp, Warning, TEXT("APRSDoor::Open"));
-	bIsOpen = true;
-}
-
-void APRSDoor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-	if (bIsOpen && GetActorScale().Y > 0.f)
+	switch (CurrentState)
 	{
-		PassedOpenDuration += DeltaTime;
-		PassedOpenDuration = FMath::Clamp(PassedOpenDuration, 0.f, OpenDuration);
-		const float NewActorYScale = FMath::Lerp(OriginalScale3D.Y, 0.f, PassedOpenDuration / OpenDuration);
-		SetActorScale3D(FVector(OriginalScale3D.X, NewActorYScale, OriginalScale3D.Z));
+	case EDoorState::Closed:
+		CurrentState = EDoorState::Opening;
+		break;
+	case EDoorState::Closing:
+		break;
+	case EDoorState::Open:
+		CurrentState = EDoorState::Closing;
+	case EDoorState::Opening:
+		break;
+	default:
+		break;
 	}
-}
 
+	OnDoorStateChanged.Broadcast(CurrentState);
+}
