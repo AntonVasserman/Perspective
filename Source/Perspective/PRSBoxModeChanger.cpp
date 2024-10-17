@@ -47,6 +47,7 @@ void APRSBoxModeChanger::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* 
 		return;
 	}
 
+	// TODO: Currently this logic will only work on non-rotated boxes.
 	// BoxComp
 	const FVector RelativeLocation = PRSCharacter->GetActorLocation() - BoxComp->GetComponentLocation();
 	const FVector NormalizedRelativeLocation = RelativeLocation / BoxComp->GetScaledBoxExtent();
@@ -59,7 +60,7 @@ void APRSBoxModeChanger::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* 
 	else if (FMath::Abs(NormalizedRelativeLocation.Y) > FMath::Abs(NormalizedRelativeLocation.X) &&
 		FMath::Abs(NormalizedRelativeLocation.Y) > FMath::Abs(NormalizedRelativeLocation.Z)) // Right or Left
 	{
-		ExitVector = NormalizedRelativeLocation.Y > 0 ? FVector(0.f, 1.f, 0.f) : FVector(0.f, -1.f, 0.f);
+		ExitVector = NormalizedRelativeLocation.Y > 0 ? NormalizedRelativeLocation : FVector(0.f, -1.f, 0.f);
 	}
 	else // Top or Bottom
 	{

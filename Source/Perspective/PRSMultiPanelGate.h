@@ -1,37 +1,35 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Anton Vasserman, All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PRSMultiPanelModeChanger.generated.h"
+#include "PRSMultiPanelGate.generated.h"
 
 class APRSCharacter;
 class UBoxComponent;
 
 UCLASS()
-class PERSPECTIVE_API APRSMultiPanelModeChanger : public AActor
+class PERSPECTIVE_API APRSMultiPanelGate : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	APRSMultiPanelModeChanger();
+	APRSMultiPanelGate();
 
-	virtual void Tick(float DeltaTime) override;
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 protected:
-	enum class EDirection : uint8
+	enum class EGateDirection : uint8
 	{
 		None,
 		Front,
 		Back,
 		Right,
 		Left,
-		Top,
-		Bottom,
 	};
 
+	// TODO: Get this by default from Statics
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
 	USoundCue* PerspectiveModeChangedSoundCue;
 	
@@ -51,19 +49,34 @@ private:
 	const float PanelLength = 50.f;
 	bool bIsInsideBox = false;
 	bool bIsTouchingInsideBox = false;
-	EDirection EnterDirection;
-	EDirection ExitDirection;
+	EGateDirection EnterDirection;
+	EGateDirection ExitDirection;
 
-	TMap<UBoxComponent*, EDirection> BoxComponentToDirectionMapping;
-	TMap<EDirection, UBoxComponent*> DirectionToBoxComponentMapping;
+	TMap<UBoxComponent*, EGateDirection> BoxComponentToDirectionMapping;
+	TMap<EGateDirection, UBoxComponent*> DirectionToBoxComponentMapping;
+
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* CenterBoxComp;
 	
-	TWeakObjectPtr<UBoxComponent> CenterBoxComp;
-	TWeakObjectPtr<UBoxComponent> FrontBoxComp;
-	TWeakObjectPtr<UBoxComponent> BackBoxComp;
-	TWeakObjectPtr<UBoxComponent> RightBoxComp;
-	TWeakObjectPtr<UBoxComponent> LeftBoxComp;
-	TWeakObjectPtr<UBoxComponent> TopBoxComp;
-	TWeakObjectPtr<UBoxComponent> BottomBoxComp;
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* FrontBoxComp;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* FrontCubeEffectComp;
+	
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* BackBoxComp;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* BackCubeEffectComp;
+	
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* RightBoxComp;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* RightCubeEffectComp;
+	
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* LeftBoxComp;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* LeftCubeEffectComp;
 
 	void InternalBoxComponentOnComponentEndOverlap(const UBoxComponent* OverlappedBoxComponent, APRSCharacter* PRSCharacter);
 };
