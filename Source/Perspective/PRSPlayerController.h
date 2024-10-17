@@ -19,9 +19,12 @@ class PERSPECTIVE_API APRSPlayerController : public APlayerController
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* MoveAction;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, DisplayName="Move X Action", meta = (AllowPrivateAccess = "true"))
+	UInputAction* MoveXAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, DisplayName="Move Y Action", meta = (AllowPrivateAccess = "true"))
+	UInputAction* MoveYAction;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
@@ -46,7 +49,8 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaTime) override;
 
-	void RequestMoveAction(const FInputActionValue& InputActionValue);
+	void RequestMoveXAction(const FInputActionValue& InputActionValue);
+	void RequestMoveYAction(const FInputActionValue& InputActionValue);
 	void RequestMoveActionCompleted();
 	void RequestLookAction(const FInputActionValue& InputActionValue);
 	void RequestInteractionAction();
@@ -54,9 +58,12 @@ protected:
 private:
 	bool bEnableYInput = true;
 	bool bIsPerspectiveChangedRequiresHandling = false;
+	bool bMovingByX = false;
+	bool bMovingByY = false;
 	float PreviousControllerPitchRotation = 0.0f;
 	TWeakObjectPtr<APRSCharacter> PossessedCharacter;
 
 	UFUNCTION()
 	void OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode);
+	void HandlePerspectiveChanged();
 };
