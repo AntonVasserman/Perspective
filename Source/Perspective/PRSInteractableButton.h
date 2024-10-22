@@ -3,16 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Interactables/PRSInteractableActor.h"
 #include "GameFramework/Actor.h"
-#include "Interfaces/Interactable.h"
 #include "PRSInteractableButton.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonPressed);
 
-class UUserWidget;
-
 UCLASS()
-class PERSPECTIVE_API APRSInteractableButton : public AActor, public IInteractable
+class PERSPECTIVE_API APRSInteractableButton : public APRSInteractableActor
 {
 	GENERATED_BODY()
 
@@ -22,20 +20,15 @@ public:
 
 	APRSInteractableButton();
 	
-	virtual void TickActor(float DeltaTime, ELevelTick TickType, FActorTickFunction& ThisTickFunction) override;
-	
-	virtual void DisableInteraction() override;
-	virtual void EnableInteraction() override;
-	virtual void Interacted() override;
-	FORCEINLINE virtual bool IsInteractable() override { return bInteractable && !bPressed; }
+	virtual void Interact() override;
+	FORCEINLINE virtual bool IsInteractable() override { return Super::IsInteractable() && !bPressed; }
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void ResetButton() { bPressed = false; }
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bRePressable = false;
-	
+	bool bRepressable = false;
+
 private:
-	bool bInteractable = false;
 	bool bPressed = false;
 };

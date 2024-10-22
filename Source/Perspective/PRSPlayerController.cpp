@@ -32,7 +32,7 @@ void APRSPlayerController::OnPossess(APawn* InPawn)
 void APRSPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-
+	
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestLookAction);
 	EnhancedInputComponent->BindAction(MoveXAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestMoveXAction);

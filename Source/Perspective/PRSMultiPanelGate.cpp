@@ -50,7 +50,7 @@ APRSMultiPanelGate::APRSMultiPanelGate()
 	RightBoxComp->SetRelativeScale3D(FVector(1.f / PanelLength, 1.f, 1.f));
 	RightBoxComp->AttachToComponent(CenterBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 	RightCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Right Cube Effect Component");
-	RightCubeEffectComp->AttachToComponent(RightBoxComp, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	RightCubeEffectComp->AttachToComponent(RightBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 	RightCubeEffectComp->SetStaticMesh(UPerspectiveStatics::GetCubeStaticMesh());
 	RightCubeEffectComp->SetMaterial(0, UPerspectiveStatics::GetPanelGreenMaterial());
 	RightCubeEffectComp->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);

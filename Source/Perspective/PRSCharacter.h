@@ -10,14 +10,13 @@
 
 #include "PRSCharacter.generated.h"
 
+class APRSInteractableActor;
 class IInteractable;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
-
-DECLARE_LOG_CATEGORY_EXTERN(LogPRSCharacter, Log, All);
 
 UCLASS(config=Game)
 class APRSCharacter : public ACharacter
@@ -44,10 +43,12 @@ public:
 	FORCEINLINE bool CanRotate() const { return !IsInteracting(); }
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool IsInteracting() const { return bInteracting; }
-	FORCEINLINE bool IsMoving() const { return GetCharacterMovement()->Velocity.X != 0.f || GetCharacterMovement()->Velocity.Y != 0.f; }
+	FORCEINLINE bool IsMoving() const { return IsValid(GetCharacterMovement()) && (GetCharacterMovement()->Velocity.X != 0.f || GetCharacterMovement()->Velocity.Y != 0.f); }
 	FORCEINLINE void SetForwardVectorOverride (const FVector& ForwardVector) { ForwardVectorOverride = ForwardVector; }
 
 protected:
+	UPROPERTY(BlueprintReadWrite)
+	APRSInteractableActor* InteractableActor = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
 	UAnimMontage* InteractionAnimMontage;
 	FOnMontageEnded MontageEndedDelegate;
@@ -61,7 +62,6 @@ protected:
 private:
 	bool bShouldUseForwardVectorOverride = false;
 	bool bIsPerspectiveChangedRequiresHandling = false;
-	IInteractable* InteractableActor = nullptr;
 	bool bInteracting = false;
 
 	UFUNCTION()

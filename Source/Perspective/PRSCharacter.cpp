@@ -10,17 +10,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
-#include "Interfaces/Interactable.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "PRSModeWorldSubsystem.h"
-
-DEFINE_LOG_CATEGORY(LogPRSCharacter);
-
-static TAutoConsoleVariable<bool> CVarDisplayTraceLine(
-	TEXT("Perspective.Character.Debug.DisplayTraceLine"),
-	false,
-	TEXT("Display Trace Line"),
-	ECVF_Default);
+#include "Core/Interactables/PRSInteractableActor.h"
 
 APRSCharacter::APRSCharacter()
 {
@@ -92,9 +84,6 @@ void APRSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// TODO: Switch line tracing in favor of trigger boxes
-	LineTraceForInteractableActor();
-	
 	if (bIsPerspectiveChangedRequiresHandling && !IsMoving())
 	{
 		if (const EPerspectiveMode PerspectiveMode = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->GetMode();
@@ -158,60 +147,6 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 	}
 }
 
-void APRSCharacter::LineTraceForInteractableActor()
-{
-	// Get the start and end points for the line trace
-	constexpr float TraceUnits = 150.f;
-	constexpr float TraceZOffset = 50.f;
-	const FVector Start = GetActorLocation() + FVector(0.f, 0.f, TraceZOffset);
-	const FVector End = Start + GetActorForwardVector() * TraceUnits; // Trace 150 units forward
-
-	// Line trace parameters
-	FCollisionQueryParams TraceParams(FName(TEXT("Trace")), true, this);
-	TraceParams.bReturnPhysicalMaterial = false;
-	TraceParams.bTraceComplex = true;
-
-	// Perform the line trace
-	if (FHitResult HitResult; GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, TraceParams))
-	{
-		if (AActor* HitActor = HitResult.GetActor();
-			IsValid(HitActor) && HitActor->Implements<UInteractable>())
-		{
-#if ENABLE_DRAW_DEBUG
-			if (CVarDisplayTraceLine->GetBool())
-			{
-				DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.f, 0, 1.f);
-			}
-#endif
-			InteractableActor = Cast<IInteractable>(HitActor);
-			InteractableActor->EnableInteraction();
-			return;
-		}
-
-#if ENABLE_DRAW_DEBUG
-		if (CVarDisplayTraceLine->GetBool())
-		{
-			DrawDebugLine(GetWorld(), Start, End, FColor::Yellow, false, 0.f, 0, 1.f);
-		}
-#endif
-	}
-	else
-	{
-#if ENABLE_DRAW_DEBUG
-		if (CVarDisplayTraceLine->GetBool())
-		{
-			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 0.f, 0, 1.f);
-		}
-#endif
-	}
-
-	if (InteractableActor != nullptr)
-	{
-		InteractableActor->DisableInteraction();
-		InteractableActor = nullptr;
-	}
-}
-
 void APRSCharacter::OnMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted)
 {
 	GetMesh()->GetAnimInstance()->OnPlayMontageNotifyBegin.RemoveDynamic(this, &APRSCharacter::OnNotifyBeginReceived);
@@ -224,7 +159,7 @@ void APRSCharacter::OnNotifyBeginReceived(FName NotifyName, const FBranchingPoin
 		// We do the check again, in case the player somehow moved away from the interactable actor
 		if (InteractableActor != nullptr)
 		{
-			InteractableActor->Interacted();
+			InteractableActor->Interact();
 		}
 
 		bInteracting = false;
