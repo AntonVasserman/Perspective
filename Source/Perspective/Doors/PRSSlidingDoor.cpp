@@ -1,8 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Anton Vasserman, All Rights Reserved.
 
 #include "PRSSlidingDoor.h"
 
-#include "Perspective/PRSInteractableButton.h"
+#include "Perspective/Interactables/PRSInteractableButton.h"
 
 APRSSlidingDoor::APRSSlidingDoor()
 {

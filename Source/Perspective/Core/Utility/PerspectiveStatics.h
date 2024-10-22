@@ -18,16 +18,16 @@ public:
 
 	FORCEINLINE static UMaterialInterface* GetPanelGreenMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/PerspectiveGates/M_Panel_Green.M_Panel_Green"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/WorldModeChangers/M_Panel_Green.M_Panel_Green"));
 	}
 
 	FORCEINLINE static UMaterialInterface* GetPanelYellowMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/PerspectiveGates/M_Panel_Yellow.M_Panel_Yellow"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/WorldModeChangers/M_Panel_Yellow.M_Panel_Yellow"));
 	}
 
 	FORCEINLINE static UMaterialInterface* GetPanelRedMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/PerspectiveGates/M_Panel_Red.M_Panel_Red"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/WorldModeChangers/M_Panel_Red.M_Panel_Red"));
 	}
 };
