@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Perspective/Core/Utility/PerspectiveStatics.h"
 
 #include "PRSMultiPanelGate.generated.h"
 
@@ -30,9 +31,8 @@ protected:
 		Left,
 	};
 
-	// TODO (Refactor #13): Get this by default from Statics
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
-	USoundCue* PerspectiveModeChangedSoundCue;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound")
+	USoundCue* PerspectiveModeChangedSoundCue = UPerspectiveStatics::GetModeChangedSoundCue();
 	
 	virtual void BeginPlay() override;
 

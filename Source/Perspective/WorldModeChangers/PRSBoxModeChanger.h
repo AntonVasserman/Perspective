@@ -4,10 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Perspective/Core/Utility/PerspectiveStatics.h"
 
 #include "PRSBoxModeChanger.generated.h"
-
-class UBoxComponent;
 
 UCLASS()
 class PERSPECTIVE_API APRSBoxModeChanger : public AActor
@@ -19,10 +18,10 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere)
-	UBoxComponent* BoxComp;
+	class UBoxComponent* BoxComp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
-	USoundCue* PerspectiveModeChangedSoundCue;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound")
+	USoundCue* PerspectiveModeChangedSoundCue = UPerspectiveStatics::GetModeChangedSoundCue();
 
 	virtual void BeginPlay() override;
 	

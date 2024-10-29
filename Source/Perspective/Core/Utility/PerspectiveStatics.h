@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Sound/SoundCue.h"
+
 #include "PerspectiveStatics.generated.h"
 
 UCLASS(MinimalAPI)
@@ -16,6 +18,11 @@ public:
 		return LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube"));
 	}
 
+	FORCEINLINE static USoundCue* GetModeChangedSoundCue()
+	{
+		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Core/Audio/A_PRSModeChanged_Cue.A_PRSModeChanged_Cue"));
+	}
+	
 	FORCEINLINE static UMaterialInterface* GetPanelGreenMaterial()
 	{
 		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/WorldModeChangers/M_Panel_Green.M_Panel_Green"));
