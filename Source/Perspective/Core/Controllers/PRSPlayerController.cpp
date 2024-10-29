@@ -7,7 +7,7 @@
 #include "Perspective/Characters/PRSCharacter.h"
 #include "Perspective/Subsystems/PRSModeWorldSubsystem.h"
 
-// TODO: Gamepad and Keyboard rotation requires fix. The rotation in the Gamepad is faster using 'Movement' than it is using the Gamepad look function.
+// TODO (Refactor #14): Gamepad and Keyboard rotation requires fix. The rotation in the Gamepad is faster using 'Movement' than it is using the Gamepad look function.
 void APRSPlayerController::BeginPlay()
 {
 	Super::BeginPlay();

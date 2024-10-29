@@ -20,7 +20,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDoorStateChanged, EDoorState, New
 
 class APRSInteractableButton;
 
-// TODO: Consolidate this and Sliding Door into one parent class
+// TODO (Refactor #15): Consolidate this and Sliding Door into one parent class
 UCLASS()
 class PERSPECTIVE_API APRSSlidingDoor : public AActor
 {

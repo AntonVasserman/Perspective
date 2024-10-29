@@ -47,7 +47,7 @@ void APRSBoxModeChanger::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* 
 		return;
 	}
 
-	// TODO: Currently this logic will only work on non-rotated boxes.
+	// TODO (Bug #12): Currently this logic will only work on non-rotated boxes.
 	// BoxComp
 	const FVector RelativeLocation = PRSCharacter->GetActorLocation() - BoxComp->GetComponentLocation();
 	const FVector NormalizedRelativeLocation = RelativeLocation / BoxComp->GetScaledBoxExtent();

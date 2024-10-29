@@ -18,7 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRotationStateChanged, ERotationSt
 
 class APRSInteractableButton;
 
-// TODO: Consolidate this and Sliding Door into one parent class
+// TODO (Refactor #15): Consolidate this and Sliding Door into one parent class
 UCLASS()
 class PERSPECTIVE_API APRSRotatingDoor : public AActor
 {
@@ -31,6 +31,21 @@ public:
 	APRSRotatingDoor();
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FRotator OriginalRotation = FRotator::ZeroRotator;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FRotator NewRotation = FRotator::ZeroRotator;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bSupportFullRotation = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCounterClockwise = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float YawRotationDelta = 0.f;
+	
 	UPROPERTY(BlueprintReadWrite)
 	ERotationState CurrentState = ERotationState::Static;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -40,4 +55,6 @@ protected:
 
 	UFUNCTION()
 	virtual void OnButtonPressed();
+private:
+	// TODO
 };

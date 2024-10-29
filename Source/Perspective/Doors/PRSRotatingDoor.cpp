@@ -17,6 +17,12 @@ void APRSRotatingDoor::BeginPlay()
 	{
 		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSRotatingDoor::OnButtonPressed);
 	}
+
+	YawRotationDelta = bCounterClockwise ? -90.f : 90.f;
+	OriginalRotation = GetActorRotation();
+	NewRotation = bSupportFullRotation ?
+		OriginalRotation :
+		FRotator(OriginalRotation.Pitch, OriginalRotation.Yaw + YawRotationDelta, OriginalRotation.Roll);
 }
 
 void APRSRotatingDoor::OnButtonPressed()

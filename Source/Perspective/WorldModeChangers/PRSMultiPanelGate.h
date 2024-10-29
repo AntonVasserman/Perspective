@@ -30,7 +30,7 @@ protected:
 		Left,
 	};
 
-	// TODO: Get this by default from Statics
+	// TODO (Refactor #13): Get this by default from Statics
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
 	USoundCue* PerspectiveModeChangedSoundCue;
 	
