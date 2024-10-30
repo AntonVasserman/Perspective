@@ -2,21 +2,9 @@
 
 #include "PRSRotatingDoor.h"
 
-#include "Perspective/Interactables/PRSInteractableButton.h"
-
-APRSRotatingDoor::APRSRotatingDoor()
-{
-	PrimaryActorTick.bCanEverTick = true;
-}
-
 void APRSRotatingDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (InteractableButton != nullptr)
-	{
-		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSRotatingDoor::OnButtonPressed);
-	}
 
 	YawRotationDelta = bCounterClockwise ? -90.f : 90.f;
 	OriginalRotation = GetActorRotation();
@@ -29,10 +17,10 @@ void APRSRotatingDoor::OnButtonPressed()
 {
 	switch (CurrentState)
 	{
-	case ERotationState::Static:
-		CurrentState = ERotationState::Rotating;
+	case ERotatingDoorState::Static:
+		CurrentState = ERotatingDoorState::Rotating;
 		break;
-	case ERotationState::Rotating:
+	case ERotatingDoorState::Rotating:
 		break;
 	default:
 		break;

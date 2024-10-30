@@ -2,36 +2,18 @@
 
 #include "PRSSlidingDoor.h"
 
-#include "Perspective/Interactables/PRSInteractableButton.h"
-
-APRSSlidingDoor::APRSSlidingDoor()
-{
-	PrimaryActorTick.bCanEverTick = true;
-
-}
-
-void APRSSlidingDoor::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if (InteractableButton != nullptr)
-	{
-		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSSlidingDoor::OnButtonPressed);
-	}
-}
-
 void APRSSlidingDoor::OnButtonPressed()
 {
 	switch (CurrentState)
 	{
-	case EDoorState::Closed:
-		CurrentState = EDoorState::Opening;
+	case ESlidingDoorState::Closed:
+		CurrentState = ESlidingDoorState::Opening;
 		break;
-	case EDoorState::Closing:
+	case ESlidingDoorState::Closing:
 		break;
-	case EDoorState::Open:
-		CurrentState = EDoorState::Closing;
-	case EDoorState::Opening:
+	case ESlidingDoorState::Open:
+		CurrentState = ESlidingDoorState::Closing;
+	case ESlidingDoorState::Opening:
 		break;
 	default:
 		break;
