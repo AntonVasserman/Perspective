@@ -17,9 +17,17 @@ public:
 	APRSBoxModeChanger();
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bEnabled = true;
+	
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* BoxComp;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* CubeEffectComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction")
+	class APRSInteractableButton* InteractableButton = nullptr;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound")
 	USoundCue* PerspectiveModeChangedSoundCue = UPRSStatics::GetModeChangedSoundCue();
 
@@ -34,6 +42,10 @@ protected:
 		int32 OtherBodyIndex);
 
 private:
+	const float PanelLength = 50.f;
 	FVector EnterVector = FVector::ZeroVector;
 	FVector ExitVector = FVector::ZeroVector;
+
+	UFUNCTION()
+	void OnButtonPressed();
 };

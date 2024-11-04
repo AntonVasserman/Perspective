@@ -6,6 +6,8 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Perspective/Characters/PRSCharacter.h"
+#include "Perspective/Doors/PRSDoor.h"
+#include "Perspective/Interactables/PRSInteractableButton.h"
 #include "Perspective/Subsystems/PRSModeWorldSubsystem.h"
 #include "Sound/SoundCue.h"
 
@@ -15,6 +17,13 @@ APRSBoxModeChanger::APRSBoxModeChanger()
 
 	BoxComp = CreateDefaultSubobject<UBoxComponent>("Box");
 	SetRootComponent(BoxComp);
+	BoxComp->SetBoxExtent(FVector(PanelLength, PanelLength, PanelLength));
+
+	CubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Cube Effect");
+	CubeEffectComp->AttachToComponent(BoxComp, FAttachmentTransformRules::KeepRelativeTransform);
+	CubeEffectComp->SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
+	CubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelMaterial());
+	CubeEffectComp->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 }
 
 void APRSBoxModeChanger::BeginPlay()
@@ -23,11 +32,21 @@ void APRSBoxModeChanger::BeginPlay()
 
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &APRSBoxModeChanger::BoxComponentOnComponentBeginOverlap);
 	BoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSBoxModeChanger::BoxComponentOnComponentEndOverlap);
+
+	if (InteractableButton != nullptr)
+	{
+		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSBoxModeChanger::OnButtonPressed);
+	}
 }
 
 void APRSBoxModeChanger::BoxComponentOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (!bEnabled)
+	{
+		return;
+	}
+	
 	if (!IsValid(Cast<APRSCharacter>(OtherActor)))
 	{
 		return;
@@ -41,6 +60,11 @@ void APRSBoxModeChanger::BoxComponentOnComponentBeginOverlap(UPrimitiveComponent
 void APRSBoxModeChanger::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (!bEnabled)
+	{
+		return;
+	}
+	
 	APRSCharacter* PRSCharacter = Cast<APRSCharacter>(OtherActor);
 	if (!IsValid(PRSCharacter))
 	{
@@ -91,4 +115,10 @@ void APRSBoxModeChanger::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* 
 	// Cleanup vectors
 	EnterVector = FVector::ZeroVector;
 	ExitVector = FVector::ZeroVector;
+}
+
+void APRSBoxModeChanger::OnButtonPressed()
+{
+	bEnabled = !bEnabled;
+	CubeEffectComp->SetVisibility(bEnabled);
 }

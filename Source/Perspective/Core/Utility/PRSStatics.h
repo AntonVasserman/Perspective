@@ -22,6 +22,11 @@ public:
 	{
 		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Core/Audio/A_PRSModeChanged_Cue.A_PRSModeChanged_Cue"));
 	}
+
+	FORCEINLINE static UMaterialInterface* GetPanelMaterial()
+	{
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/WorldModeChangers/M_Panel.M_Panel"));
+	}
 	
 	FORCEINLINE static UMaterialInterface* GetPanelGreenMaterial()
 	{
