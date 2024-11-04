@@ -6,7 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Perspective/Characters/PRSCharacter.h"
-#include "Perspective/Core/Utility/PerspectiveStatics.h"
+#include "Perspective/Core/Utility/PRSStatics.h"
 #include "Perspective/Subsystems/PRSModeWorldSubsystem.h"
 #include "Sound/SoundCue.h"
 
@@ -27,8 +27,8 @@ APRSMultiPanelGate::APRSMultiPanelGate()
 	FrontBoxComp->AttachToComponent(CenterBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 	FrontCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Front Cube Effect");
 	FrontCubeEffectComp->AttachToComponent(FrontBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
-	FrontCubeEffectComp->SetStaticMesh(UPerspectiveStatics::GetCubeStaticMesh());
-	FrontCubeEffectComp->SetMaterial(0, UPerspectiveStatics::GetPanelGreenMaterial());
+	FrontCubeEffectComp->SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
+	FrontCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 	FrontCubeEffectComp->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 
 	BackBoxComp = CreateDefaultSubobject<UBoxComponent>("Back Box");
@@ -39,8 +39,8 @@ APRSMultiPanelGate::APRSMultiPanelGate()
 	BackBoxComp->AttachToComponent(CenterBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 	BackCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Back Cube Effect");
 	BackCubeEffectComp->AttachToComponent(BackBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
-	BackCubeEffectComp->SetStaticMesh(UPerspectiveStatics::GetCubeStaticMesh());
-	BackCubeEffectComp->SetMaterial(0, UPerspectiveStatics::GetPanelGreenMaterial());
+	BackCubeEffectComp->SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
+	BackCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 	BackCubeEffectComp->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 
 	RightBoxComp = CreateDefaultSubobject<UBoxComponent>("Right Box");
@@ -51,8 +51,8 @@ APRSMultiPanelGate::APRSMultiPanelGate()
 	RightBoxComp->AttachToComponent(CenterBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 	RightCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Right Cube Effect");
 	RightCubeEffectComp->AttachToComponent(RightBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
-	RightCubeEffectComp->SetStaticMesh(UPerspectiveStatics::GetCubeStaticMesh());
-	RightCubeEffectComp->SetMaterial(0, UPerspectiveStatics::GetPanelGreenMaterial());
+	RightCubeEffectComp->SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
+	RightCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 	RightCubeEffectComp->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 
 	LeftBoxComp = CreateDefaultSubobject<UBoxComponent>("Left Box");
@@ -63,8 +63,8 @@ APRSMultiPanelGate::APRSMultiPanelGate()
 	LeftBoxComp->AttachToComponent(CenterBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 	LeftCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Left Cube Effect");
 	LeftCubeEffectComp->AttachToComponent(LeftBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
-	LeftCubeEffectComp->SetStaticMesh(UPerspectiveStatics::GetCubeStaticMesh());
-	LeftCubeEffectComp->SetMaterial(0, UPerspectiveStatics::GetPanelGreenMaterial());
+	LeftCubeEffectComp->SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
+	LeftCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 	LeftCubeEffectComp->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 
 	// Setup Box Components Mappings
@@ -144,22 +144,22 @@ void APRSMultiPanelGate::InternalBoxComponentOnComponentEndOverlap(const UBoxCom
 		bIsInsideBox = true;
 		EnterDirection = Direction;
 		UE_LOG(LogTemp, Warning, TEXT("Entered from: %hhd"), Direction);
-		OverlappedCubeEffectComponent->SetMaterial(0, UPerspectiveStatics::GetPanelYellowMaterial());
+		OverlappedCubeEffectComponent->SetMaterial(0, UPRSStatics::GetPanelYellowMaterial());
 		if (FrontCubeEffectComp != OverlappedCubeEffectComponent)
 		{
-			FrontCubeEffectComp->SetMaterial(0, UPerspectiveStatics::GetPanelGreenMaterial());
+			FrontCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 		}
 		if (BackCubeEffectComp != OverlappedCubeEffectComponent)
 		{
-			BackCubeEffectComp->SetMaterial(0, UPerspectiveStatics::GetPanelGreenMaterial());
+			BackCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 		}
 		if (RightCubeEffectComp != OverlappedCubeEffectComponent)
 		{
-			RightCubeEffectComp->SetMaterial(0, UPerspectiveStatics::GetPanelGreenMaterial());
+			RightCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 		}
 		if (LeftCubeEffectComp != OverlappedCubeEffectComponent)
 		{
-			LeftCubeEffectComp->SetMaterial(0, UPerspectiveStatics::GetPanelGreenMaterial());
+			LeftCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 		}
 	}
 	else if (bIsInsideBox && !bIsTouchingInsideBox) // Exited box
@@ -170,7 +170,7 @@ void APRSMultiPanelGate::InternalBoxComponentOnComponentEndOverlap(const UBoxCom
 
 		const UBoxComponent* EnterBoxComponent = Cast<UBoxComponent>(*DirectionToBoxComponentMapping.Find(EnterDirection));
 		UStaticMeshComponent* EnterCubeEffectComponent = Cast<UStaticMeshComponent>(EnterBoxComponent->GetChildComponent(0));
-		EnterCubeEffectComponent->SetMaterial(0, UPerspectiveStatics::GetPanelGreenMaterial());
+		EnterCubeEffectComponent->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 		
 		// Exit from the same direction entered
 		if (EnterDirection == ExitDirection)
@@ -178,7 +178,7 @@ void APRSMultiPanelGate::InternalBoxComponentOnComponentEndOverlap(const UBoxCom
 			return;
 		}
 
-		OverlappedCubeEffectComponent->SetMaterial(0, UPerspectiveStatics::GetPanelRedMaterial());
+		OverlappedCubeEffectComponent->SetMaterial(0, UPRSStatics::GetPanelRedMaterial());
 		OverlappedCubeEffectComponent->SetCollisionProfileName(UCollisionProfile::BlockAll_ProfileName);
 		
 		PRSCharacter->SetForwardVectorOverride(OverlappedBoxComponent->GetForwardVector());

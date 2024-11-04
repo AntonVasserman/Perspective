@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Perspective/Core/Utility/PerspectiveStatics.h"
+#include "Perspective/Core/Utility/PRSStatics.h"
 
 #include "PRSMultiPanelGate.generated.h"
 
@@ -32,7 +32,7 @@ protected:
 	};
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound")
-	USoundCue* PerspectiveModeChangedSoundCue = UPerspectiveStatics::GetModeChangedSoundCue();
+	USoundCue* PerspectiveModeChangedSoundCue = UPRSStatics::GetModeChangedSoundCue();
 	
 	virtual void BeginPlay() override;
 

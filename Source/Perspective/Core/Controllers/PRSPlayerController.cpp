@@ -38,7 +38,7 @@ void APRSPlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(MoveXAction, ETriggerEvent::Completed, this, &APRSPlayerController::RequestMoveActionCompleted);
 	EnhancedInputComponent->BindAction(MoveYAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestMoveYAction);
 	EnhancedInputComponent->BindAction(MoveYAction, ETriggerEvent::Completed, this, &APRSPlayerController::RequestMoveActionCompleted);
-	EnhancedInputComponent->BindAction(InteractionAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestInteractionAction);
+	EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestInteractionAction);
 }
 
 void APRSPlayerController::Tick(float DeltaTime)

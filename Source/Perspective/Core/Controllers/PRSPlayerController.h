@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "InputActionValue.h"
+#include "Perspective/Core/Utility/PRSInputStatics.h"
 
 #include "PRSPlayerController.generated.h"
 
@@ -17,20 +18,20 @@ class PERSPECTIVE_API APRSPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess="true"))
+	UInputMappingContext* DefaultMappingContext = UPRSInputStatics::GetDefaultInputMappingContext();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, DisplayName="Move X Action", meta = (AllowPrivateAccess = "true"))
-	UInputAction* MoveXAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, DisplayName="Move X Action", meta=(AllowPrivateAccess="true"))
+	UInputAction* MoveXAction = UPRSInputStatics::GetMoveXInputAction();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, DisplayName="Move Y Action", meta = (AllowPrivateAccess = "true"))
-	UInputAction* MoveYAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, DisplayName="Move Y Action", meta=(AllowPrivateAccess="true"))
+	UInputAction* MoveYAction = UPRSInputStatics::GetMoveYInputAction();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* LookAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess="true"))
+	UInputAction* LookAction = UPRSInputStatics::GetLookInputAction();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* InteractionAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess="true"))
+	UInputAction* InteractAction = UPRSInputStatics::GetInteractInputAction();
 
 	UPROPERTY(EditAnywhere, Category=Movement)
 	float BackwardMovementMultiplier = 0.5f;
@@ -38,10 +39,10 @@ class PERSPECTIVE_API APRSPlayerController : public APlayerController
 	UPROPERTY(EditAnywhere, Category=Look)
 	float BaseLookUpRate = 45.0f;
 
-	UPROPERTY(EditAnywhere, Category= Look)
+	UPROPERTY(EditAnywhere, Category=Look)
 	float BaseLookRightRate = 45.0f;
 
-	UPROPERTY(EditAnywhere, Category= Look)
+	UPROPERTY(EditAnywhere, Category=Look)
 	float LookMultiplierForMoveControls = 1.5f;
 	
 protected:

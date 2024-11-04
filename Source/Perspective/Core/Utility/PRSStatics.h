@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 #include "Sound/SoundCue.h"
 
-#include "PerspectiveStatics.generated.h"
+#include "PRSStatics.generated.h"
 
 UCLASS(MinimalAPI)
-class UPerspectiveStatics : public UBlueprintFunctionLibrary
+class UPRSStatics : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
