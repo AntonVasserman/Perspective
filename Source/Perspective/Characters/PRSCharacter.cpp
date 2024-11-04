@@ -4,9 +4,12 @@
 
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "DrawDebugHelpers.h"
+#include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/Controller.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Perspective/Core/Interactables/PRSInteractableActor.h"
 #include "Perspective/Subsystems/PRSModeWorldSubsystem.h"
@@ -19,9 +22,12 @@ APRSCharacter::APRSCharacter()
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
-	// Setup character movement
+	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = false;
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
+
+	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
+	// instead of recompiling to adjust them
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
@@ -29,18 +35,18 @@ APRSCharacter::APRSCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
-	// Setup Spring Arm Component
-	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
-	SpringArmComp->SetupAttachment(RootComponent);
-	SpringArmComp->TargetArmLength = 200.0f;
-	SpringArmComp->SocketOffset = FVector(0.f, 75.f, 70.f);
-	SpringArmComp->bUsePawnControlRotation = true;
+	// Create a camera boom (pulls in towards the player if there is a collision)
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->TargetArmLength = 200.0f; // The camera follows at this distance behind the character
+	CameraBoom->SocketOffset = FVector(0.f, 75.f, 70.f);
+	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
-	// Setup Camera Component
-	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
-	CameraComp->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
-	CameraComp->bUsePawnControlRotation = false;
+	// Create a follow camera
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
+	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	MontageEndedDelegate.BindUObject(this, &APRSCharacter::OnMontageEnded);
 }
@@ -117,24 +123,24 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 		bUseControllerRotationYaw = false;
 		GetCharacterMovement()->bOrientRotationToMovement = true;
 
-		SpringArmComp->SocketOffset = FVector(0.f, 0.f, 0.f);
-		SpringArmComp->bUsePawnControlRotation = false;
-		SpringArmComp->SetRelativeRotation(UKismetMathLibrary::MakeRotFromX(ForwardVectorOverride));
-		SpringArmComp->AddRelativeRotation(FRotator(0.f, -90.f, 0.f));
-		SpringArmComp->bInheritYaw = false;
+		CameraBoom->SocketOffset = FVector(0.f, 0.f, 0.f);
+		CameraBoom->bUsePawnControlRotation = false;
+		CameraBoom->SetRelativeRotation(UKismetMathLibrary::MakeRotFromX(ForwardVectorOverride));
+		CameraBoom->AddRelativeRotation(FRotator(0.f, -90.f, 0.f));
+		CameraBoom->bInheritYaw = false;
 
-		CameraComp->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
-		CameraComp->SetProjectionMode(ECameraProjectionMode::Orthographic);
-		CameraComp->SetOrthoWidth(1024.0f); // Increase the Orthographic width, we have to do it here only after the projection mode has changed
+		FollowCamera->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
+		FollowCamera->SetProjectionMode(ECameraProjectionMode::Orthographic);
+		FollowCamera->SetOrthoWidth(1024.0f); // Increase the Orthographic width, we have to do it here only after the projection mode has changed
 	}
 	else if (NewPerspectiveMode == EPerspectiveMode::ThreeDimensional)
 	{
-		CameraComp->SetProjectionMode(ECameraProjectionMode::Perspective);
-		CameraComp->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
+		FollowCamera->SetProjectionMode(ECameraProjectionMode::Perspective);
+		FollowCamera->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
 
-		SpringArmComp->bUsePawnControlRotation = true;
-		SpringArmComp->bInheritYaw = true;
-		SpringArmComp->SocketOffset = FVector(0.f, 75.f, 70.f);
+		CameraBoom->bUsePawnControlRotation = true;
+		CameraBoom->bInheritYaw = true;
+		CameraBoom->SocketOffset = FVector(0.f, 75.f, 70.f);
 		
 		GetCharacterMovement()->bOrientRotationToMovement = false;
 		bUseControllerRotationYaw = true;

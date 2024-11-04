@@ -13,7 +13,7 @@ APRSBoxModeChanger::APRSBoxModeChanger()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	BoxComp = CreateDefaultSubobject<UBoxComponent>("Box");
+	BoxComp = CreateDefaultSubobject<UBoxComponent>("Box Component");
 	SetRootComponent(BoxComp);
 }
 

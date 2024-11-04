@@ -23,10 +23,10 @@ class APRSCharacter : public ACharacter
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* SpringArmComp;
+	USpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* CameraComp;
+	UCameraComponent* FollowCamera;
 
 public:
 	APRSCharacter();
@@ -34,8 +34,8 @@ public:
 	FVector GetActorForwardVector() const;
 	FVector GetActorRightVector() const;
 	void Interact();
-	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return SpringArmComp; }
-	FORCEINLINE UCameraComponent* GetFollowCamera() const { return CameraComp; }
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool CanMove() const { return !IsInteracting(); }
 	UFUNCTION(BlueprintPure)
