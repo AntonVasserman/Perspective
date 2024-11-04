@@ -15,53 +15,53 @@ APRSMultiPanelGate::APRSMultiPanelGate()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Setup Box Components and their respective Static Mesh Cube "Effect" Component
-	CenterBoxComp = CreateDefaultSubobject<UBoxComponent>("Center Box Component");
+	CenterBoxComp = CreateDefaultSubobject<UBoxComponent>("Center Box");
 	CenterBoxComp->SetBoxExtent(FVector(PanelLength, PanelLength, PanelLength));
 	SetRootComponent(CenterBoxComp);
 
-	FrontBoxComp = CreateDefaultSubobject<UBoxComponent>("Front Box Component");
+	FrontBoxComp = CreateDefaultSubobject<UBoxComponent>("Front Box");
 	FrontBoxComp->SetBoxExtent(FVector(PanelLength, PanelLength, PanelLength));
 	FrontBoxComp->SetRelativeLocation(FVector(PanelLength + 1.f, 0.f, 0.f));
 	FrontBoxComp->SetRelativeRotation(FRotator::ZeroRotator);
 	FrontBoxComp->SetRelativeScale3D(FVector(1.f / PanelLength, 1.f, 1.f));
 	FrontBoxComp->AttachToComponent(CenterBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
-	FrontCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Front Cube Effect Component");
+	FrontCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Front Cube Effect");
 	FrontCubeEffectComp->AttachToComponent(FrontBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 	FrontCubeEffectComp->SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
 	FrontCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 	FrontCubeEffectComp->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 
-	BackBoxComp = CreateDefaultSubobject<UBoxComponent>("Back Box Component");
+	BackBoxComp = CreateDefaultSubobject<UBoxComponent>("Back Box");
 	BackBoxComp->SetBoxExtent(FVector(PanelLength, PanelLength, PanelLength));
 	BackBoxComp->SetRelativeLocation(FVector(-PanelLength - 1.f, 0.f, 0.f));
 	BackBoxComp->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
 	BackBoxComp->SetRelativeScale3D(FVector(1.f / PanelLength, 1.f, 1.f));
 	BackBoxComp->AttachToComponent(CenterBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
-	BackCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Back Cube Effect Component");
+	BackCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Back Cube Effect");
 	BackCubeEffectComp->AttachToComponent(BackBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 	BackCubeEffectComp->SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
 	BackCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 	BackCubeEffectComp->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 
-	RightBoxComp = CreateDefaultSubobject<UBoxComponent>("Right Box Component");
+	RightBoxComp = CreateDefaultSubobject<UBoxComponent>("Right Box");
 	RightBoxComp->SetBoxExtent(FVector(PanelLength, PanelLength, PanelLength));
 	RightBoxComp->SetRelativeLocation(FVector(0.f, PanelLength + 1.f, 0.f));
 	RightBoxComp->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
 	RightBoxComp->SetRelativeScale3D(FVector(1.f / PanelLength, 1.f, 1.f));
 	RightBoxComp->AttachToComponent(CenterBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
-	RightCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Right Cube Effect Component");
+	RightCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Right Cube Effect");
 	RightCubeEffectComp->AttachToComponent(RightBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 	RightCubeEffectComp->SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
 	RightCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
 	RightCubeEffectComp->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 
-	LeftBoxComp = CreateDefaultSubobject<UBoxComponent>("Left Box Component");
+	LeftBoxComp = CreateDefaultSubobject<UBoxComponent>("Left Box");
 	LeftBoxComp->SetBoxExtent(FVector(PanelLength, PanelLength, PanelLength));
 	LeftBoxComp->SetRelativeLocation(FVector(0.f, -PanelLength - 1.f, 0.f));
 	LeftBoxComp->SetRelativeRotation(FRotator(0.f, 270.f, 0.f));
 	LeftBoxComp->SetRelativeScale3D(FVector(1.f / PanelLength, 1.f, 1.f));
 	LeftBoxComp->AttachToComponent(CenterBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
-	LeftCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Left Cube Effect Component");
+	LeftCubeEffectComp = CreateDefaultSubobject<UStaticMeshComponent>("Left Cube Effect");
 	LeftCubeEffectComp->AttachToComponent(LeftBoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 	LeftCubeEffectComp->SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
 	LeftCubeEffectComp->SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
