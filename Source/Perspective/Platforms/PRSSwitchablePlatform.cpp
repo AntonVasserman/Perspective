@@ -13,12 +13,7 @@ APRSSwitchablePlatform::APRSSwitchablePlatform()
 void APRSSwitchablePlatform::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-
-	GetStaticMeshComponent()->SetCollisionProfileName(
-		bEnabled ? UPRSStatics::GetCollisionProfileNameBlockAll() : UPRSStatics::GetCollisionProfileNameNoCollision(),
-		true);
-	// TODO (PRS-16): Add proper materials
-	GetStaticMeshComponent()->SetMaterial(0, bEnabled ? UPRSStatics::GetPanelGreenMaterial() : UPRSStatics::GetPanelRedMaterial());
+	UpdatePlatform();
 }
 
 void APRSSwitchablePlatform::BeginPlay()
@@ -34,10 +29,13 @@ void APRSSwitchablePlatform::BeginPlay()
 void APRSSwitchablePlatform::OnButtonPressed()
 {
 	bEnabled = !bEnabled;
+	UpdatePlatform();
+}
 
+void APRSSwitchablePlatform::UpdatePlatform()
+{
 	GetStaticMeshComponent()->SetCollisionProfileName(
 		bEnabled ? UPRSStatics::GetCollisionProfileNameBlockAll() : UPRSStatics::GetCollisionProfileNameNoCollision(),
 		true);
-	// TODO (PRS-16): Add proper materials
-	GetStaticMeshComponent()->SetMaterial(0, bEnabled ? UPRSStatics::GetPanelGreenMaterial() : UPRSStatics::GetPanelRedMaterial());
+	GetStaticMeshComponent()->SetMaterial(0, bEnabled ? UPRSStatics::GetPlatformEnabledMaterial() : UPRSStatics::GetPlatformDisabledMaterial());
 }

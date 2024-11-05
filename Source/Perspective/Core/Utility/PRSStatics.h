@@ -45,4 +45,14 @@ public:
 	{
 		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/WorldModeChangers/M_Panel_Red.M_Panel_Red"));
 	}
+
+	FORCEINLINE static UMaterialInterface* GetPlatformEnabledMaterial()
+	{
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Platforms/M_Platform_Enabled.M_Platform_Enabled"));
+	}
+
+	FORCEINLINE static UMaterialInterface* GetPlatformDisabledMaterial()
+	{
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Platforms/M_Platform_Disabled.M_Platform_Disabled"));
+	}
 };

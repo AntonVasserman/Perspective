@@ -25,7 +25,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* CubeEffectComp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Interaction)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Interaction")
 	class APRSInteractableButton* InteractableButton = nullptr;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound")
