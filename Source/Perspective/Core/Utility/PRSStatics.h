@@ -13,6 +13,9 @@ class UPRSStatics : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
+	FORCEINLINE static FName GetCollisionProfileNameBlockAll() { return FName("BlockAll"); }
+	FORCEINLINE static FName GetCollisionProfileNameNoCollision() { return FName("NoCollision"); }
+	
 	FORCEINLINE static UStaticMesh* GetCubeStaticMesh()
 	{
 		return LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube"));

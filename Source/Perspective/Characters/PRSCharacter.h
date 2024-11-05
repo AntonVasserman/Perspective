@@ -9,24 +9,16 @@
 
 #include "PRSCharacter.generated.h"
 
-class APRSInteractableActor;
-class IInteractable;
-class USpringArmComponent;
-class UCameraComponent;
-class UInputMappingContext;
-class UInputAction;
-struct FInputActionValue;
-
 UCLASS(config=Game)
 class APRSCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* SpringArmComp;
+	class USpringArmComponent* SpringArmComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* CameraComp;
+	class UCameraComponent* CameraComp;
 
 public:
 	APRSCharacter();
@@ -34,8 +26,6 @@ public:
 	FVector GetActorForwardVector() const;
 	FVector GetActorRightVector() const;
 	void Interact();
-	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return SpringArmComp; }
-	FORCEINLINE UCameraComponent* GetFollowCamera() const { return CameraComp; }
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool CanMove() const { return !IsInteracting(); }
 	UFUNCTION(BlueprintPure)
@@ -47,7 +37,7 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadWrite)
-	APRSInteractableActor* InteractableActor = nullptr;
+	class APRSInteractableActor* InteractableActor = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
 	UAnimMontage* InteractionAnimMontage;
 	FOnMontageEnded MontageEndedDelegate;
@@ -63,6 +53,7 @@ private:
 	bool bIsPerspectiveChangedRequiresHandling = false;
 	bool bInteracting = false;
 
+	void LineTraceForInteractableActor();
 	UFUNCTION()
 	void OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode);
 	void OnMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted);

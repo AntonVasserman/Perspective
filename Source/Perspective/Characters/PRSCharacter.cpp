@@ -78,6 +78,8 @@ void APRSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	LineTraceForInteractableActor();
+
 	if (bIsPerspectiveChangedRequiresHandling && !IsMoving())
 	{
 		if (const EPerspectiveMode PerspectiveMode = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->GetMode();
@@ -104,6 +106,62 @@ void APRSCharacter::Interact()
 		{
 			bInteracting = false;
 		}
+	}
+}
+
+void APRSCharacter::LineTraceForInteractableActor()
+{
+	// Get Current Game Perspective Mode
+	const EPerspectiveMode CurrentPerspectiveMode = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->GetMode();
+	
+	// Get the start and end points for the line trace
+	constexpr float TraceAxisOffset = 50.f;
+
+	float TraceUnits;
+	FVector Start;
+	FVector End;
+
+	switch (CurrentPerspectiveMode)
+	{
+		case EPerspectiveMode::TwoDimensional:
+			TraceUnits = 10000.f;
+			Start = GetActorLocation() + FVector(0.f, TraceAxisOffset, TraceAxisOffset);
+			End = Start + CameraComp->GetForwardVector() * TraceUnits;
+			break;
+		case EPerspectiveMode::ThreeDimensional:
+			TraceUnits = 150.f;
+			Start = GetActorLocation() + FVector(0.f, 0.f, TraceAxisOffset);
+			End = Start + GetActorForwardVector() * TraceUnits;
+			break;
+		default:
+			break;
+	}
+	
+	// Line trace parameters
+	FCollisionQueryParams TraceParams(FName(TEXT("Trace")), true, this);
+	TraceParams.bReturnPhysicalMaterial = false;
+	TraceParams.bTraceComplex = true;
+
+	// Perform the line trace
+	if (FHitResult HitResult; GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, TraceParams))
+	{
+		if (AActor* HitActor = HitResult.GetActor();
+			IsValid(HitActor))
+		{
+			if (APRSInteractableActor* HitInteractableActor = Cast<APRSInteractableActor>(HitActor);
+				IsValid(HitInteractableActor))
+			{
+				InteractableActor = HitInteractableActor;
+				InteractableActor->EnableInteraction();
+				return;
+			}
+		}
+	}
+
+	if (InteractableActor != nullptr)
+	{
+		InteractableActor->DisableInteraction();
+		InteractableActor = nullptr;
 	}
 }
 
