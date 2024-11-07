@@ -15,9 +15,9 @@ public:
 	APRSDoor();
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction")
-	class APRSInteractableButton* InteractableButton = nullptr;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Interaction")
+	TArray<class APRSInteractableButton*> InteractableButtons;
+	
 	virtual void BeginPlay() override;
 	
 	UFUNCTION()

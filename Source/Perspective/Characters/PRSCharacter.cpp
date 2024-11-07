@@ -13,7 +13,7 @@
 
 APRSCharacter::APRSCharacter()
 {
-	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	GetCapsuleComponent()->InitCapsuleSize(25.f, 96.0f);
 		
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
@@ -28,6 +28,8 @@ APRSCharacter::APRSCharacter()
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
+	GetCharacterMovement()->bCanWalkOffLedges = false;
+	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
 
 	// Setup Spring Arm Component
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));

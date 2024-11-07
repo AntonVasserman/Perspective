@@ -13,8 +13,8 @@ void APRSDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (InteractableButton != nullptr)
+	for (APRSInteractableButton* Button : InteractableButtons)
 	{
-		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSDoor::OnButtonPressed);
+		Button->OnButtonPressed.AddDynamic(this, &APRSDoor::OnButtonPressed);
 	}
 }
