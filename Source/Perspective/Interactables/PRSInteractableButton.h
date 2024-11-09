@@ -27,7 +27,7 @@ public:
 	FORCEINLINE void ResetButton() { bPressed = false; }
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
 	bool bRepressable = false;
 
 private:

@@ -27,19 +27,19 @@ public:
 	FOnRotatingDoorStateChanged OnRotationStateChanged;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
 	FRotator OriginalRotation = FRotator::ZeroRotator;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
 	FRotator NewRotation = FRotator::ZeroRotator;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
 	bool bSupportFullRotation = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
 	bool bCounterClockwise = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
 	float YawRotationDelta = 0.f;
 	
 	UPROPERTY(BlueprintReadWrite)

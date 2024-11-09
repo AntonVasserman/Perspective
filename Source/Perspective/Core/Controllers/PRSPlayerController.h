@@ -18,31 +18,31 @@ class PERSPECTIVE_API APRSPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
 	UInputMappingContext* DefaultMappingContext = UPRSInputStatics::GetDefaultInputMappingContext();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, DisplayName="Move X Action", meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input", DisplayName="Move X Action", meta=(AllowPrivateAccess="true"))
 	UInputAction* MoveXAction = UPRSInputStatics::GetMoveXInputAction();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, DisplayName="Move Y Action", meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input", DisplayName="Move Y Action", meta=(AllowPrivateAccess="true"))
 	UInputAction* MoveYAction = UPRSInputStatics::GetMoveYInputAction();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
 	UInputAction* LookAction = UPRSInputStatics::GetLookInputAction();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
 	UInputAction* InteractAction = UPRSInputStatics::GetInteractInputAction();
 
-	UPROPERTY(EditAnywhere, Category=Movement)
+	UPROPERTY(EditAnywhere, Category = "Config | Movement")
 	float BackwardMovementMultiplier = 0.5f;
 	
-	UPROPERTY(EditAnywhere, Category=Look)
+	UPROPERTY(EditAnywhere, Category = "Config | Look")
 	float BaseLookUpRate = 45.0f;
 
-	UPROPERTY(EditAnywhere, Category=Look)
+	UPROPERTY(EditAnywhere, Category = "Config | Look")
 	float BaseLookRightRate = 45.0f;
 
-	UPROPERTY(EditAnywhere, Category=Look)
+	UPROPERTY(EditAnywhere, Category = "Config | Look")
 	float LookMultiplierForMoveControls = 1.5f;
 	
 protected:

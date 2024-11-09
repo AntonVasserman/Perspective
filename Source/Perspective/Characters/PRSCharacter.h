@@ -38,11 +38,11 @@ public:
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	class APRSInteractableActor* InteractableActor = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Animation")
 	UAnimMontage* InteractionAnimMontage;
 	FOnMontageEnded MontageEndedDelegate;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
 	FVector ForwardVectorOverride = FVector(1.0f, 0.0f, 0.0f);
 
 	virtual void BeginPlay() override;

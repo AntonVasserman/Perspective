@@ -17,7 +17,7 @@ public:
 	APRSBoxModeChanger();
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
 	bool bEnabled = true;
 	
 	UPROPERTY(EditAnywhere)
@@ -25,7 +25,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* CubeEffectComp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Interaction")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Interaction")
 	class APRSInteractableButton* InteractableButton = nullptr;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound")
