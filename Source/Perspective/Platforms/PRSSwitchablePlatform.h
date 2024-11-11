@@ -20,7 +20,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	bool bEnabled = true;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Interaction")
-	class APRSInteractableButton* InteractableButton = nullptr;
+	TArray<class APRSInteractableButton*> InteractableButtons;
+	
 	
 	virtual void BeginPlay() override;
 

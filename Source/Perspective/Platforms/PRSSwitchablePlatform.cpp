@@ -19,10 +19,16 @@ void APRSSwitchablePlatform::OnConstruction(const FTransform& Transform)
 void APRSSwitchablePlatform::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (InteractableButton != nullptr)
+
+	for (APRSInteractableButton* Button : InteractableButtons)
 	{
-		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSSwitchablePlatform::OnButtonPressed);
+		if (Button == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Platform: %s, has a null button set"), *this->GetName());
+			continue;
+		}
+
+		Button->OnButtonPressed.AddDynamic(this, &APRSSwitchablePlatform::OnButtonPressed);
 	}
 }
 
