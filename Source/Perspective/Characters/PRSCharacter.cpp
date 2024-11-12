@@ -28,7 +28,7 @@ APRSCharacter::APRSCharacter()
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
-	GetCharacterMovement()->bCanWalkOffLedges = false;
+	GetCharacterMovement()->bCanWalkOffLedges = true;
 	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
 
 	// Setup Spring Arm Component
@@ -80,6 +80,7 @@ void APRSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	LineTraceForLedges();
 	LineTraceForInteractableActor();
 
 	if (bIsPerspectiveChangedRequiresHandling && !IsMoving())
@@ -165,6 +166,44 @@ void APRSCharacter::LineTraceForInteractableActor()
 		InteractableActor->DisableInteraction();
 		InteractableActor = nullptr;
 	}
+}
+
+void APRSCharacter::LineTraceForLedges()
+{
+	const FVector CharacterLocation = GetActorLocation();
+	const FVector Forward = GetActorForwardVector();
+	const FVector Right = GetActorRightVector();
+
+	TArray<FVector> Directions = {
+		Forward,
+		-Forward,
+		Right,
+		-Right,
+		(Forward + Right).GetSafeNormal(),
+		(Forward - Right).GetSafeNormal(),
+		(-Forward + Right).GetSafeNormal(),
+		(-Forward - Right).GetSafeNormal()
+	};
+
+	for (const FVector& Direction : Directions)
+	{
+		constexpr float TraceCharacterOffset = 50.f;
+		FVector Start = CharacterLocation + TraceCharacterOffset * Direction;
+		FVector End = Start - FVector(0, 0, CanWalkOffLedgesHeight);
+
+		FHitResult HitResult;
+		FCollisionQueryParams CollisionParams;
+		CollisionParams.AddIgnoredActor(this);
+
+		if (const bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams);
+			!bHit)
+		{
+			GetCharacterMovement()->bCanWalkOffLedges = false;
+			return;
+		}
+	}
+
+	GetCharacterMovement()->bCanWalkOffLedges = true;
 }
 
 void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode)

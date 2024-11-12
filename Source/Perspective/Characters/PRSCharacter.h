@@ -41,10 +41,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Animation")
 	UAnimMontage* InteractionAnimMontage;
 	FOnMontageEnded MontageEndedDelegate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config | Character Movement")
+	float CanWalkOffLedgesHeight = 2500.f;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
-	FVector ForwardVectorOverride = FVector(1.0f, 0.0f, 0.0f);
-
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
@@ -52,8 +51,10 @@ private:
 	bool bShouldUseForwardVectorOverride = false;
 	bool bIsPerspectiveChangedRequiresHandling = false;
 	bool bInteracting = false;
+	FVector ForwardVectorOverride = FVector(1.0f, 0.0f, 0.0f);
 
 	void LineTraceForInteractableActor();
+	void LineTraceForLedges();
 	UFUNCTION()
 	void OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode);
 	void OnMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted);
