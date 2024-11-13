@@ -11,8 +11,8 @@ APRSInteractableActor::APRSInteractableActor()
 void APRSInteractableActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (bInteractable)
+	
+	if (IsInteractable())
 	{
 		DrawDebugString(GetWorld(), FVector::Zero(), TEXT("Press 'E' to Interact"), this, FColor::Blue, 0.f);
 	}

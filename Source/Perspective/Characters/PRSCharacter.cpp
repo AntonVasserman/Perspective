@@ -119,7 +119,7 @@ void APRSCharacter::LineTraceForInteractableActor()
 	const EPerspectiveMode CurrentPerspectiveMode = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->GetMode();
 	
 	// Get the start and end points for the line trace
-	constexpr float TraceAxisOffset = 50.f;
+	const float TraceAxisOffset = GetCapsuleComponent()->GetScaledCapsuleRadius();;
 
 	float TraceUnits;
 	FVector Start;
