@@ -90,7 +90,7 @@ void APRSGate::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* Overlapped
 	else if (FMath::Abs(NormalizedRelativeLocation.Y) > FMath::Abs(NormalizedRelativeLocation.X) &&
 		FMath::Abs(NormalizedRelativeLocation.Y) > FMath::Abs(NormalizedRelativeLocation.Z)) // Right or Left
 	{
-		ExitVector = NormalizedRelativeLocation.Y > 0 ? NormalizedRelativeLocation : FVector(0.f, -1.f, 0.f);
+		ExitVector = NormalizedRelativeLocation.Y > 0 ? FVector(0.f, 1.f, 0.f) : FVector(0.f, -1.f, 0.f);
 	}
 	else // Top or Bottom
 	{
