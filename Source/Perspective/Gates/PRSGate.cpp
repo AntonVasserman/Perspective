@@ -1,7 +1,7 @@
 // Copyright Anton Vasserman, All Rights Reserved.
 
 
-#include "PRSBoxModeChanger.h"
+#include "PRSGate.h"
 
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -11,7 +11,7 @@
 #include "Perspective/Subsystems/PRSModeWorldSubsystem.h"
 #include "Sound/SoundCue.h"
 
-APRSBoxModeChanger::APRSBoxModeChanger()
+APRSGate::APRSGate()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -26,20 +26,20 @@ APRSBoxModeChanger::APRSBoxModeChanger()
 	CubeEffectComp->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 }
 
-void APRSBoxModeChanger::BeginPlay()
+void APRSGate::BeginPlay()
 {
 	Super::BeginPlay();
 
-	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &APRSBoxModeChanger::BoxComponentOnComponentBeginOverlap);
-	BoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSBoxModeChanger::BoxComponentOnComponentEndOverlap);
+	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &APRSGate::BoxComponentOnComponentBeginOverlap);
+	BoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSGate::BoxComponentOnComponentEndOverlap);
 
 	if (InteractableButton != nullptr)
 	{
-		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSBoxModeChanger::OnButtonPressed);
+		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSGate::OnButtonPressed);
 	}
 }
 
-void APRSBoxModeChanger::BoxComponentOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+void APRSGate::BoxComponentOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (!bEnabled)
@@ -57,7 +57,7 @@ void APRSBoxModeChanger::BoxComponentOnComponentBeginOverlap(UPrimitiveComponent
 	UE_LOG(LogTemp, Warning, TEXT("Entered from direction: %s"), *EnterVector.ToString());
 }
 
-void APRSBoxModeChanger::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+void APRSGate::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (!bEnabled)
@@ -117,7 +117,7 @@ void APRSBoxModeChanger::BoxComponentOnComponentEndOverlap(UPrimitiveComponent* 
 	ExitVector = FVector::ZeroVector;
 }
 
-void APRSBoxModeChanger::OnButtonPressed()
+void APRSGate::OnButtonPressed()
 {
 	bEnabled = !bEnabled;
 	CubeEffectComp->SetVisibility(bEnabled);

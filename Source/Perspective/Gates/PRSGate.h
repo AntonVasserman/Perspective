@@ -6,15 +6,15 @@
 #include "GameFramework/Actor.h"
 #include "Perspective/Core/Utility/PRSStatics.h"
 
-#include "PRSBoxModeChanger.generated.h"
+#include "PRSGate.generated.h"
 
 UCLASS()
-class PERSPECTIVE_API APRSBoxModeChanger : public AActor
+class PERSPECTIVE_API APRSGate : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	APRSBoxModeChanger();
+	APRSGate();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
