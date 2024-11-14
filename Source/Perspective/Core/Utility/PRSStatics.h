@@ -28,22 +28,22 @@ public:
 
 	FORCEINLINE static UMaterialInterface* GetPanelMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/WorldModeChangers/M_Panel.M_Panel"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Gates/M_Panel.M_Panel"));
 	}
 	
 	FORCEINLINE static UMaterialInterface* GetPanelGreenMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/WorldModeChangers/M_Panel_Green.M_Panel_Green"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Gates/M_Panel_Green.M_Panel_Green"));
 	}
 
 	FORCEINLINE static UMaterialInterface* GetPanelYellowMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/WorldModeChangers/M_Panel_Yellow.M_Panel_Yellow"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Gates/M_Panel_Yellow.M_Panel_Yellow"));
 	}
 
 	FORCEINLINE static UMaterialInterface* GetPanelRedMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/WorldModeChangers/M_Panel_Red.M_Panel_Red"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Gates/M_Panel_Red.M_Panel_Red"));
 	}
 
 	FORCEINLINE static UMaterialInterface* GetPlatformEnabledMaterial()
