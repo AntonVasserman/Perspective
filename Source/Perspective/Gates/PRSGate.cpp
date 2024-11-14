@@ -33,9 +33,15 @@ void APRSGate::BeginPlay()
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &APRSGate::BoxComponentOnComponentBeginOverlap);
 	BoxComp->OnComponentEndOverlap.AddDynamic(this, &APRSGate::BoxComponentOnComponentEndOverlap);
 
-	if (InteractableButton != nullptr)
+	for (APRSInteractableButton* Button : InteractableButtons)
 	{
-		InteractableButton->OnButtonPressed.AddDynamic(this, &APRSGate::OnButtonPressed);
+		if (Button == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Gate: %s, has a null button set"), *this->GetName());
+			continue;
+		}
+		
+		Button->OnButtonPressed.AddDynamic(this, &APRSGate::OnButtonPressed);
 	}
 }
 

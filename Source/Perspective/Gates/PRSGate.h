@@ -26,8 +26,8 @@ protected:
 	UStaticMeshComponent* CubeEffectComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Interaction")
-	class APRSInteractableButton* InteractableButton = nullptr;
-	
+	TArray<class APRSInteractableButton*> InteractableButtons;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound")
 	USoundCue* PerspectiveModeChangedSoundCue = UPRSStatics::GetModeChangedSoundCue();
 
