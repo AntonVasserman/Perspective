@@ -7,7 +7,6 @@
 #include "Perspective/Characters/PRSCharacter.h"
 #include "Perspective/Subsystems/PRSModeWorldSubsystem.h"
 
-// TODO (Refactor #14): Gamepad and Keyboard rotation requires fix. The rotation in the Gamepad is faster using 'Movement' than it is using the Gamepad look function.
 void APRSPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -39,6 +38,8 @@ void APRSPlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(MoveYAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestMoveYAction);
 	EnhancedInputComponent->BindAction(MoveYAction, ETriggerEvent::Completed, this, &APRSPlayerController::RequestMoveActionCompleted);
 	EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestInteractionAction);
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestSprintAction);
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APRSPlayerController::RequestSprintActionCompleted);
 }
 
 void APRSPlayerController::Tick(float DeltaTime)
@@ -50,6 +51,25 @@ void APRSPlayerController::Tick(float DeltaTime)
 		bMovingByX = false;
 		bMovingByY = false;
 	}
+}
+
+void APRSPlayerController::RequestInteractionAction()
+{
+	UE_LOG(LogTemp, Warning, TEXT("APRSPlayerController::RequestInteractionAction"));
+	PossessedCharacter->Interact();
+}
+
+void APRSPlayerController::RequestLookAction(const FInputActionValue& InputActionValue)
+{
+	if (!PossessedCharacter->CanRotate() || !bEnableYInput)
+	{
+		return;
+	}
+
+	const FVector2D LookVector = InputActionValue.Get<FVector2D>();
+	
+	AddYawInput(LookVector.X * BaseLookRightRate * GetWorld()->GetDeltaSeconds());
+	AddPitchInput(LookVector.Y * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
 void APRSPlayerController::RequestMoveXAction(const FInputActionValue& InputActionValue)
@@ -111,23 +131,15 @@ void APRSPlayerController::RequestMoveActionCompleted()
 	}
 }
 
-void APRSPlayerController::RequestLookAction(const FInputActionValue& InputActionValue)
-{
-	if (!PossessedCharacter->CanRotate() || !bEnableYInput)
-	{
-		return;
-	}
 
-	const FVector2D LookVector = InputActionValue.Get<FVector2D>();
-	
-	AddYawInput(LookVector.X * BaseLookRightRate * GetWorld()->GetDeltaSeconds());
-	AddPitchInput(LookVector.Y * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+void APRSPlayerController::RequestSprintAction(const FInputActionValue& InputActionValue)
+{
+	PossessedCharacter->Sprint();
 }
 
-void APRSPlayerController::RequestInteractionAction()
+void APRSPlayerController::RequestSprintActionCompleted(const FInputActionValue& InputActionValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("APRSPlayerController::RequestInteractionAction"));
-	PossessedCharacter->Interact();
+	PossessedCharacter->StopSprint();
 }
 
 void APRSPlayerController::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode)

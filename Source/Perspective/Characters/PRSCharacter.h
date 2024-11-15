@@ -34,6 +34,8 @@ public:
 	FORCEINLINE bool IsInteracting() const { return bInteracting; }
 	FORCEINLINE bool IsMoving() const { return IsValid(GetCharacterMovement()) && (GetCharacterMovement()->Velocity.X != 0.f || GetCharacterMovement()->Velocity.Y != 0.f); }
 	FORCEINLINE void SetForwardVectorOverride (const FVector& ForwardVector) { ForwardVectorOverride = ForwardVector; }
+	FORCEINLINE void Sprint() const { GetCharacterMovement()->MaxWalkSpeed *= SprintSpeedMultiplier; }
+	FORCEINLINE void StopSprint() const { GetCharacterMovement()->MaxWalkSpeed /= SprintSpeedMultiplier; }
 
 protected:
 	UPROPERTY(BlueprintReadWrite)
@@ -43,6 +45,8 @@ protected:
 	FOnMontageEnded MontageEndedDelegate;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config | Character Movement")
 	float CanWalkOffLedgesHeight = 2500.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config | Character Movement")
+	float SprintSpeedMultiplier = 2.f;
 	
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
@@ -51,6 +55,7 @@ private:
 	bool bShouldUseForwardVectorOverride = false;
 	bool bIsPerspectiveChangedRequiresHandling = false;
 	bool bInteracting = false;
+	float WalkSpeed = 0.f;
 	FVector ForwardVectorOverride = FVector(1.0f, 0.0f, 0.0f);
 
 	void LineTraceForInteractableActor();

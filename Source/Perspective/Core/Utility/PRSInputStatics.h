@@ -38,4 +38,9 @@ public:
 	{
 		return LoadObject<UInputAction>(nullptr, TEXT("/Game/Perspective/Core/Inputs/Actions/IA_MoveY.IA_MoveY"));
 	}
+
+	FORCEINLINE static UInputAction* GetSprintInputAction()
+	{
+		return LoadObject<UInputAction>(nullptr, TEXT("/Game/Perspective/Core/Inputs/Actions/IA_Sprint.IA_Sprint"));
+	}
 };
