@@ -152,12 +152,20 @@ void APRSCharacter::LineTraceForInteractableActor()
 		if (AActor* HitActor = HitResult.GetActor();
 			IsValid(HitActor))
 		{
-			if (APRSInteractableActor* HitInteractableActor = Cast<APRSInteractableActor>(HitActor);
-				IsValid(HitInteractableActor))
+			// We do the next calculation as we don't want to be able to interact with interactables that don't face us!
+			const FVector HitActorToImpactDirection = (HitResult.ImpactPoint - HitActor->GetActorLocation()).GetSafeNormal();
+			const float DotProduct = FVector::DotProduct(HitActor->GetActorForwardVector(), HitActorToImpactDirection);
+
+			// Convert dot product to angle in degrees (everything in (0, 90) will result in the interactable facing us)
+			if (FMath::RadiansToDegrees(FMath::Acos(DotProduct)) < 90.f)
 			{
-				InteractableActor = HitInteractableActor;
-				InteractableActor->EnableInteraction();
-				return;
+				if (APRSInteractableActor* HitInteractableActor = Cast<APRSInteractableActor>(HitActor);
+					IsValid(HitInteractableActor))
+				{
+					InteractableActor = HitInteractableActor;
+					InteractableActor->EnableInteraction();
+					return;
+				}
 			}
 		}
 	}
