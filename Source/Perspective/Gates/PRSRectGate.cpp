@@ -10,8 +10,6 @@
 
 APRSRectGate::APRSRectGate()
 {
-	PrimaryActorTick.bCanEverTick = true;
-	
 	CenterRectComp = CreateDefaultSubobject<UBoxComponent>("Center Rectangle");
 	CenterRectComp->SetBoxExtent(FVector(PanelLength, PanelLength, PanelLength));
 	SetRootComponent(CenterRectComp);
@@ -90,12 +88,6 @@ void APRSRectGate::BeginPlay()
 	}
 }
 
-void APRSRectGate::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-}
-
 void APRSRectGate::CenterRectCompOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -120,37 +112,46 @@ void APRSRectGate::CenterRectCompOnComponentEndOverlap(UPrimitiveComponent* Over
 
 void APRSRectGate::PanelOnPlayerEndOverlap(UPRSPanel* OverlappedPanel, APRSCharacter* PlayerCharacter)
 {
-	if (bIsTouchingInsideRectangle && EnterPanel == nullptr)
+	// Entered the Rectangle, we don't check EnterPanel here, as there might be an edge case where the player managed to exit the Rectangle
+	// not using one of the Panels, in which case EnterPanel isn't nullptr, but we still want to override it
+	if (bIsTouchingInsideRectangle)
 	{
 		EnterPanel = OverlappedPanel;
 		EnterPanel->SetPending();
+
+		if (bCloseOnPassthrough && ExitPanel != nullptr)
+		{
+			ExitPanel->SetOpen(); 
+		}
 	}
-	else if (!bIsTouchingInsideRectangle && EnterPanel != OverlappedPanel)
+	else if (EnterPanel == OverlappedPanel) // Exit the Rectangle from the same Panel
+	{
+		EnterPanel->SetOpen();
+		EnterPanel = nullptr;
+
+		if (bCloseOnPassthrough && ExitPanel != nullptr)
+		{
+			ExitPanel->SetClosed(); 
+		}
+	}
+	else if (EnterPanel != OverlappedPanel) // Exit the Rectangle from a different Panel
 	{
 		EnterPanel->SetOpen();
 		EnterPanel = nullptr;
 		if (bCloseOnPassthrough)
 		{
-			for (int i = 0; i < Panels.Num(); i++)
+			// Here we first open the last Exit panel and then close the newly exit panel
+			if (ExitPanel != nullptr) // Exit panel might be null if this is the first time we enter the rectangle
 			{
-				Panels[i]->SetOpen();
+				ExitPanel->SetOpen();
 			}
-			
-			OverlappedPanel->SetClosed();
-		}
-		else
-		{
-			OverlappedPanel->SetOpen();
+			ExitPanel = OverlappedPanel;
+			ExitPanel->SetClosed();
 		}
 
 		PlayerCharacter->SetForwardVectorOverride(OverlappedPanel->GetForwardVector());
 		GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->Switch();
 		UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
-	}
-	else if (!bIsTouchingInsideRectangle && EnterPanel == OverlappedPanel)
-	{
-		EnterPanel->SetOpen();
-		EnterPanel = nullptr;
 	}
 }
 

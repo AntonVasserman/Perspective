@@ -18,7 +18,6 @@ public:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-	virtual void Tick(float DeltaTime) override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
@@ -64,6 +63,8 @@ private:
 	bool bIsTouchingInsideRectangle = false;
 	UPROPERTY()
 	UPRSPanel* EnterPanel = nullptr;
+	UPROPERTY()
+	UPRSPanel* ExitPanel = nullptr;
 
 	UPROPERTY(VisibleDefaultsOnly)
 	class UBoxComponent* CenterRectComp;
