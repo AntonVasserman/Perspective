@@ -27,10 +27,10 @@ public:
 	FOnRotatingDoorStateChanged OnRotationStateChanged;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
+	UPROPERTY(BlueprintReadWrite)
 	FRotator OriginalRotation = FRotator::ZeroRotator;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
+	UPROPERTY(BlueprintReadWrite)
 	FRotator NewRotation = FRotator::ZeroRotator;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
