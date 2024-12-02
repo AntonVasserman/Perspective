@@ -13,4 +13,8 @@ class PERSPECTIVE_API APRSDoor : public AActor
 
 public:
 	APRSDoor();
+
+private:
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config", meta = (AllowPrivateAccess = "true"))
+	float DoorOpenDuration = 2.5f;
 };

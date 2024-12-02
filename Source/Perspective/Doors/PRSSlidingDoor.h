@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "PRSDoor.h"
 #include "Perspective/Core/Operations/Interfaces/PRSOperatableInterface.h"
-
 #include "PRSSlidingDoor.generated.h"
 
 UENUM(BlueprintType)
