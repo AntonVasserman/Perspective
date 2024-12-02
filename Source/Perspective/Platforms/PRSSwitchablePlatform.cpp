@@ -1,9 +1,7 @@
 // Copyright Anton Vasserman, All Rights Reserved.
 
 #include "PRSSwitchablePlatform.h"
-
 #include "Perspective/Core/Utility/PRSStatics.h"
-#include "Perspective/Interactables/PRSInteractableButton.h"
 
 APRSSwitchablePlatform::APRSSwitchablePlatform()
 {
@@ -16,23 +14,7 @@ void APRSSwitchablePlatform::OnConstruction(const FTransform& Transform)
 	UpdatePlatform();
 }
 
-void APRSSwitchablePlatform::BeginPlay()
-{
-	Super::BeginPlay();
-
-	for (APRSInteractableButton* Button : InteractableButtons)
-	{
-		if (Button == nullptr)
-		{
-			UE_LOG(LogTemp, Error, TEXT("Platform: %s, has a null button set"), *this->GetName());
-			continue;
-		}
-
-		Button->OnButtonPressed.AddDynamic(this, &APRSSwitchablePlatform::OnButtonPressed);
-	}
-}
-
-void APRSSwitchablePlatform::OnButtonPressed()
+void APRSSwitchablePlatform::Operate()
 {
 	bEnabled = !bEnabled;
 	UpdatePlatform();

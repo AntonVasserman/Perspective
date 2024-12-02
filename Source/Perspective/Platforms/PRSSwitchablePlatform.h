@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Engine/StaticMeshActor.h"
+#include "Perspective/Core/Operations/Interfaces/PRSOperatableInterface.h"
 #include "PRSSwitchablePlatform.generated.h"
 
 UCLASS()
-class PERSPECTIVE_API APRSSwitchablePlatform : public AStaticMeshActor
+class PERSPECTIVE_API APRSSwitchablePlatform : public AStaticMeshActor, public IPRSOperatableInterface
 {
 	GENERATED_BODY()
 
@@ -15,18 +16,12 @@ public:
 	APRSSwitchablePlatform();
 	
 	virtual void OnConstruction(const FTransform& Transform) override;
+	virtual void Operate() override;
 
 protected:
 	UPROPERTY(EditAnywhere)
 	bool bEnabled = true;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Interaction")
-	TArray<class APRSInteractableButton*> InteractableButtons;
-	
-	
-	virtual void BeginPlay() override;
 
 private:
-	UFUNCTION()
-	void OnButtonPressed();
 	void UpdatePlatform();
 };

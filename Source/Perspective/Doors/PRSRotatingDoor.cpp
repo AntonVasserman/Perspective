@@ -2,18 +2,7 @@
 
 #include "PRSRotatingDoor.h"
 
-void APRSRotatingDoor::BeginPlay()
-{
-	Super::BeginPlay();
-
-	YawRotationDelta = bCounterClockwise ? -90.f : 90.f;
-	OriginalRotation = GetActorRotation();
-	NewRotation = bSupportFullRotation ?
-		OriginalRotation :
-		FRotator(OriginalRotation.Pitch, OriginalRotation.Yaw + YawRotationDelta, OriginalRotation.Roll);
-}
-
-void APRSRotatingDoor::OnButtonPressed()
+void APRSRotatingDoor::Operate()
 {
 	switch (CurrentState)
 	{
@@ -27,4 +16,15 @@ void APRSRotatingDoor::OnButtonPressed()
 	}
 
 	OnRotationStateChanged.Broadcast(CurrentState);
+}
+
+void APRSRotatingDoor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	YawRotationDelta = bCounterClockwise ? -90.f : 90.f;
+	OriginalRotation = GetActorRotation();
+	NewRotation = bSupportFullRotation ?
+		OriginalRotation :
+		FRotator(OriginalRotation.Pitch, OriginalRotation.Yaw + YawRotationDelta, OriginalRotation.Roll);
 }

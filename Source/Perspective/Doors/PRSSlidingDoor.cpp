@@ -2,7 +2,7 @@
 
 #include "PRSSlidingDoor.h"
 
-void APRSSlidingDoor::OnButtonPressed()
+void APRSSlidingDoor::Operate()
 {
 	switch (CurrentState)
 	{

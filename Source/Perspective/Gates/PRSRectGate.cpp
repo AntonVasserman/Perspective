@@ -5,7 +5,6 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Perspective/Characters/PRSCharacter.h"
-#include "Perspective/Interactables/PRSInteractableButton.h"
 #include "Perspective/Subsystems/PRSModeWorldSubsystem.h"
 
 APRSRectGate::APRSRectGate()
@@ -64,6 +63,15 @@ void APRSRectGate::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 	Panels[3]->SetEnabled(bLeftPanelEnabled);
 }
 
+void APRSRectGate::Operate()
+{
+	bEnabled = !bEnabled;
+	Panels[0]->SetEnabled(bEnabled && bFrontPanelEnabled);
+	Panels[1]->SetEnabled(bEnabled && bBackPanelEnabled);
+	Panels[2]->SetEnabled(bEnabled && bRightPanelEnabled);
+	Panels[3]->SetEnabled(bEnabled && bLeftPanelEnabled);
+}
+
 void APRSRectGate::BeginPlay()
 {
 	Super::BeginPlay();
@@ -74,17 +82,6 @@ void APRSRectGate::BeginPlay()
 	for (int i = 0; i < Panels.Num(); i++)
 	{
 		Panels[i]->OnPlayerEndOverlap.AddDynamic(this, &APRSRectGate::APRSRectGate::PanelOnPlayerEndOverlap);
-	}
-
-	for (APRSInteractableButton* Button : InteractableButtons)
-	{
-		if (Button == nullptr)
-		{
-			UE_LOG(LogTemp, Error, TEXT("Gate: %s, has a null button set"), *this->GetName());
-			continue;
-		}
-		
-		Button->OnButtonPressed.AddDynamic(this, &APRSRectGate::OnButtonPressed);
 	}
 }
 
@@ -153,13 +150,4 @@ void APRSRectGate::PanelOnPlayerEndOverlap(UPRSPanel* OverlappedPanel, APRSChara
 		GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->Switch();
 		UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
 	}
-}
-
-void APRSRectGate::OnButtonPressed()
-{
-	bEnabled = !bEnabled;
-	Panels[0]->SetEnabled(bEnabled && bFrontPanelEnabled);
-	Panels[1]->SetEnabled(bEnabled && bBackPanelEnabled);
-	Panels[2]->SetEnabled(bEnabled && bRightPanelEnabled);
-	Panels[3]->SetEnabled(bEnabled && bLeftPanelEnabled);
 }

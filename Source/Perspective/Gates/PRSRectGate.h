@@ -5,11 +5,12 @@
 #include "CoreMinimal.h"
 #include "PRSPanel.h"
 #include "GameFramework/Actor.h"
+#include "Perspective/Core/Operations/Interfaces/PRSOperatableInterface.h"
 #include "Perspective/Core/Utility/PRSStatics.h"
 #include "PRSRectGate.generated.h"
 
 UCLASS()
-class PERSPECTIVE_API APRSRectGate : public AActor
+class PERSPECTIVE_API APRSRectGate : public AActor, public IPRSOperatableInterface
 {
 	GENERATED_BODY()
 	
@@ -18,6 +19,7 @@ public:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	virtual void Operate() override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
@@ -41,9 +43,6 @@ protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	bool bCloseOnPassthrough = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Interaction")
-	TArray<class APRSInteractableButton*> InteractableButtons;
-	
 	UPROPERTY()
 	TArray<UPRSPanel*> Panels;
 
@@ -68,7 +67,4 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 	class UBoxComponent* CenterRectComp;
-
-	UFUNCTION()
-	void OnButtonPressed();
 };

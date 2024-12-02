@@ -13,13 +13,4 @@ class PERSPECTIVE_API APRSDoor : public AActor
 
 public:
 	APRSDoor();
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Interaction")
-	TArray<class APRSInteractableButton*> InteractableButtons;
-	
-	virtual void BeginPlay() override;
-	
-	UFUNCTION()
-	virtual void OnButtonPressed() { }
 };
