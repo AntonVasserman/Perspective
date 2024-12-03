@@ -107,21 +107,37 @@ void APRSRectGate::CenterRectCompOnComponentEndOverlap(UPrimitiveComponent* Over
 	bIsTouchingInsideRectangle = false;
 }
 
+// TODO (PRS-59): Refactor this to maybe use State Enum instead of many bools
 void APRSRectGate::PanelOnPlayerEndOverlap(UPRSPanel* OverlappedPanel, APRSCharacter* PlayerCharacter)
 {
-	// Entered the Rectangle, we don't check EnterPanel here, as there might be an edge case where the player managed to exit the Rectangle
-	// not using one of the Panels, in which case EnterPanel isn't nullptr, but we still want to override it
+	// Entered the Rectangle
 	if (bIsTouchingInsideRectangle)
 	{
-		EnterPanel = OverlappedPanel;
-		EnterPanel->SetPending();
-
-		if (bCloseOnPassthrough && ExitPanel != nullptr)
+		// Entered (allegedly) from the outside.
+		// There is an edge case here where we might be able to enter the rectangle without touching any side,
+		// this should be handled by level design for now.
+		// Else we entered from inside, meaning we were already inside, touched a panel, and went back, do nothing in that case
+		if (EnterPanel == nullptr)
 		{
-			ExitPanel->SetOpen(); 
+			EnterPanel = OverlappedPanel;
+			EnterPanel->SetPending();
+
+			if (bCloseOnPassthrough && ExitPanel != nullptr)
+			{
+				ExitPanel->SetOpen(); 
+			}
 		}
+
+		return;
 	}
-	else if (EnterPanel == OverlappedPanel) // Exit the Rectangle from the same Panel
+
+	// Exit the Rectangle
+	if (EnterPanel == nullptr) // Edge case where we never actually entered the rectangle, but touched and left back the same panel
+	{
+		return;
+	}
+
+	if (EnterPanel == OverlappedPanel) // Exit the Rectangle from the same Panel
 	{
 		EnterPanel->SetOpen();
 		EnterPanel = nullptr;
@@ -131,7 +147,7 @@ void APRSRectGate::PanelOnPlayerEndOverlap(UPRSPanel* OverlappedPanel, APRSChara
 			ExitPanel->SetClosed(); 
 		}
 	}
-	else if (EnterPanel != OverlappedPanel) // Exit the Rectangle from a different Panel
+	else // Exit the Rectangle from a different Panel
 	{
 		EnterPanel->SetOpen();
 		EnterPanel = nullptr;

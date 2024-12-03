@@ -55,7 +55,6 @@ void APRSPlayerController::Tick(float DeltaTime)
 
 void APRSPlayerController::RequestInteractionAction()
 {
-	UE_LOG(LogTemp, Warning, TEXT("APRSPlayerController::RequestInteractionAction"));
 	PossessedCharacter->Interact();
 }
 
