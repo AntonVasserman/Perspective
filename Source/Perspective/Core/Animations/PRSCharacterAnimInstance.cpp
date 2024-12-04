@@ -30,7 +30,7 @@ void UPRSCharacterAnimInstance::EvaluateDirection()
 {
 	Direction = FMath::Sign(
 		FVector::DotProduct(
-			static_cast<AActor*>(OwnerCharacter)->GetActorForwardVector().GetSafeNormal(),
+			Cast<AActor>(OwnerCharacter)->GetActorForwardVector().GetSafeNormal(),
 			OwnerCharacter->GetVelocity().GetSafeNormal()));
 }
 
