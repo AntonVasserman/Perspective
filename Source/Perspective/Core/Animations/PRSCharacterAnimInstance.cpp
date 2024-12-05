@@ -20,6 +20,7 @@ void UPRSCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	if (OwnerCharacter)
 	{
 		EvaluateDirection();
+		EvaluateFalling();
 		EvaluateInteracting();
 		EvaluateRotating();
 		EvaluateSpeed();
@@ -32,6 +33,11 @@ void UPRSCharacterAnimInstance::EvaluateDirection()
 		FVector::DotProduct(
 			Cast<AActor>(OwnerCharacter)->GetActorForwardVector().GetSafeNormal(),
 			OwnerCharacter->GetVelocity().GetSafeNormal()));
+}
+
+void UPRSCharacterAnimInstance::EvaluateFalling()
+{
+	bFalling = OwnerCharacter->GetCharacterMovement()->IsFalling();
 }
 
 void UPRSCharacterAnimInstance::EvaluateSpeed()
