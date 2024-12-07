@@ -4,6 +4,12 @@
 #include "Perspective/Core/Operations/Interfaces/PRSOperatableInterface.h"
 #include "Perspective/Interactables/PRSInteractableButton.h"
 
+static TAutoConsoleVariable CVarDisplayOperatableToInteractableLineTrace(
+	TEXT("PRS.OpeartionComponent.Debug.OperatableToInteractableLineTrace"),
+	false,
+	TEXT("Display Operatable to Interactable Line Trace"),
+	ECVF_Default);
+
 UPRSOperationComponent::UPRSOperationComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -44,9 +50,13 @@ void UPRSOperationComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	for (const APRSInteractableButton* Button : InteractableButtons)
+	if (CVarDisplayOperatableToInteractableLineTrace->GetBool())
 	{
-		DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), Button->GetActorLocation(), FColor::Blue, true);
+		for (const APRSInteractableButton* Button : InteractableButtons)
+		{
+			DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), Button->GetActorLocation(), FColor::Blue,
+				false, 0.1f);
+		}
 	}
 }
 

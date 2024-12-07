@@ -25,6 +25,7 @@ void UPRSPanel::SetOpen()
 {
 	CurrentState = EState::Open;
 	UMeshComponent::SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
+	// TODO: Move this to the Statics
 	UStaticMeshComponent::SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 }
 

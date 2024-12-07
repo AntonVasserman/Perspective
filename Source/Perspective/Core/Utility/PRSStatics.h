@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Sound/SoundCue.h"
 
 #include "PRSStatics.generated.h"
 
@@ -13,6 +12,7 @@ class UPRSStatics : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
+	// TODO: remove those and use 'NoCollision_ProfileName' instead
 	FORCEINLINE static FName GetCollisionProfileNameBlockAll() { return FName("BlockAll"); }
 	FORCEINLINE static FName GetCollisionProfileNameNoCollision() { return FName("NoCollision"); }
 	
