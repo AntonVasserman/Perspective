@@ -9,6 +9,8 @@
 #include "Perspective/Core/Utility/PRSSoundStatics.h"
 #include "PRSRectGate.generated.h"
 
+class USoundCue;
+
 UCLASS()
 class PERSPECTIVE_API APRSRectGate : public AActor, public IPRSOperatableInterface
 {
@@ -31,6 +33,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Config | Sound")
 	USoundCue* PerspectiveModeChangedSoundCue = UPRSSoundStatics::GetModeChangedSoundCue();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
+	USoundCue* EnableDisableSound = UPRSSoundStatics::GetRectGateEnableDisableSoundCue();
+	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config | Panels")
 	bool bFrontPanelEnabled = true;
 

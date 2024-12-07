@@ -71,6 +71,7 @@ void APRSRectGate::Operate()
 	Panels[1]->SetEnabled(bEnabled && bBackPanelEnabled);
 	Panels[2]->SetEnabled(bEnabled && bRightPanelEnabled);
 	Panels[3]->SetEnabled(bEnabled && bLeftPanelEnabled);
+	UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), EnableDisableSound, GetActorLocation(), GetActorRotation());
 }
 
 void APRSRectGate::BeginPlay()

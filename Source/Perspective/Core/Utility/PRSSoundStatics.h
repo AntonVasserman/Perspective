@@ -23,6 +23,11 @@ public:
 		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Core/Audio/A_ModeChanged_Cue.A_ModeChanged_Cue"));
 	}
 
+	FORCEINLINE static USoundCue* GetRectGateEnableDisableSoundCue()
+	{
+		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Gates/Audio/A_RectGate_EnableDisable_Cue.A_RectGate_EnableDisable_Cue"));
+	}
+
 	FORCEINLINE static USoundCue* GetRotatingDoorOpenCloseSoundCue()
 	{
 		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Doors/Audio/A_RotatingDoor_OpenClose_Cue.A_RotatingDoor_OpenClose_Cue"));
