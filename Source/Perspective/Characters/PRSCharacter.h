@@ -30,6 +30,7 @@ public:
 	FORCEINLINE bool CanMove() const { return !IsInteracting(); }
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool CanRotate() const { return !IsInteracting(); }
+	FORCEINLINE bool CanInteract() const { return !IsInteracting(); }
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool IsInteracting() const { return bInteracting; }
 	FORCEINLINE bool IsMoving() const { return IsValid(GetCharacterMovement()) && (GetCharacterMovement()->Velocity.X != 0.f || GetCharacterMovement()->Velocity.Y != 0.f); }

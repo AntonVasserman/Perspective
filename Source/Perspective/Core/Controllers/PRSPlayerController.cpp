@@ -55,7 +55,10 @@ void APRSPlayerController::Tick(float DeltaTime)
 
 void APRSPlayerController::RequestInteractionAction()
 {
-	PossessedCharacter->Interact();
+	if (PossessedCharacter->CanInteract())
+	{
+		PossessedCharacter->Interact();	
+	}
 }
 
 void APRSPlayerController::RequestLookAction(const FInputActionValue& InputActionValue)
