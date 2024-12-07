@@ -2,6 +2,7 @@
 
 #include "PRSSwitchablePlatform.h"
 #include "Perspective/Core/Utility/PRSStatics.h"
+#include "Sound/SoundCue.h"
 
 APRSSwitchablePlatform::APRSSwitchablePlatform()
 {
@@ -17,6 +18,7 @@ void APRSSwitchablePlatform::OnConstruction(const FTransform& Transform)
 void APRSSwitchablePlatform::Operate()
 {
 	bEnabled = !bEnabled;
+	UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), SwitchSound, GetActorLocation(), GetActorRotation());
 	UpdatePlatform();
 }
 

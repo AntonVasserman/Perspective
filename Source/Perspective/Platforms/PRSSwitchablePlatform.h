@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/StaticMeshActor.h"
 #include "Perspective/Core/Operations/Interfaces/PRSOperatableInterface.h"
+#include "Perspective/Core/Utility/PRSSoundStatics.h"
 #include "PRSSwitchablePlatform.generated.h"
 
 UCLASS()
@@ -22,6 +23,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	bool bEnabled = true;
 
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
+	class USoundCue* SwitchSound = UPRSSoundStatics::GetSwitchablePlatformSwitchSoundCue();
 private:
 	void UpdatePlatform();
 };
