@@ -34,16 +34,16 @@ protected:
 	FRotator OriginalRotation = FRotator::ZeroRotator;
 
 	UPROPERTY(BlueprintReadWrite)
-	FRotator NewRotation = FRotator::ZeroRotator;
-
+	FRotator NextRotation = FRotator::ZeroRotator;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
 	bool bSupportFullRotation = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
 	bool bCounterClockwise = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
-	float YawRotationDelta = 0.f;
+	UPROPERTY(BlueprintReadOnly)
+	FRotator RotationDelta = FRotator::ZeroRotator;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
 	class USoundCue* OpenCloseSound = UPRSSoundStatics::GetRotatingDoorOpenCloseSoundCue();

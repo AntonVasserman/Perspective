@@ -26,9 +26,7 @@ void APRSRotatingDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	YawRotationDelta = bCounterClockwise ? -90.f : 90.f;
+	RotationDelta = FRotator(0.f, bCounterClockwise ? -90.f : 90.f, 0.f);
 	OriginalRotation = GetActorRotation();
-	NewRotation = bSupportFullRotation ?
-		OriginalRotation :
-		FRotator(OriginalRotation.Pitch, OriginalRotation.Yaw + YawRotationDelta, OriginalRotation.Roll);
+	NextRotation = OriginalRotation + RotationDelta;
 }
