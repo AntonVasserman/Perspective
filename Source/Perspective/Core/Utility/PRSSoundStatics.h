@@ -23,6 +23,16 @@ public:
 		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Core/Audio/A_PRSModeChanged_Cue.A_PRSModeChanged_Cue"));
 	}
 
-	static void PlaySoundAtLocation(const UObject* WorldContextObject, class USoundBase* Sound,
-		FVector Location, FRotator Rotation);
+	FORCEINLINE static USoundCue* GetRotatingDoorOpenCloseSoundCue()
+	{
+		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Doors/Audio/A_PRSRotatingDoorOpenClose_Cue.A_PRSRotatingDoorOpenClose_Cue"));
+	}
+
+	FORCEINLINE static USoundCue* GetSlidingDoorOpenCloseSoundCue()
+	{
+		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Doors/Audio/A_PRSSlidingDoorOpenClose_Cue.A_PRSSlidingDoorOpenClose_Cue"));
+	}
+
+	static void PlaySoundAtLocation(const UObject* WorldContextObject, class USoundBase* Sound, const FVector& Location, const FRotator& Rotation,
+		const float VolumeMultiplier = 1.f, const float PitchMultiplier = 1.f);
 };

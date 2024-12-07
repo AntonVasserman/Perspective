@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PRSDoor.h"
 #include "Perspective/Core/Operations/Interfaces/PRSOperatableInterface.h"
+#include "Perspective/Core/Utility/PRSSoundStatics.h"
 #include "PRSRotatingDoor.generated.h"
 
 UENUM(BlueprintType)
@@ -43,6 +44,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config")
 	float YawRotationDelta = 0.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
+	class USoundCue* OpenCloseSound = UPRSSoundStatics::GetRotatingDoorOpenCloseSoundCue();
 	
 	UPROPERTY(BlueprintReadWrite)
 	ERotatingDoorState CurrentState = ERotatingDoorState::Static;

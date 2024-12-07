@@ -2,12 +2,16 @@
 
 #include "PRSRotatingDoor.h"
 
+#include "Sound/SoundCue.h"
+
 void APRSRotatingDoor::Operate()
 {
 	switch (CurrentState)
 	{
 	case ERotatingDoorState::Static:
 		CurrentState = ERotatingDoorState::Rotating;
+		UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), OpenCloseSound, GetActorLocation(), GetActorRotation(), 1.f,
+			OpenCloseSound->Duration / DoorOpenDuration);
 		break;
 	case ERotatingDoorState::Rotating:
 		break;

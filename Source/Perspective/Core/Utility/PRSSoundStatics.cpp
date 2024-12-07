@@ -4,9 +4,10 @@
 
 #include "Kismet/GameplayStatics.h"
 
-void UPRSSoundStatics::PlaySoundAtLocation(const UObject* WorldContextObject, USoundBase* Sound, FVector Location, FRotator Rotation)
+void UPRSSoundStatics::PlaySoundAtLocation(const UObject* WorldContextObject, USoundBase* Sound, const FVector& Location, const FRotator& Rotation,
+	const float VolumeMultiplier, const float PitchMultiplier)
 {
-	const float VolumeMultiplier = FMath::RandRange(0.9f, 1.f);
-	const float PitchMultiplier = FMath::RandRange(0.9f, 1.1f);
-	UGameplayStatics::PlaySoundAtLocation(WorldContextObject, Sound, Location, Rotation, VolumeMultiplier, PitchMultiplier);
+	const float RandomizedVolumeMultiplier = FMath::RandRange(0.9f, 1.f) * VolumeMultiplier;
+	const float RandomizedPitchMultiplier = FMath::RandRange(0.9f, 1.1f) * PitchMultiplier;
+	UGameplayStatics::PlaySoundAtLocation(WorldContextObject, Sound, Location, Rotation, RandomizedVolumeMultiplier, RandomizedPitchMultiplier);
 }

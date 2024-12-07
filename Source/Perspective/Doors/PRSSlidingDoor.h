@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PRSDoor.h"
 #include "Perspective/Core/Operations/Interfaces/PRSOperatableInterface.h"
+#include "Perspective/Core/Utility/PRSSoundStatics.h"
 #include "PRSSlidingDoor.generated.h"
 
 UENUM(BlueprintType)
@@ -33,4 +34,7 @@ public:
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	ESlidingDoorState CurrentState = ESlidingDoorState::Closed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
+	class USoundCue* OpenCloseSound = UPRSSoundStatics::GetSlidingDoorOpenCloseSoundCue();
 };
