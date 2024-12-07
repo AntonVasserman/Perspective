@@ -21,11 +21,6 @@ public:
 		return LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube"));
 	}
 
-	FORCEINLINE static USoundCue* GetModeChangedSoundCue()
-	{
-		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Core/Audio/A_PRSModeChanged_Cue.A_PRSModeChanged_Cue"));
-	}
-
 	FORCEINLINE static UMaterialInterface* GetPanelMaterial()
 	{
 		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Gates/M_Gate.M_Gate"));

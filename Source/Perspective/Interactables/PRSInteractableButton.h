@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Perspective/Core/Interactables/PRSInteractableActor.h"
+#include "Perspective/Core/Utility/PRSSoundStatics.h"
 
 #include "PRSInteractableButton.generated.h"
 
@@ -29,6 +30,9 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
 	bool bRepressable = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
+	class USoundCue* ButtonClickSound = UPRSSoundStatics::GetButtonClickSoundCue();
 
 private:
 	bool bPressed = false;

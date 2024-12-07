@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Perspective/Characters/PRSCharacter.h"
 #include "Perspective/Subsystems/PRSModeWorldSubsystem.h"
+#include "Sound/SoundCue.h"
 
 APRSRectGate::APRSRectGate()
 {

@@ -6,7 +6,7 @@
 #include "PRSPanel.h"
 #include "GameFramework/Actor.h"
 #include "Perspective/Core/Operations/Interfaces/PRSOperatableInterface.h"
-#include "Perspective/Core/Utility/PRSStatics.h"
+#include "Perspective/Core/Utility/PRSSoundStatics.h"
 #include "PRSRectGate.generated.h"
 
 UCLASS()
@@ -24,9 +24,12 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
 	bool bEnabled = true;
-
+	
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
+	bool bCloseOnPassthrough = false;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Config | Sound")
-	USoundCue* PerspectiveModeChangedSoundCue = UPRSStatics::GetModeChangedSoundCue();
+	USoundCue* PerspectiveModeChangedSoundCue = UPRSSoundStatics::GetModeChangedSoundCue();
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config | Panels")
 	bool bFrontPanelEnabled = true;
@@ -39,9 +42,6 @@ protected:
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config | Panels")
 	bool bLeftPanelEnabled = true;
-
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
-	bool bCloseOnPassthrough = false;
 
 	UPROPERTY()
 	TArray<UPRSPanel*> Panels;
