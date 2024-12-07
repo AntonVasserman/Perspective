@@ -50,13 +50,13 @@ private:
 	float BackwardMovementMultiplier = 0.5f;
 
 	UPROPERTY(EditAnywhere, Category = "Config | Look")
-	float BaseLookUpRate = 45.f;
+	float BaseLookUpRate = 60.f;
 
 	UPROPERTY(EditAnywhere, Category = "Config | Look")
-	float BaseLookRightRate = 45.f;
+	float BaseLookRightRate = 60.f;
 
 	UPROPERTY(EditAnywhere, Category = "Config | Look")
-	float LookMultiplierForMoveControls = 1.5f;
+	float LookMultiplierForMoveControls = 2.f;
 	
 	bool bEnableYInput = true;
 	bool bIsPerspectiveChangedRequiresHandling = false;
