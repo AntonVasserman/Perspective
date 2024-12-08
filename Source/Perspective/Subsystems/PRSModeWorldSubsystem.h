@@ -14,15 +14,15 @@ class PERSPECTIVE_API UPRSModeWorldSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 	
 public:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPerspectiveModeChanged, const EPerspectiveMode, NewPerspectiveMode);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPerspectiveModeChanged, const struct FPerspectiveModeChangedArgs&, NewPerspectiveArgs);
 	UPROPERTY(BlueprintAssignable, Category="Perspective")
 	FPerspectiveModeChanged OnPerspectiveModeChanged;
 	
 	UFUNCTION(BlueprintCallable)
-	EPerspectiveMode GetMode() const;
+	FORCEINLINE EPerspectiveMode GetMode() const { return Mode; }
 
 	UFUNCTION(BlueprintCallable)
-	void Switch();
+	void Switch(const FRotator& NewControlRotation = FRotator::ZeroRotator);
 
 private:
 	EPerspectiveMode Mode = EPerspectiveMode::ThreeDimensional;

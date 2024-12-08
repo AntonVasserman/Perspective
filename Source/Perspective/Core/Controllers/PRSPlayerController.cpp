@@ -5,7 +5,18 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Perspective/Characters/PRSCharacter.h"
+#include "Perspective/Subsystems/PerspectiveModeChangedArgs.h"
 #include "Perspective/Subsystems/PRSModeWorldSubsystem.h"
+
+void APRSPlayerController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (bAwaitingPerspectiveChangeHandling && (!PossessedCharacter->IsMoving() || bMovementInputChanged))
+	{
+		bAwaitingPerspectiveChangeHandling = false;
+	}
+}
 
 void APRSPlayerController::BeginPlay()
 {
@@ -16,7 +27,7 @@ void APRSPlayerController::BeginPlay()
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
 
-	UPRSModeWorldSubsystem* PerspectiveModeWorldSubsystem = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>();
+	PerspectiveModeWorldSubsystem = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>();
 	PerspectiveModeWorldSubsystem->OnPerspectiveModeChanged.AddDynamic(this, &APRSPlayerController::OnPerspectiveModeChanged);
 }
 
@@ -33,37 +44,25 @@ void APRSPlayerController::SetupInputComponent()
 	
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestLookAction);
-	EnhancedInputComponent->BindAction(MoveXAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestMoveXAction);
-	EnhancedInputComponent->BindAction(MoveXAction, ETriggerEvent::Completed, this, &APRSPlayerController::RequestMoveActionCompleted);
-	EnhancedInputComponent->BindAction(MoveYAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestMoveYAction);
-	EnhancedInputComponent->BindAction(MoveYAction, ETriggerEvent::Completed, this, &APRSPlayerController::RequestMoveActionCompleted);
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestMoveAction);
 	EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestInteractionAction);
 	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestSprintAction);
 	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APRSPlayerController::RequestSprintActionCompleted);
 }
 
-void APRSPlayerController::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	if (!PossessedCharacter->IsMoving())
-	{
-		bMovingByX = false;
-		bMovingByY = false;
-	}
-}
-
 void APRSPlayerController::RequestInteractionAction()
 {
-	if (PossessedCharacter->CanInteract())
+	if (!PossessedCharacter->CanInteract())
 	{
-		PossessedCharacter->Interact();	
+		return;
 	}
+	
+	PossessedCharacter->Interact();
 }
 
 void APRSPlayerController::RequestLookAction(const FInputActionValue& InputActionValue)
 {
-	if (!PossessedCharacter->CanRotate() || !bEnableYInput)
+	if (!PossessedCharacter->CanRotate() || PerspectiveModeWorldSubsystem->GetMode() == EPerspectiveMode::TwoDimensional)
 	{
 		return;
 	}
@@ -74,65 +73,52 @@ void APRSPlayerController::RequestLookAction(const FInputActionValue& InputActio
 	AddPitchInput(LookVector.Y * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-void APRSPlayerController::RequestMoveXAction(const FInputActionValue& InputActionValue)
+void APRSPlayerController::RequestMoveAction(const FInputActionValue& InputActionValue)
 {
 	if (!PossessedCharacter->CanMove())
 	{
 		return;
 	}
 
-	const float MovementValue = InputActionValue.Get<float>();
-
-	if (bEnableYInput) // 3D
+	const FVector2D MovementValue = InputActionValue.Get<FVector2D>();
+	if (PreviousMovementInput != MovementValue)
 	{
-		if (bMovingByY)
-		{
-			HandlePerspectiveChanged();
-			bMovingByY = false;
-		}
-		
-		AddYawInput(MovementValue * BaseLookRightRate * LookMultiplierForMoveControls * GetWorld()->GetDeltaSeconds());
-	}
-	else // 2D
-	{
-		bMovingByX = true;
-		const float NormalizedMovementValue = bIsPerspectiveChangedRequiresHandling ? FMath::Abs(MovementValue) : MovementValue;
-		PossessedCharacter->AddMovementInput(PossessedCharacter->GetActorRightVector(), NormalizedMovementValue);
-	}
-}
-
-void APRSPlayerController::RequestMoveYAction(const FInputActionValue& InputActionValue)
-{
-	if (!PossessedCharacter->CanMove())
-	{
-		return;
-	}
-
-	if (bEnableYInput) // 3D
-	{
-		bMovingByY = true;
-		const float MovementValue = InputActionValue.Get<float>();
-		const float InputToApply = MovementValue >= 0.f ? MovementValue : MovementValue * BackwardMovementMultiplier;
-		PossessedCharacter->AddMovementInput(PossessedCharacter->GetActorForwardVector(), InputToApply);
+		PreviousMovementInput = MovementValue;
+		bMovementInputChanged = true;
 	}
 	else
 	{
-		if (bMovingByX)
+		bMovementInputChanged = false;
+	}
+	
+	const FRotator ControllerRotation = GetControlRotation();
+	const FRotationMatrix YawControllerRotationMatrix = FRotationMatrix(FRotator(0.f, ControllerRotation.Yaw, 0.f));
+
+	if (PerspectiveModeWorldSubsystem->GetMode() == EPerspectiveMode::TwoDimensional)
+	{
+		if (bAwaitingPerspectiveChangeHandling)
 		{
-			HandlePerspectiveChanged();
-			bMovingByX = false;
+			PossessedCharacter->AddMovementInput(YawControllerRotationMatrix.GetUnitAxis(EAxis::X), FMath::Abs(MovementValue.Y));
+			PossessedCharacter->AddMovementInput(YawControllerRotationMatrix.GetUnitAxis(EAxis::X), FMath::Abs(MovementValue.X));
+		}
+		else
+		{
+			PossessedCharacter->AddMovementInput(YawControllerRotationMatrix.GetUnitAxis(EAxis::X), MovementValue.X);	
+		}
+	}
+	else if (PerspectiveModeWorldSubsystem->GetMode() == EPerspectiveMode::ThreeDimensional)
+	{
+		if (bAwaitingPerspectiveChangeHandling)
+		{
+			PossessedCharacter->AddMovementInput(YawControllerRotationMatrix.GetUnitAxis(EAxis::X), FMath::Abs(MovementValue.X));
+		}
+		else
+		{
+			PossessedCharacter->AddMovementInput(YawControllerRotationMatrix.GetUnitAxis(EAxis::X), MovementValue.Y);
+			PossessedCharacter->AddMovementInput(YawControllerRotationMatrix.GetUnitAxis(EAxis::Y), MovementValue.X);
 		}
 	}
 }
-
-void APRSPlayerController::RequestMoveActionCompleted()
-{
-	if (bIsPerspectiveChangedRequiresHandling)
-	{
-		HandlePerspectiveChanged();
-	}
-}
-
 
 void APRSPlayerController::RequestSprintAction(const FInputActionValue& InputActionValue)
 {
@@ -144,33 +130,19 @@ void APRSPlayerController::RequestSprintActionCompleted(const FInputActionValue&
 	PossessedCharacter->StopSprint();
 }
 
-void APRSPlayerController::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode)
+void APRSPlayerController::OnPerspectiveModeChanged(const FPerspectiveModeChangedArgs& NewPerspectiveArgs)
 {
-	bIsPerspectiveChangedRequiresHandling = true;
-
-	if (NewPerspectiveMode == EPerspectiveMode::TwoDimensional)
+	if (NewPerspectiveArgs.Mode == EPerspectiveMode::TwoDimensional)
 	{
 		// Save previous Pitch rotation to restore it upon exiting 2D mode
-		PreviousControllerPitchRotation = GetControlRotation().Pitch;
+		PreviousPitchRotation = GetControlRotation().Pitch;
+		SetControlRotation(NewPerspectiveArgs.NewControlRotation);
 	}
-	else
+	else if (NewPerspectiveArgs.Mode == EPerspectiveMode::ThreeDimensional)
 	{
-		// Restore the previous Pitch rotation
-		SetControlRotation(FRotator(PreviousControllerPitchRotation, PossessedCharacter->GetActorRotation().Yaw, 0.f));
-	}
-}
-
-void APRSPlayerController::HandlePerspectiveChanged()
-{
-	switch (GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->GetMode())
-	{
-	case EPerspectiveMode::TwoDimensional:
-		bEnableYInput = false;
-		break;
-	case EPerspectiveMode::ThreeDimensional:
-		bEnableYInput = true;
-		break;
+		// Restore the previous Pitch rotation, and use new Yaw rotation
+		SetControlRotation(FRotator(PreviousPitchRotation, NewPerspectiveArgs.NewControlRotation.Yaw, 0.f));
 	}
 
-	bIsPerspectiveChangedRequiresHandling = false;
+	bAwaitingPerspectiveChangeHandling = !bAwaitingPerspectiveChangeHandling;
 }

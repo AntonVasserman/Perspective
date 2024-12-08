@@ -29,14 +29,9 @@ public:
 		return LoadObject<UInputAction>(nullptr, TEXT("/Game/Perspective/Core/Inputs/Actions/IA_Look.IA_Look"));
 	}
 
-	FORCEINLINE static UInputAction* GetMoveXInputAction()
+	FORCEINLINE static UInputAction* GetMoveInputAction()
 	{
-		return LoadObject<UInputAction>(nullptr, TEXT("/Game/Perspective/Core/Inputs/Actions/IA_MoveX.IA_MoveX"));
-	}
-
-	FORCEINLINE static UInputAction* GetMoveYInputAction()
-	{
-		return LoadObject<UInputAction>(nullptr, TEXT("/Game/Perspective/Core/Inputs/Actions/IA_MoveY.IA_MoveY"));
+		return LoadObject<UInputAction>(nullptr, TEXT("/Game/Perspective/Core/Inputs/Actions/IA_Move.IA_Move"));
 	}
 
 	FORCEINLINE static UInputAction* GetSprintInputAction()

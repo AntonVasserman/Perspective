@@ -22,7 +22,6 @@ void UPRSCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		EvaluateDirection();
 		EvaluateFalling();
 		EvaluateInteracting();
-		EvaluateRotating();
 		EvaluateSpeed();
 	}
 }
@@ -48,18 +47,4 @@ void UPRSCharacterAnimInstance::EvaluateSpeed()
 void UPRSCharacterAnimInstance::EvaluateInteracting()
 {
 	bInteracting = OwnerCharacter->IsInteracting();
-}
-
-void UPRSCharacterAnimInstance::EvaluateRotating()
-{
-	if (const FRotator CurrRotation = OwnerCharacter->GetActorRotation();
-		PrevRotation.Equals(CurrRotation))
-	{
-		bRotating = false;
-	}
-	else
-	{
-		bRotating = true;
-		PrevRotation = CurrRotation;
-	}
 }

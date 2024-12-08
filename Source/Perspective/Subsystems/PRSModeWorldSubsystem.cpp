@@ -2,15 +2,12 @@
 
 #include "PRSModeWorldSubsystem.h"
 
-EPerspectiveMode UPRSModeWorldSubsystem::GetMode() const
-{
-	return Mode;
-}
+#include "PerspectiveModeChangedArgs.h"
 
-void UPRSModeWorldSubsystem::Switch()
+void UPRSModeWorldSubsystem::Switch(const FRotator& NewControlRotation)
 {
 	Mode = Mode == EPerspectiveMode::TwoDimensional ?
 		EPerspectiveMode::ThreeDimensional :
 		EPerspectiveMode::TwoDimensional;
-	OnPerspectiveModeChanged.Broadcast(Mode);
+	OnPerspectiveModeChanged.Broadcast(FPerspectiveModeChangedArgs(Mode, NewControlRotation));
 }

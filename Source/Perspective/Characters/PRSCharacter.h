@@ -23,8 +23,6 @@ class APRSCharacter : public ACharacter
 public:
 	APRSCharacter();
 	
-	FVector GetActorForwardVector() const;
-	FVector GetActorRightVector() const;
 	void Interact();
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool CanMove() const { return !IsInteracting(); }
@@ -34,7 +32,6 @@ public:
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool IsInteracting() const { return bInteracting; }
 	FORCEINLINE bool IsMoving() const { return IsValid(GetCharacterMovement()) && (GetCharacterMovement()->Velocity.X != 0.f || GetCharacterMovement()->Velocity.Y != 0.f); }
-	FORCEINLINE void SetForwardVectorOverride (const FVector& ForwardVector) { ForwardVectorOverride = ForwardVector; }
 	FORCEINLINE void Sprint() const { GetCharacterMovement()->MaxWalkSpeed *= SprintSpeedMultiplier; }
 	FORCEINLINE void StopSprint() const { GetCharacterMovement()->MaxWalkSpeed /= SprintSpeedMultiplier; }
 
@@ -53,16 +50,13 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	bool bShouldUseForwardVectorOverride = false;
-	bool bIsPerspectiveChangedRequiresHandling = false;
 	bool bInteracting = false;
 	float WalkSpeed = 0.f;
-	FVector ForwardVectorOverride = FVector(1.0f, 0.0f, 0.0f);
 
 	void LineTraceForInteractableActor();
 	void LineTraceForLedges();
 	UFUNCTION()
-	void OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode);
+	void OnPerspectiveModeChanged(const struct FPerspectiveModeChangedArgs& PerspectiveModeArgs);
 	void OnMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted);
 	UFUNCTION()
 	void OnNotifyBeginReceived(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);

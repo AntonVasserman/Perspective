@@ -164,8 +164,7 @@ void APRSRectGate::PanelOnPlayerEndOverlap(UPRSPanel* OverlappedPanel, APRSChara
 			ExitPanel->SetClosed();
 		}
 
-		PlayerCharacter->SetForwardVectorOverride(OverlappedPanel->GetForwardVector());
-		GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->Switch();
+		GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->Switch(OverlappedPanel->GetComponentRotation());
 		UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
 	}
 }

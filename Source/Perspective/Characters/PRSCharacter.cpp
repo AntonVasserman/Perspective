@@ -7,8 +7,8 @@
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Perspective/Core/Interactables/PRSInteractableActor.h"
+#include "Perspective/Subsystems/PerspectiveModeChangedArgs.h"
 #include "Perspective/Subsystems/PRSModeWorldSubsystem.h"
 
 APRSCharacter::APRSCharacter()
@@ -16,11 +16,11 @@ APRSCharacter::APRSCharacter()
 	GetCapsuleComponent()->InitCapsuleSize(25.f, 96.0f);
 		
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = true;
+	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
 	// Setup character movement
-	GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->AirControl = 0.35f;
@@ -38,6 +38,7 @@ APRSCharacter::APRSCharacter()
 	SpringArmComp->SocketOffset = FVector(0.f, 75.f, 70.f);
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->bEnableCameraLag = true;
+	SpringArmComp->CameraLagSpeed = 16.f;
 
 	// Setup Camera Component
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -45,27 +46,8 @@ APRSCharacter::APRSCharacter()
 	CameraComp->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
 	CameraComp->bUsePawnControlRotation = false;
 
+	// TODO: Consider moving this to BeginPlay
 	MontageEndedDelegate.BindUObject(this, &APRSCharacter::OnMontageEnded);
-}
-
-FVector APRSCharacter::GetActorForwardVector() const
-{
-	if (bShouldUseForwardVectorOverride)
-	{
-		return ForwardVectorOverride;
-	}
-
-	return ACharacter::GetActorForwardVector();
-}
-
-FVector APRSCharacter::GetActorRightVector() const
-{
-	if (bShouldUseForwardVectorOverride)
-	{
-		return ForwardVectorOverride;
-	}
-
-	return ACharacter::GetActorRightVector();
 }
 
 void APRSCharacter::BeginPlay()
@@ -83,20 +65,6 @@ void APRSCharacter::Tick(float DeltaTime)
 
 	LineTraceForLedges();
 	LineTraceForInteractableActor();
-
-	if (bIsPerspectiveChangedRequiresHandling && !IsMoving())
-	{
-		if (const EPerspectiveMode PerspectiveMode = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->GetMode();
-			PerspectiveMode == EPerspectiveMode::TwoDimensional)
-		{
-			bIsPerspectiveChangedRequiresHandling = false;
-		}
-		else if (PerspectiveMode == EPerspectiveMode::ThreeDimensional)
-		{
-			bShouldUseForwardVectorOverride = false;
-			bIsPerspectiveChangedRequiresHandling = false;
-		}
-	}
 }
 
 void APRSCharacter::Interact()
@@ -215,27 +183,21 @@ void APRSCharacter::LineTraceForLedges()
 	GetCharacterMovement()->bCanWalkOffLedges = true;
 }
 
-void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode)
+void APRSCharacter::OnPerspectiveModeChanged(const FPerspectiveModeChangedArgs& NewPerspectiveArgs)
 {
-	bIsPerspectiveChangedRequiresHandling = true;
-
-	if (NewPerspectiveMode == EPerspectiveMode::TwoDimensional)
+	if (NewPerspectiveArgs.Mode == EPerspectiveMode::TwoDimensional)
 	{
-		bShouldUseForwardVectorOverride = true;
-		bUseControllerRotationYaw = false;
-		GetCharacterMovement()->bOrientRotationToMovement = true;
-
 		SpringArmComp->SocketOffset = FVector(0.f, 0.f, 0.f);
-		SpringArmComp->bUsePawnControlRotation = false;
-		SpringArmComp->SetRelativeRotation(UKismetMathLibrary::MakeRotFromX(ForwardVectorOverride));
-		SpringArmComp->AddRelativeRotation(FRotator(0.f, -90.f, 0.f));
 		SpringArmComp->bInheritYaw = false;
+		SpringArmComp->bUsePawnControlRotation = false;
+		SpringArmComp->SetRelativeRotation(NewPerspectiveArgs.NewControlRotation);
+		SpringArmComp->AddRelativeRotation(FRotator(0.f, -90.f, 0.f));
 
 		CameraComp->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
 		CameraComp->SetProjectionMode(ECameraProjectionMode::Orthographic);
 		CameraComp->SetOrthoWidth(1024.0f); // Increase the Orthographic width, we have to do it here only after the projection mode has changed
 	}
-	else if (NewPerspectiveMode == EPerspectiveMode::ThreeDimensional)
+	else if (NewPerspectiveArgs.Mode == EPerspectiveMode::ThreeDimensional)
 	{
 		CameraComp->SetProjectionMode(ECameraProjectionMode::Perspective);
 		CameraComp->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
@@ -243,9 +205,6 @@ void APRSCharacter::OnPerspectiveModeChanged(EPerspectiveMode NewPerspectiveMode
 		SpringArmComp->bUsePawnControlRotation = true;
 		SpringArmComp->bInheritYaw = true;
 		SpringArmComp->SocketOffset = FVector(0.f, 75.f, 70.f);
-		
-		GetCharacterMovement()->bOrientRotationToMovement = false;
-		bUseControllerRotationYaw = true;
 	}
 }
 

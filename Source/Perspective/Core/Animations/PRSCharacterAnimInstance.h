@@ -29,15 +29,10 @@ private:
 	bool bInteracting = false;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	bool bRotating = false;
-	FRotator PrevRotation;
-
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	bool bFalling = false;
 	
 	void EvaluateDirection();
 	void EvaluateFalling();
 	void EvaluateSpeed();
 	void EvaluateInteracting();
-	void EvaluateRotating();
 };
