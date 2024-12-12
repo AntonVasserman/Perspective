@@ -45,9 +45,6 @@ APRSCharacter::APRSCharacter()
 	CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
 	CameraComp->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
 	CameraComp->bUsePawnControlRotation = false;
-
-	// TODO: Consider moving this to BeginPlay
-	MontageEndedDelegate.BindUObject(this, &APRSCharacter::OnMontageEnded);
 }
 
 void APRSCharacter::BeginPlay()
@@ -57,6 +54,8 @@ void APRSCharacter::BeginPlay()
 
 	UPRSModeWorldSubsystem* PerspectiveModeWorldSubsystem = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>();
 	PerspectiveModeWorldSubsystem->OnPerspectiveModeChanged.AddDynamic(this, &APRSCharacter::OnPerspectiveModeChanged);
+	
+	MontageEndedDelegate.BindUObject(this, &APRSCharacter::OnMontageEnded);
 }
 
 void APRSCharacter::Tick(float DeltaTime)

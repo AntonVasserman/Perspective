@@ -32,9 +32,17 @@ public:
 	virtual void Operate() override;
 
 protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
+	bool bCloseOnOpened = false;
+
 	UPROPERTY(BlueprintReadWrite)
 	ESlidingDoorState CurrentState = ESlidingDoorState::Closed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
 	class USoundCue* OpenCloseSound = UPRSSoundStatics::GetSlidingDoorOpenCloseSoundCue();
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
+	bool bOpenOnGameStart = false;
 };

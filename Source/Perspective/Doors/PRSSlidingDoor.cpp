@@ -20,6 +20,7 @@ void APRSSlidingDoor::Operate()
 		CurrentState = ESlidingDoorState::Closing;
 		UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), OpenCloseSound, GetActorLocation(), GetActorRotation(), 1.f,
 			OpenCloseSound->Duration / DoorOpenDuration);
+		break;
 	case ESlidingDoorState::Opening:
 		break;
 	default:
@@ -27,4 +28,15 @@ void APRSSlidingDoor::Operate()
 	}
 
 	OnDoorStateChanged.Broadcast(CurrentState);
+}
+
+void APRSSlidingDoor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (bOpenOnGameStart && !bCloseOnOpened)
+	{
+		CurrentState = ESlidingDoorState::Opening;
+		OnDoorStateChanged.Broadcast(CurrentState);
+	}
 }
