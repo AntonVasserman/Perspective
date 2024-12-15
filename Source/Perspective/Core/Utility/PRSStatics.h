@@ -12,10 +12,11 @@ class UPRSStatics : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	// TODO: remove those and use 'NoCollision_ProfileName' instead
+	// TODO (79): Move to a dedicated shared Module
 	FORCEINLINE static FName GetCollisionProfileNameBlockAll() { return FName("BlockAll"); }
 	FORCEINLINE static FName GetCollisionProfileNameNoCollision() { return FName("NoCollision"); }
-	
+	FORCEINLINE static FName GetCollisionProfileNameOverlapAllDynamic() { return FName("OverlapAllDynamic"); }
+
 	FORCEINLINE static UStaticMesh* GetCubeStaticMesh()
 	{
 		return LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube"));

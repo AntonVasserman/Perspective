@@ -11,7 +11,7 @@ UPRSPanel::UPRSPanel()
 	
 	UStaticMeshComponent::SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
 	UMeshComponent::SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
-	UStaticMeshComponent::SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+	UStaticMeshComponent::SetCollisionProfileName(UPRSStatics::GetCollisionProfileNameOverlapAllDynamic());
 }
 
 void UPRSPanel::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -25,15 +25,14 @@ void UPRSPanel::SetOpen()
 {
 	CurrentState = EState::Open;
 	UMeshComponent::SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
-	// TODO: Move this to the Statics
-	UStaticMeshComponent::SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+	UStaticMeshComponent::SetCollisionProfileName(UPRSStatics::GetCollisionProfileNameOverlapAllDynamic());
 }
 
 void UPRSPanel::SetPending()
 {
 	CurrentState = EState::Pending;
 	UMeshComponent::SetMaterial(0, UPRSStatics::GetPanelYellowMaterial());
-	UStaticMeshComponent::SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+	UStaticMeshComponent::SetCollisionProfileName(UPRSStatics::GetCollisionProfileNameOverlapAllDynamic());
 }
 
 void UPRSPanel::SetClosed()
@@ -48,7 +47,7 @@ void UPRSPanel::SetEnabled(bool bEnabled)
 	bPanelEnabled = bEnabled;
 
 	SetVisibility(bPanelEnabled);
-	UStaticMeshComponent::SetCollisionProfileName(bPanelEnabled ? TEXT("OverlapAllDynamic") : UCollisionProfile::NoCollision_ProfileName);
+	UStaticMeshComponent::SetCollisionProfileName(bPanelEnabled ? UPRSStatics::GetCollisionProfileNameOverlapAllDynamic() : UCollisionProfile::NoCollision_ProfileName);
 }
 
 void UPRSPanel::BeginPlay()
