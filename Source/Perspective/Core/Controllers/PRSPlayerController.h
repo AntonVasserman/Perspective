@@ -24,6 +24,7 @@ protected:
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void SetupInputComponent() override;
 
+	void RequestCrouchAction();
 	void RequestInteractionAction();
 	void RequestLookAction(const FInputActionValue& InputActionValue);
 	void RequestMoveAction(const FInputActionValue& InputActionValue);
@@ -33,6 +34,8 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
 	UInputMappingContext* DefaultMappingContext = UPRSInputStatics::GetDefaultInputMappingContext();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
+	UInputAction* CrouchAction = UPRSInputStatics::GetCrouchInputAction();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
 	UInputAction* InteractAction = UPRSInputStatics::GetInteractInputAction();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))

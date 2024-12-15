@@ -58,10 +58,10 @@ void APRSRectGate::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
-	Panels[0]->SetEnabled(bFrontPanelEnabled);
-	Panels[1]->SetEnabled(bBackPanelEnabled);
-	Panels[2]->SetEnabled(bRightPanelEnabled);
-	Panels[3]->SetEnabled(bLeftPanelEnabled);
+	Panels[0]->SetEnabled(bEnabled && bFrontPanelEnabled);
+	Panels[1]->SetEnabled(bEnabled && bBackPanelEnabled);
+	Panels[2]->SetEnabled(bEnabled && bRightPanelEnabled);
+	Panels[3]->SetEnabled(bEnabled && bLeftPanelEnabled);
 }
 
 void APRSRectGate::Operate()

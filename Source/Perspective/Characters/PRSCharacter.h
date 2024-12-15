@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Logging/LogMacros.h"
 
 #include "PRSCharacter.generated.h"
@@ -28,10 +29,12 @@ public:
 	FORCEINLINE bool CanMove() const { return !IsInteracting(); }
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool CanRotate() const { return !IsInteracting(); }
-	FORCEINLINE bool CanInteract() const { return !IsInteracting(); }
+	FORCEINLINE bool CanInteract() const { return !IsInteracting() && !IsFalling(); }
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE bool IsFalling() const { return IsValid(GetCharacterMovement()) && GetCharacterMovement()->IsFalling(); }
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool IsInteracting() const { return bInteracting; }
-	FORCEINLINE bool IsMoving() const { return IsValid(GetCharacterMovement()) && (GetCharacterMovement()->Velocity.X != 0.f || GetCharacterMovement()->Velocity.Y != 0.f); }
+	FORCEINLINE bool IsMoving() const { return UKismetMathLibrary::VSizeXY(GetVelocity()) != 0.f; }
 	FORCEINLINE void Sprint() const { GetCharacterMovement()->MaxWalkSpeed *= SprintSpeedMultiplier; }
 	FORCEINLINE void StopSprint() const { GetCharacterMovement()->MaxWalkSpeed /= SprintSpeedMultiplier; }
 

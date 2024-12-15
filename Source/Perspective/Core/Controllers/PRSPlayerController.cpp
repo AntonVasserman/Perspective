@@ -45,9 +45,22 @@ void APRSPlayerController::SetupInputComponent()
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestLookAction);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestMoveAction);
+	EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestCrouchAction);
 	EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestInteractionAction);
 	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestSprintAction);
 	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APRSPlayerController::RequestSprintActionCompleted);
+}
+
+void APRSPlayerController::RequestCrouchAction()
+{
+	if (PossessedCharacter->GetCharacterMovement()->IsCrouching())
+	{
+		PossessedCharacter->UnCrouch();
+	}
+	else if (PossessedCharacter->CanCrouch())
+	{
+		PossessedCharacter->Crouch();
+	}
 }
 
 void APRSPlayerController::RequestInteractionAction()

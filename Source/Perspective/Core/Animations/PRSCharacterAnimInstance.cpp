@@ -19,11 +19,17 @@ void UPRSCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	if (OwnerCharacter)
 	{
+		EvaluateCrouching();
 		EvaluateDirection();
 		EvaluateFalling();
 		EvaluateInteracting();
 		EvaluateSpeed();
 	}
+}
+
+void UPRSCharacterAnimInstance::EvaluateCrouching()
+{
+	bCrouching = OwnerCharacter->GetCharacterMovement()->IsCrouching();
 }
 
 void UPRSCharacterAnimInstance::EvaluateDirection()

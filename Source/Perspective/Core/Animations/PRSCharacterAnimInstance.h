@@ -30,7 +30,11 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	bool bFalling = false;
-	
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	bool bCrouching = false;
+
+	void EvaluateCrouching();
 	void EvaluateDirection();
 	void EvaluateFalling();
 	void EvaluateSpeed();
