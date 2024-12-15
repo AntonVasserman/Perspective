@@ -23,13 +23,13 @@ class APRSCharacter : public ACharacter
 
 public:
 	APRSCharacter();
-	
-	void Interact();
+	FORCEINLINE virtual bool CanCrouch() const override { return !IsFalling() && !IsInteracting() && Super::CanCrouch(); }
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool CanMove() const { return !IsInteracting(); }
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool CanRotate() const { return !IsInteracting(); }
 	FORCEINLINE bool CanInteract() const { return !IsInteracting() && !IsFalling(); }
+	void Interact();
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool IsFalling() const { return IsValid(GetCharacterMovement()) && GetCharacterMovement()->IsFalling(); }
 	UFUNCTION(BlueprintPure)
@@ -45,7 +45,7 @@ protected:
 	UAnimMontage* InteractionAnimMontage;
 	FOnMontageEnded MontageEndedDelegate;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config | Character Movement")
-	float CanWalkOffLedgesHeight = 2500.f;
+	float CanWalkOffLedgesHeight = 1100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config | Character Movement")
 	float SprintSpeedMultiplier = 2.f;
 	
