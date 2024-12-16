@@ -44,11 +44,11 @@ public:
 
 	FORCEINLINE static UMaterialInterface* GetPlatformEnabledMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Platforms/M_Platform_Enabled.M_Platform_Enabled"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Platforms/MI_SwitchablePlatform_Enabled.MI_SwitchablePlatform_Enabled"));
 	}
 
 	FORCEINLINE static UMaterialInterface* GetPlatformDisabledMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Platforms/M_Platform_Disabled.M_Platform_Disabled"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Platforms/MI_SwitchablePlatform_Disabled.MI_SwitchablePlatform_Disabled"));
 	}
 };

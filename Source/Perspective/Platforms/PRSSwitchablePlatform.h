@@ -20,7 +20,7 @@ public:
 	virtual void Operate() override;
 
 protected:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	bool bEnabled = true;
 
 	
