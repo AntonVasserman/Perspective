@@ -12,11 +12,6 @@ class UPRSStatics : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	// TODO (79): Move to a dedicated shared Module
-	FORCEINLINE static FName GetCollisionProfileNameBlockAll() { return FName(TEXT("BlockAll")); }
-	FORCEINLINE static FName GetCollisionProfileNameNoCollision() { return FName(TEXT("NoCollision")); }
-	FORCEINLINE static FName GetCollisionProfileNameOverlapAllDynamic() { return FName(TEXT("OverlapAllDynamic")); }
-
 	FORCEINLINE static UStaticMesh* GetCubeStaticMesh()
 	{
 		return LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube"));

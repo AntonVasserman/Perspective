@@ -1,6 +1,8 @@
 // Copyright Anton Vasserman, All Rights Reserved.
 
 #include "PRSSwitchablePlatform.h"
+
+#include "AVCollisionProfileStatics.h"
 #include "Perspective/Core/Utility/PRSStatics.h"
 #include "Sound/SoundCue.h"
 
@@ -25,7 +27,6 @@ void APRSSwitchablePlatform::Operate()
 void APRSSwitchablePlatform::UpdatePlatform()
 {
 	GetStaticMeshComponent()->SetCollisionProfileName(
-		bEnabled ? UPRSStatics::GetCollisionProfileNameBlockAll() : UPRSStatics::GetCollisionProfileNameNoCollision(),
-		true);
+		bEnabled ? UAVCollisionProfileStatics::BlockAll_ProfileName : UAVCollisionProfileStatics::NoCollision_ProfileName, true);
 	GetStaticMeshComponent()->SetMaterial(0, bEnabled ? UPRSStatics::GetPlatformEnabledMaterial() : UPRSStatics::GetPlatformDisabledMaterial());
 }

@@ -30,9 +30,8 @@ APRSCharacter::APRSCharacter()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->bCanWalkOffLedges = true;
 	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
-	GetCharacterMovement()->CrouchedHalfHeight = 78.f;
-
-	// TODO: Change 'Can Crouch' here by changing the NavMovement->MovementCapabilities. look at NaviationTypes.h
+	GetCharacterMovement()->SetCrouchedHalfHeight(78.f);
+	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 	
 	// Setup Spring Arm Component
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));

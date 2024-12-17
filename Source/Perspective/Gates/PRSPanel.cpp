@@ -2,6 +2,7 @@
 
 #include "PRSPanel.h"
 
+#include "AVCollisionProfileStatics.h"
 #include "Perspective/Characters/PRSCharacter.h"
 #include "Perspective/Core/Utility/PRSStatics.h"
 
@@ -11,7 +12,7 @@ UPRSPanel::UPRSPanel()
 	
 	UStaticMeshComponent::SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
 	UMeshComponent::SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
-	UStaticMeshComponent::SetCollisionProfileName(UPRSStatics::GetCollisionProfileNameOverlapAllDynamic());
+	UStaticMeshComponent::SetCollisionProfileName(UAVCollisionProfileStatics::OverlapAllDynamic_ProfileName);
 }
 
 void UPRSPanel::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -25,21 +26,21 @@ void UPRSPanel::SetOpen()
 {
 	CurrentState = EState::Open;
 	UMeshComponent::SetMaterial(0, UPRSStatics::GetPanelGreenMaterial());
-	UStaticMeshComponent::SetCollisionProfileName(UPRSStatics::GetCollisionProfileNameOverlapAllDynamic());
+	UStaticMeshComponent::SetCollisionProfileName(UAVCollisionProfileStatics::OverlapAllDynamic_ProfileName);
 }
 
 void UPRSPanel::SetPending()
 {
 	CurrentState = EState::Pending;
 	UMeshComponent::SetMaterial(0, UPRSStatics::GetPanelYellowMaterial());
-	UStaticMeshComponent::SetCollisionProfileName(UPRSStatics::GetCollisionProfileNameOverlapAllDynamic());
+	UStaticMeshComponent::SetCollisionProfileName(UAVCollisionProfileStatics::OverlapAllDynamic_ProfileName);
 }
 
 void UPRSPanel::SetClosed()
 {
 	CurrentState = EState::Closed;
 	UMeshComponent::SetMaterial(0, UPRSStatics::GetPanelRedMaterial());
-	UStaticMeshComponent::SetCollisionProfileName(UCollisionProfile::BlockAll_ProfileName);
+	UStaticMeshComponent::SetCollisionProfileName(UAVCollisionProfileStatics::BlockAll_ProfileName);
 }
 
 void UPRSPanel::SetEnabled(bool bEnabled)
@@ -47,7 +48,7 @@ void UPRSPanel::SetEnabled(bool bEnabled)
 	bPanelEnabled = bEnabled;
 
 	SetVisibility(bPanelEnabled);
-	UStaticMeshComponent::SetCollisionProfileName(bPanelEnabled ? UPRSStatics::GetCollisionProfileNameOverlapAllDynamic() : UCollisionProfile::NoCollision_ProfileName);
+	UStaticMeshComponent::SetCollisionProfileName(bPanelEnabled ? UAVCollisionProfileStatics::OverlapAllDynamic_ProfileName : UAVCollisionProfileStatics::NoCollision_ProfileName);
 }
 
 void UPRSPanel::BeginPlay()
