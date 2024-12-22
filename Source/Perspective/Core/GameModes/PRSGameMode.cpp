@@ -2,8 +2,6 @@
 
 #include "PRSGameMode.h"
 
-#include "UObject/ConstructorHelpers.h"
-
 APRSGameMode::APRSGameMode()
 {
 }

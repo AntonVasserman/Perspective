@@ -32,6 +32,7 @@ APRSCharacter::APRSCharacter()
 	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
 	GetCharacterMovement()->SetCrouchedHalfHeight(78.f);
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	GetCharacterMovement()->SetWalkableFloorAngle(46.f);
 	
 	// Setup Spring Arm Component
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));

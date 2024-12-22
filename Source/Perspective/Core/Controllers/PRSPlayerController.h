@@ -32,17 +32,17 @@ protected:
 	void RequestSprintActionCompleted(const FInputActionValue& InputActionValue);
 
 private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
 	UInputMappingContext* DefaultMappingContext = UPRSInputStatics::GetDefaultInputMappingContext();
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
 	UInputAction* CrouchAction = UPRSInputStatics::GetCrouchInputAction();
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
 	UInputAction* InteractAction = UPRSInputStatics::GetInteractInputAction();
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
 	UInputAction* LookAction = UPRSInputStatics::GetLookInputAction();
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
 	UInputAction* MoveAction = UPRSInputStatics::GetMoveInputAction();
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess="true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
 	UInputAction* SprintAction = UPRSInputStatics::GetSprintInputAction();
 
 	UPROPERTY(EditAnywhere, Category = "Config | Look")
