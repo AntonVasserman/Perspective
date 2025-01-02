@@ -5,7 +5,7 @@
 | Parameter                         | Value |
 |-----------------------------------|-------|
 | Character Collision Height        | 200   |
-| Character Crouch Collision Height | 160   |
+| Character Crouch Collision Height | 150   |
 | Character Walkable Angel          | 46.0  |
 | Max Fall Height                   | 1100m |
 
@@ -13,8 +13,8 @@
 ### Environment
 | Parameter                                       | Value                                 |
 |-------------------------------------------------|---------------------------------------|
-| Floor Distance with Assets for Character Crouch | 170                                   |
-| Ramp Distance with Assets for Character Crouch  | 185                                   |
+| Floor Distance with Assets for Character Crouch | 150                                   |
+| Ramp Distance with Assets for Character Crouch  | 200                                   |
 | Floor Asset Scale                               | (1.25, 1.25, 0.25)                    |
 | Floor Asset Scale and Rotation as 500x250 ramp  | ((1.3955, 1.25, 0.25), (0, -26.6, 0)) |
 | Floor Asset Scale and Rotation as 750x250 ramp  | ((1.25, 1.9765, 0.25), (0, 18.5, 0))  |

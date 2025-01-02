@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PerspectiveMode.h"
 
 #include "PerspectiveModeChangedArgs.generated.h"
 
@@ -19,8 +20,8 @@ struct FPerspectiveModeChangedArgs
 		: Mode(Mode), NewControlRotation(NewControlRotation) { }
 
 	UPROPERTY()
-	EPerspectiveMode Mode;
+	EPerspectiveMode Mode = EPerspectiveMode::ThreeDimensional;
 
 	UPROPERTY()
-	FRotator NewControlRotation;
+	FRotator NewControlRotation = FRotator::ZeroRotator;
 };
