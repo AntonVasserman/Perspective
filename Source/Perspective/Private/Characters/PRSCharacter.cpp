@@ -37,7 +37,7 @@ APRSCharacter::APRSCharacter()
 	// Setup Spring Arm Component
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArmComp->SetupAttachment(RootComponent);
-	SpringArmComp->TargetArmLength = 200.0f;
+	SpringArmComp->TargetArmLength = 300.0f;
 	SpringArmComp->SocketOffset = FVector(0.f, 75.f, 70.f);
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->bEnableCameraLag = true;

@@ -15,12 +15,6 @@ class APRSCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* SpringArmComp;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* CameraComp;
-
 public:
 	APRSCharacter();
 	FORCEINLINE virtual bool CanCrouch() const override { return !IsFalling() && !IsInteracting() && Super::CanCrouch(); }
@@ -56,6 +50,12 @@ private:
 	bool bInteracting = false;
 	float WalkSpeed = 0.f;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class USpringArmComponent> SpringArmComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UCameraComponent> CameraComp;
+	
 	void LineTraceForInteractableActor();
 	void LineTraceForLedges();
 	UFUNCTION()
