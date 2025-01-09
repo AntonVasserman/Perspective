@@ -23,7 +23,7 @@ public:
 		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Core/Audio/A_ModeChanged_Cue.A_ModeChanged_Cue"));
 	}
 
-	FORCEINLINE static USoundCue* GetRectGateEnableDisableSoundCue()
+	FORCEINLINE static USoundCue* GetGateEnableDisableSoundCue()
 	{
 		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Gates/Audio/A_RectGate_EnableDisable_Cue.A_RectGate_EnableDisable_Cue"));
 	}

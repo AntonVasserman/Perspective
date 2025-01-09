@@ -34,7 +34,7 @@ protected:
 	USoundCue* PerspectiveModeChangedSoundCue = UPRSSoundStatics::GetModeChangedSoundCue();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
-	USoundCue* EnableDisableSound = UPRSSoundStatics::GetRectGateEnableDisableSoundCue();
+	USoundCue* EnableDisableSound = UPRSSoundStatics::GetGateEnableDisableSoundCue();
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config | Panels")
 	bool bFrontPanelEnabled = true;
