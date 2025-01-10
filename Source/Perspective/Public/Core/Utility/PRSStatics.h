@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Materials/MaterialParameterCollection.h"
 
 #include "PRSStatics.generated.h"
 
@@ -45,5 +46,15 @@ public:
 	FORCEINLINE static UMaterialInterface* GetPlatformDisabledMaterial()
 	{
 		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Platforms/MI_SwitchablePlatform_Disabled.MI_SwitchablePlatform_Disabled"));
+	}
+
+	FORCEINLINE static UMaterialParameterCollection* GetMaskingMaterialParameterCollection()
+	{
+		return LoadObject<UMaterialParameterCollection>(nullptr, TEXT("/Game/Perspective/Art/Shared/Materials/MPC_Masking.MPC_Masking"));
+	}
+
+	FORCEINLINE static FName GetMaskingMaterialParameterCollectionMaskParameterName()
+	{
+		return TEXT("Mask");
 	}
 };
