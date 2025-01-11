@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
+#include "GameFramework/ForceFeedbackEffect.h"
 
 #include "PRSInputStatics.generated.h"
 
@@ -14,6 +15,16 @@ class UPRSInputStatics : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
+	FORCEINLINE static UForceFeedbackEffect* GetInteractForceFeedbackEffect()
+	{
+		return LoadObject<UForceFeedbackEffect>(nullptr, TEXT("/Game/Perspective/Core/Inputs/Effects/FFE_Interact.FFE_Interact"));
+	}
+
+	FORCEINLINE static UForceFeedbackEffect* GetModeChangedForceFeedbackEffect()
+	{
+		return LoadObject<UForceFeedbackEffect>(nullptr, TEXT("/Game/Perspective/Core/Inputs/Effects/FFE_ModeChange.FFE_ModeChange"));
+	}
+	
 	FORCEINLINE static UInputMappingContext* GetDefaultInputMappingContext()
 	{
 		return LoadObject<UInputMappingContext>(nullptr, TEXT("/Game/Perspective/Core/Inputs/IMC_Default.IMC_Default"));

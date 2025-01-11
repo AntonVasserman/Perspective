@@ -36,6 +36,15 @@ void APRSPlayerController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 
 	PossessedCharacter = Cast<APRSCharacter>(InPawn);
+
+	PossessedCharacter->OnInteracted.AddDynamic(this, &APRSPlayerController::OnPlayerCharacterInteracted);
+}
+
+void APRSPlayerController::OnUnPossess()
+{
+	Super::OnUnPossess();
+
+	PossessedCharacter = nullptr;
 }
 
 void APRSPlayerController::SetupInputComponent()
@@ -158,4 +167,10 @@ void APRSPlayerController::OnPerspectiveModeChanged(const FPerspectiveModeChange
 	}
 
 	bAwaitingPerspectiveChangeHandling = !bAwaitingPerspectiveChangeHandling;
+	ClientPlayForceFeedback(UPRSInputStatics::GetModeChangedForceFeedbackEffect());
+}
+
+void APRSPlayerController::OnPlayerCharacterInteracted()
+{
+	ClientPlayForceFeedback(UPRSInputStatics::GetInteractForceFeedbackEffect());
 }

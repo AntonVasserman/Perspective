@@ -8,6 +8,8 @@
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetInputLibrary.h"
 #include "Subsystems/PerspectiveModeChangedArgs.h"
 #include "Subsystems/PRSModeWorldSubsystem.h"
 
@@ -223,6 +225,7 @@ void APRSCharacter::OnNotifyBeginReceived(FName NotifyName, const FBranchingPoin
 		if (InteractableActor != nullptr)
 		{
 			InteractableActor->Interact();
+			OnInteracted.Broadcast();
 		}
 
 		bInteracting = false;

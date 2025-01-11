@@ -22,6 +22,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
 	virtual void SetupInputComponent() override;
 
 	void RequestCrouchAction();
@@ -67,4 +68,7 @@ private:
 
 	UFUNCTION()
 	void OnPerspectiveModeChanged(const struct FPerspectiveModeChangedArgs& NewPerspectiveArgs);
+
+	UFUNCTION()
+	void OnPlayerCharacterInteracted();
 };

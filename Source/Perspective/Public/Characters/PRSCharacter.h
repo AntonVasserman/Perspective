@@ -10,12 +10,16 @@
 
 #include "PRSCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteracted);
+
 UCLASS(config=Game)
 class APRSCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
+	FOnInteracted OnInteracted;
+	
 	APRSCharacter();
 	FORCEINLINE virtual bool CanCrouch() const override { return !IsFalling() && !IsInteracting() && Super::CanCrouch(); }
 	UFUNCTION(BlueprintPure)
