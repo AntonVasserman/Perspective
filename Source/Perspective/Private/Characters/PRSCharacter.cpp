@@ -69,6 +69,11 @@ void APRSCharacter::Tick(float DeltaTime)
 
 	LineTraceForLedges();
 	LineTraceForInteractableActor();
+
+	if (bSprinting && !IsMoving())
+	{
+		StopSprint();
+	}
 }
 
 void APRSCharacter::Interact()
@@ -83,6 +88,21 @@ void APRSCharacter::Interact()
 			bInteracting = false;
 		}
 	}
+}
+
+void APRSCharacter::Sprint()
+{
+	if (!bSprinting)
+	{
+		GetCharacterMovement()->MaxWalkSpeed *= SprintSpeedMultiplier;
+		bSprinting = true;
+	}
+}
+
+void APRSCharacter::StopSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed /= SprintSpeedMultiplier;
+	bSprinting = false;
 }
 
 void APRSCharacter::LineTraceForInteractableActor()

@@ -30,7 +30,6 @@ protected:
 	void RequestLookAction(const FInputActionValue& InputActionValue);
 	void RequestMoveAction(const FInputActionValue& InputActionValue);
 	void RequestSprintAction(const FInputActionValue& InputActionValue);
-	void RequestSprintActionCompleted(const FInputActionValue& InputActionValue);
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))

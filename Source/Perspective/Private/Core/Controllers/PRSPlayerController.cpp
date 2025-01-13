@@ -57,7 +57,6 @@ void APRSPlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestCrouchAction);
 	EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestInteractionAction);
 	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestSprintAction);
-	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APRSPlayerController::RequestSprintActionCompleted);
 }
 
 void APRSPlayerController::RequestCrouchAction()
@@ -145,11 +144,6 @@ void APRSPlayerController::RequestMoveAction(const FInputActionValue& InputActio
 void APRSPlayerController::RequestSprintAction(const FInputActionValue& InputActionValue)
 {
 	PossessedCharacter->Sprint();
-}
-
-void APRSPlayerController::RequestSprintActionCompleted(const FInputActionValue& InputActionValue)
-{
-	PossessedCharacter->StopSprint();
 }
 
 void APRSPlayerController::OnPerspectiveModeChanged(const FPerspectiveModeChangedArgs& NewPerspectiveArgs)

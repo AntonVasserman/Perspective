@@ -33,8 +33,8 @@ public:
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool IsInteracting() const { return bInteracting; }
 	FORCEINLINE bool IsMoving() const { return UKismetMathLibrary::VSizeXY(GetVelocity()) != 0.f; }
-	FORCEINLINE void Sprint() const { GetCharacterMovement()->MaxWalkSpeed *= SprintSpeedMultiplier; }
-	FORCEINLINE void StopSprint() const { GetCharacterMovement()->MaxWalkSpeed /= SprintSpeedMultiplier; }
+	void Sprint();
+	void StopSprint();
 
 protected:
 	UPROPERTY(BlueprintReadWrite)
@@ -52,6 +52,7 @@ protected:
 
 private:
 	bool bInteracting = false;
+	bool bSprinting = false;
 	float WalkSpeed = 0.f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
