@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Core/Interactables/PRSInteractableActor.h"
+#include "Interactables/PRSInteractableActor.h"
 #include "Core/Utility/PRSSoundStatics.h"
 #include "GameFramework/Actor.h"
 

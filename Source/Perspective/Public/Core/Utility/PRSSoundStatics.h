@@ -25,22 +25,22 @@ public:
 
 	FORCEINLINE static USoundCue* GetGateEnableDisableSoundCue()
 	{
-		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Gates/Audio/A_RectGate_EnableDisable_Cue.A_RectGate_EnableDisable_Cue"));
+		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Operatables/Gates/Audio/A_RectGate_EnableDisable_Cue.A_RectGate_EnableDisable_Cue"));
 	}
 
 	FORCEINLINE static USoundCue* GetRotatingDoorOpenCloseSoundCue()
 	{
-		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Doors/Audio/A_RotatingDoor_OpenClose_Cue.A_RotatingDoor_OpenClose_Cue"));
+		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Operatables/Doors/Audio/A_RotatingDoor_OpenClose_Cue.A_RotatingDoor_OpenClose_Cue"));
 	}
 
 	FORCEINLINE static USoundCue* GetSlidingDoorOpenCloseSoundCue()
 	{
-		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Doors/Audio/A_SlidingDoor_OpenClose_Cue.A_SlidingDoor_OpenClose_Cue"));
+		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Operatables/Doors/Audio/A_SlidingDoor_OpenClose_Cue.A_SlidingDoor_OpenClose_Cue"));
 	}
 
 	FORCEINLINE static USoundCue* GetSwitchablePlatformSwitchSoundCue()
 	{
-		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Platforms/Audio/A_SwitchablePlatform_Switch_Cue.A_SwitchablePlatform_Switch_Cue"));
+		return LoadObject<USoundCue>(nullptr, TEXT("/Game/Perspective/Operatables/Platforms/Audio/A_SwitchablePlatform_Switch_Cue.A_SwitchablePlatform_Switch_Cue"));
 	}
 	
 	static void PlaySoundAtLocation(const UObject* WorldContextObject, USoundBase* Sound, const FVector& Location, const FRotator& Rotation,

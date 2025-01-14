@@ -4,12 +4,10 @@
 
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Core/Interactables/PRSInteractableActor.h"
+#include "Interactables/PRSInteractableActor.h"
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetInputLibrary.h"
 #include "Subsystems/PerspectiveModeChangedArgs.h"
 #include "Subsystems/PRSModeWorldSubsystem.h"
 

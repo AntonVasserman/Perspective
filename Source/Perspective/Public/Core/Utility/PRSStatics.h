@@ -20,32 +20,32 @@ public:
 
 	FORCEINLINE static UMaterialInterface* GetPanelMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Gates/M_Gate.M_Gate"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Operatables/Gates/M_Gate.M_Gate"));
 	}
 	
 	FORCEINLINE static UMaterialInterface* GetPanelGreenMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Gates/M_Gate_Green.M_Gate_Green"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Operatables/Gates/M_Gate_Green.M_Gate_Green"));
 	}
 
 	FORCEINLINE static UMaterialInterface* GetPanelYellowMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Gates/M_Gate_Yellow.M_Gate_Yellow"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Operatables/Gates/M_Gate_Yellow.M_Gate_Yellow"));
 	}
 
 	FORCEINLINE static UMaterialInterface* GetPanelRedMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Gates/M_Gate_Red.M_Gate_Red"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Operatables/Gates/M_Gate_Red.M_Gate_Red"));
 	}
 
 	FORCEINLINE static UMaterialInterface* GetPlatformEnabledMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Platforms/MI_SwitchablePlatform_Enabled.MI_SwitchablePlatform_Enabled"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Operatables/Platforms/MI_SwitchablePlatform_Enabled.MI_SwitchablePlatform_Enabled"));
 	}
 
 	FORCEINLINE static UMaterialInterface* GetPlatformDisabledMaterial()
 	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Platforms/MI_SwitchablePlatform_Disabled.MI_SwitchablePlatform_Disabled"));
+		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Operatables/Platforms/MI_SwitchablePlatform_Disabled.MI_SwitchablePlatform_Disabled"));
 	}
 
 	FORCEINLINE static UMaterialParameterCollection* GetMaskingMaterialParameterCollection()
