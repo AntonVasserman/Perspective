@@ -64,14 +64,16 @@ void APRSRectGate::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 	Panels[3]->SetEnabled(bEnabled && bLeftPanelEnabled);
 }
 
-void APRSRectGate::Operate()
+void APRSRectGate::Operate_Implementation()
 {
+	SetOperatability(false);
 	bEnabled = !bEnabled;
 	Panels[0]->SetEnabled(bEnabled && bFrontPanelEnabled);
 	Panels[1]->SetEnabled(bEnabled && bBackPanelEnabled);
 	Panels[2]->SetEnabled(bEnabled && bRightPanelEnabled);
 	Panels[3]->SetEnabled(bEnabled && bLeftPanelEnabled);
 	UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), EnableDisableSound, GetActorLocation(), GetActorRotation());
+	SetOperatability(true);
 }
 
 void APRSRectGate::BeginPlay()

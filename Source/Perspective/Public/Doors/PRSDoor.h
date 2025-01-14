@@ -3,16 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/PRSOperatableActor.h"
 
 #include "PRSDoor.Generated.h"
 
-UCLASS()
-class PERSPECTIVE_API APRSDoor : public AActor
+UCLASS(Abstract)
+class PERSPECTIVE_API APRSDoor : public APRSOperatableActor
 {
 	GENERATED_BODY()
-
-public:
-	APRSDoor();
 
 protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")

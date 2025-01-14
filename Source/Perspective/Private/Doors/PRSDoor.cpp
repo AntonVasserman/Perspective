@@ -2,8 +2,3 @@
 
 #include "Doors/PRSDoor.h"
 
-APRSDoor::APRSDoor()
-{
-	PrimaryActorTick.bCanEverTick = true;
-}
-

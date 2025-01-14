@@ -5,8 +5,9 @@
 #include "Core/Utility/PRSSoundStatics.h"
 #include "Sound/SoundCue.h"
 
-void APRSSlidingDoor::Operate()
+void APRSSlidingDoor::Operate_Implementation()
 {
+	SetOperatability(false);
 	switch (CurrentState)
 	{
 	case ESlidingDoorState::Closed:

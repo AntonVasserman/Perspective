@@ -4,11 +4,13 @@
 
 #include "AVCollisionProfileStatics.h"
 #include "Core/Utility/PRSStatics.h"
+#include "Engine/StaticMesh.h"
 #include "Sound/SoundCue.h"
 
 APRSSwitchablePlatform::APRSSwitchablePlatform()
 {
-	GetStaticMeshComponent()->SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
+	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComp");
+	StaticMeshComp->SetStaticMesh(UPRSStatics::GetCubeStaticMesh());
 }
 
 void APRSSwitchablePlatform::OnConstruction(const FTransform& Transform)
@@ -17,8 +19,9 @@ void APRSSwitchablePlatform::OnConstruction(const FTransform& Transform)
 	UpdatePlatform();
 }
 
-void APRSSwitchablePlatform::Operate()
+void APRSSwitchablePlatform::Operate_Implementation()
 {
+	SetOperatability(false);
 	bEnabled = !bEnabled;
 	UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), SwitchSound, GetActorLocation(), GetActorRotation());
 	UpdatePlatform();
@@ -26,7 +29,7 @@ void APRSSwitchablePlatform::Operate()
 
 void APRSSwitchablePlatform::UpdatePlatform()
 {
-	GetStaticMeshComponent()->SetCollisionProfileName(
+	StaticMeshComp->SetCollisionProfileName(
 		bEnabled ? UAVCollisionProfileStatics::BlockAll_ProfileName : UAVCollisionProfileStatics::NoCollision_ProfileName, true);
-	GetStaticMeshComponent()->SetMaterial(0, bEnabled ? UPRSStatics::GetPlatformEnabledMaterial() : UPRSStatics::GetPlatformDisabledMaterial());
+	StaticMeshComp->SetMaterial(0, bEnabled ? UPRSStatics::GetPlatformEnabledMaterial() : UPRSStatics::GetPlatformDisabledMaterial());
 }

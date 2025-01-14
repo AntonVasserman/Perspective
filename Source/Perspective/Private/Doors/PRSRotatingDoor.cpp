@@ -4,8 +4,9 @@
 
 #include "Sound/SoundCue.h"
 
-void APRSRotatingDoor::Operate()
+void APRSRotatingDoor::Operate_Implementation()
 {
+	SetOperatability(false);
 	switch (CurrentState)
 	{
 	case ERotatingDoorState::Static:

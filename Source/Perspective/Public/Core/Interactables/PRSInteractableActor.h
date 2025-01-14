@@ -9,7 +9,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractionStateChanged, const bool, bInteractable);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionStarted);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractionEnded, const bool, bInteractionSucceeded);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionFailed);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionSucceeded);
 
 UCLASS(Abstract)
 class PERSPECTIVE_API APRSInteractableActor : public AActor
@@ -22,7 +23,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnInteractionStarted OnInteractionStarted;
 	UPROPERTY(BlueprintAssignable)
-	FOnInteractionEnded OnInteractionEnded;
+	FOnInteractionFailed OnInteractionFailed;
+	UPROPERTY(BlueprintAssignable)
+	FOnInteractionSucceeded OnInteractionSucceeded;
 	
 	APRSInteractableActor();
 	
@@ -31,8 +34,6 @@ public:
 	virtual bool IsInteractable() { return bInteractable; }
 
 protected:
-	bool bInteractable = true;
-
 	UFUNCTION(BlueprintCallable)
 	void DisableInteraction();
 
@@ -41,4 +42,7 @@ protected:
 	
 	UFUNCTION()
 	virtual void Interact_Implementation() { }
+
+private:
+	bool bInteractable = true;
 };

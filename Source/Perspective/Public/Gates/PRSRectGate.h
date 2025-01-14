@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PRSPanel.h"
-#include "Core/Operations/Interfaces/PRSOperatableInterface.h"
+#include "Core/PRSOperatableActor.h"
 #include "Core/Utility/PRSSoundStatics.h"
 #include "GameFramework/Actor.h"
 #include "PRSRectGate.generated.h"
@@ -12,7 +12,7 @@
 class USoundCue;
 
 UCLASS()
-class PERSPECTIVE_API APRSRectGate : public AActor, public IPRSOperatableInterface
+class PERSPECTIVE_API APRSRectGate : public APRSOperatableActor
 {
 	GENERATED_BODY()
 	
@@ -21,7 +21,7 @@ public:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-	virtual void Operate() override;
+	virtual void Operate_Implementation() override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")

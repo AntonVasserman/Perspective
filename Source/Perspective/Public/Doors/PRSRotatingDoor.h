@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "PRSDoor.h"
-#include "Core/Operations/Interfaces/PRSOperatableInterface.h"
 #include "Core/Utility/PRSSoundStatics.h"
 #include "GameFramework/Actor.h"
 #include "PRSRotatingDoor.generated.h"
@@ -19,7 +18,7 @@ enum class ERotatingDoorState : uint8
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRotatingDoorStateChanged, ERotatingDoorState, NewState);
 
 UCLASS()
-class PERSPECTIVE_API APRSRotatingDoor : public APRSDoor, public IPRSOperatableInterface
+class PERSPECTIVE_API APRSRotatingDoor : public APRSDoor
 {
 	GENERATED_BODY()
 	
@@ -27,7 +26,7 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnRotatingDoorStateChanged OnRotationStateChanged;
 
-	virtual void Operate() override;
+	virtual void Operate_Implementation() override;
 
 protected:
 	UPROPERTY(BlueprintReadWrite)

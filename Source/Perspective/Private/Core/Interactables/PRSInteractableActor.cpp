@@ -11,14 +11,13 @@ void APRSInteractableActor::Interact()
 {
 	OnInteractionStarted.Broadcast();
 
-	const bool bCurrentIsInteractable = IsInteractable();
-
-	if (bCurrentIsInteractable)
+	if (IsInteractable())
 	{
 		Interact_Implementation();
+		OnInteractionSucceeded.Broadcast();
 	}
 
-	OnInteractionEnded.Broadcast(bCurrentIsInteractable);
+	OnInteractionFailed.Broadcast();
 }
 
 void APRSInteractableActor::DisableInteraction()

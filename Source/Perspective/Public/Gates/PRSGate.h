@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Core/Operations/Interfaces/PRSOperatableInterface.h"
+#include "Core/PRSOperatableActor.h"
 #include "Core/Utility/PRSSoundStatics.h"
 #include "GameFramework/Actor.h"
 #include "PRSGate.generated.h"
@@ -11,7 +11,7 @@
 class UBoxComponent;
 
 UCLASS()
-class PERSPECTIVE_API APRSGate : public AActor, public IPRSOperatableInterface
+class PERSPECTIVE_API APRSGate : public APRSOperatableActor
 {
 	GENERATED_BODY()
 
@@ -25,7 +25,7 @@ class PERSPECTIVE_API APRSGate : public AActor, public IPRSOperatableInterface
 public:
 	APRSGate();
 	virtual void PostInitializeComponents() override;
-	virtual void Operate() override;
+	virtual void Operate_Implementation() override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")

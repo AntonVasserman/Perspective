@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "PRSDoor.h"
-#include "Core/Operations/Interfaces/PRSOperatableInterface.h"
 #include "Core/Utility/PRSSoundStatics.h"
 #include "GameFramework/Actor.h"
 #include "PRSSlidingDoor.generated.h"
@@ -21,7 +20,7 @@ enum class ESlidingDoorState : uint8
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSlidingDoorStateChanged, ESlidingDoorState, NewState);
 
 UCLASS()
-class PERSPECTIVE_API APRSSlidingDoor : public APRSDoor, public IPRSOperatableInterface
+class PERSPECTIVE_API APRSSlidingDoor : public APRSDoor
 {
 	GENERATED_BODY()
 	
@@ -29,19 +28,19 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnSlidingDoorStateChanged OnDoorStateChanged;
 
-	virtual void Operate() override;
+	virtual void Operate_Implementation() override;
 
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
+	class USoundCue* OpenCloseSound = UPRSSoundStatics::GetSlidingDoorOpenCloseSoundCue();
+	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	bool bCloseOnOpened = false;
 
 	UPROPERTY(BlueprintReadWrite)
 	ESlidingDoorState CurrentState = ESlidingDoorState::Closed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
-	class USoundCue* OpenCloseSound = UPRSSoundStatics::GetSlidingDoorOpenCloseSoundCue();
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	bool bOpenOnGameStart = false;

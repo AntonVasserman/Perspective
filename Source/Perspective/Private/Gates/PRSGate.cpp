@@ -39,11 +39,13 @@ void APRSGate::PostInitializeComponents()
 	GateMeshComp->OnComponentEndOverlap.AddDynamic(this, &APRSGate::GateMeshOnEndOverlap);
 }
 
-void APRSGate::Operate()
+void APRSGate::Operate_Implementation()
 {
+	SetOperatability(false);
 	bEnabled = !bEnabled;
 	GateMeshComp->SetHiddenInGame(!bEnabled);
 	UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), EnableDisableSound, GetActorLocation(), GetActorRotation());
+	SetOperatability(true);
 }
 
 void APRSGate::GateMeshOnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
