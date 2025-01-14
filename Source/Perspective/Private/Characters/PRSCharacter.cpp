@@ -70,6 +70,11 @@ void APRSCharacter::Tick(float DeltaTime)
 	LineTraceForLedges();
 	LineTraceForInteractableActor();
 
+	if (InteractableActor != nullptr && InteractableActor->IsInteractable())
+	{
+		DrawDebugString(GetWorld(), FVector(0.f, 0.f, 50.f), TEXT("Press 'E' to Interact"), this, FColor::Red, 0.f);
+	}
+
 	if (bSprinting && !IsMoving())
 	{
 		StopSprint();
@@ -155,7 +160,6 @@ void APRSCharacter::LineTraceForInteractableActor()
 					IsValid(HitInteractableActor))
 				{
 					InteractableActor = HitInteractableActor;
-					InteractableActor->EnableInteraction();
 					return;
 				}
 			}
@@ -164,7 +168,6 @@ void APRSCharacter::LineTraceForInteractableActor()
 
 	if (InteractableActor != nullptr)
 	{
-		InteractableActor->DisableInteraction();
 		InteractableActor = nullptr;
 	}
 }

@@ -7,28 +7,38 @@
 
 #include "PRSInteractableActor.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FInteractionStateChangedDelegate, bool);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractionStateChanged, const bool, bInteractable);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionStarted);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractionEnded, const bool, bInteractionSucceeded);
 
-UCLASS()
+UCLASS(Abstract)
 class PERSPECTIVE_API APRSInteractableActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:
-	FInteractionStateChangedDelegate OnInteractionStateChanged;
+	UPROPERTY(BlueprintAssignable)
+	FOnInteractionStateChanged OnInteractionStateChanged;
+	UPROPERTY(BlueprintAssignable)
+	FOnInteractionStarted OnInteractionStarted;
+	UPROPERTY(BlueprintAssignable)
+	FOnInteractionEnded OnInteractionEnded;
 	
 	APRSInteractableActor();
 	
-	virtual void Tick(float DeltaTime) override;
-
+	void Interact();
 	UFUNCTION(BlueprintCallable)
-	virtual void DisableInteraction();
-	UFUNCTION(BlueprintCallable)
-	virtual void EnableInteraction();
-	virtual void Interact();
-	UFUNCTION(BlueprintCallable)
-	virtual bool IsInteractable();
+	virtual bool IsInteractable() { return bInteractable; }
 
 protected:
-	bool bInteractable = false;
+	bool bInteractable = true;
+
+	UFUNCTION(BlueprintCallable)
+	void DisableInteraction();
+
+	UFUNCTION(BlueprintCallable)
+	void EnableInteraction();
+	
+	UFUNCTION()
+	virtual void Interact_Implementation() { }
 };

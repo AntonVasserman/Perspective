@@ -10,12 +10,8 @@ APRSInteractableButton::APRSInteractableButton()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void APRSInteractableButton::Interact()
+void APRSInteractableButton::Interact_Implementation()
 {
-	if (IsInteractable())
-	{
-		bPressed = true;
-		UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), ButtonClickSound, GetActorLocation(), GetActorRotation());
-		OnButtonPressed.Broadcast();
-	}
+	UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), ButtonClickSound, GetActorLocation(), GetActorRotation());
+	DisableInteraction();
 }

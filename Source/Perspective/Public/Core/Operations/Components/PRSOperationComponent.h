@@ -25,4 +25,6 @@ protected:
 private:
 	UFUNCTION()
 	void ExecuteOperation();
+	UFUNCTION()
+	void OnInteractionEnded(const bool bInteractionSucceeded);
 };

@@ -5,36 +5,30 @@
 APRSInteractableActor::APRSInteractableActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
-void APRSInteractableActor::Tick(float DeltaTime)
+void APRSInteractableActor::Interact()
 {
-	Super::Tick(DeltaTime);
-	
-	if (IsInteractable())
+	OnInteractionStarted.Broadcast();
+
+	const bool bCurrentIsInteractable = IsInteractable();
+
+	if (bCurrentIsInteractable)
 	{
-		DrawDebugString(GetWorld(), FVector::Zero(), TEXT("Press 'E' to Interact"), this, FColor::Blue, 0.f);
+		Interact_Implementation();
 	}
+
+	OnInteractionEnded.Broadcast(bCurrentIsInteractable);
 }
 
 void APRSInteractableActor::DisableInteraction()
 {
 	bInteractable = false;
-	OnInteractionStateChanged.Broadcast(false);
+	OnInteractionStateChanged.Broadcast(bInteractable);
 }
 
 void APRSInteractableActor::EnableInteraction()
 {
 	bInteractable = true;
-	OnInteractionStateChanged.Broadcast(true);
-}
-
-void APRSInteractableActor::Interact()
-{
-}
-
-bool APRSInteractableActor::IsInteractable()
-{
-	return bInteractable;
+	OnInteractionStateChanged.Broadcast(bInteractable);
 }

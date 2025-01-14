@@ -29,13 +29,21 @@ void UPRSOperationComponent::BeginPlay()
 				UE_LOG(LogTemp, Error, TEXT("Door: %s, has a null button set"), *this->GetName());
 				continue;
 			}
-		
-			Button->OnButtonPressed.AddDynamic(this, &UPRSOperationComponent::ExecuteOperation);
+
+			Button->OnInteractionEnded.AddDynamic(this, &UPRSOperationComponent::OnInteractionEnded);
 		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Non-Operatable Actor: %s, has an Operation Component"), *this->GetName());
+	}
+}
+
+void UPRSOperationComponent::OnInteractionEnded(const bool bInteractionSucceeded)
+{
+	if (bInteractionSucceeded)
+	{
+		ExecuteOperation();
 	}
 }
 
