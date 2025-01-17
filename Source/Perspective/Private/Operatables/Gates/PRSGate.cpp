@@ -11,22 +11,22 @@
 
 APRSGate::APRSGate()
 {
-	RootComp = CreateDefaultSubobject<USceneComponent>("Root");
+	RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	SetRootComponent(RootComp);
 	
-	BackBoxComp = CreateDefaultSubobject<UBoxComponent>("Back Box");
+	BackBoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Back Box"));
 	BackBoxComp->SetupAttachment(GetRootComponent());
 	BackBoxComp->SetBoxExtent(FVector(50.f, 100.f, 100.f));
 	BackBoxComp->SetRelativeLocation(FVector(-55.f, 0.f, 100.f));
 	BackBoxComp->bEditableWhenInherited = false;
 	
-	FrontBoxComp = CreateDefaultSubobject<UBoxComponent>("Front Box");
+	FrontBoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Front Box"));
 	FrontBoxComp->SetupAttachment(GetRootComponent());
 	FrontBoxComp->SetBoxExtent(FVector(50.f, 100.f, 100.f));
 	FrontBoxComp->SetRelativeLocation(FVector(55.f, 0.f, 100.f));
 	FrontBoxComp->bEditableWhenInherited = false;
 	
-	GateMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("Gate Static Mesh");
+	GateMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gate Static Mesh"));
 	GateMeshComp->SetupAttachment(GetRootComponent());
 	GateMeshComp->SetCollisionProfileName(UAVCollisionProfileStatics::OverlapAllDynamic_ProfileName);
 }

@@ -53,5 +53,5 @@ public:
 		return LoadObject<UMaterialParameterCollection>(nullptr, TEXT("/Game/Perspective/Art/Shared/Materials/MPC_Masking.MPC_Masking"));
 	}
 
-	FORCEINLINE static FName GetMaskingMaterialParameterCollectionMaskParameterName() { return "Mask"; }
+	FORCEINLINE static FName GetMaskingMaterialParameterCollectionMaskParameterName() { return FName(TEXT("Mask")); }
 };

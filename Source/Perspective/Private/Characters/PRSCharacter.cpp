@@ -35,7 +35,7 @@ APRSCharacter::APRSCharacter()
 	GetCharacterMovement()->SetWalkableFloorAngle(46.f);
 	
 	// Setup Spring Arm Component
-	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("Spring Arm");
+	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArmComp->SetupAttachment(RootComponent);
 	SpringArmComp->TargetArmLength = 300.0f;
 	SpringArmComp->SocketOffset = FVector(0.f, 75.f, 70.f);
@@ -44,7 +44,7 @@ APRSCharacter::APRSCharacter()
 	SpringArmComp->CameraLagSpeed = 16.f;
 
 	// Setup Camera Component
-	CameraComp = CreateDefaultSubobject<UCameraComponent>("Camera");
+	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
 	CameraComp->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
 	CameraComp->bUsePawnControlRotation = false;
@@ -137,7 +137,7 @@ void APRSCharacter::LineTraceForInteractableActor()
 	}
 	
 	// Line trace parameters
-	FCollisionQueryParams TraceParams("Trace", true, this);
+	FCollisionQueryParams TraceParams(FName(TEXT("Trace")), true, this);
 	TraceParams.bReturnPhysicalMaterial = false;
 	TraceParams.bTraceComplex = true;
 
@@ -240,7 +240,7 @@ void APRSCharacter::OnMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted)
 
 void APRSCharacter::OnNotifyBeginReceived(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
 {
-	if (NotifyName == FName("Interacted"))
+	if (NotifyName == FName(TEXT("Interacted")))
 	{
 		// We do the check again, in case the player somehow moved away from the interactable actor
 		if (InteractableActor != nullptr)
