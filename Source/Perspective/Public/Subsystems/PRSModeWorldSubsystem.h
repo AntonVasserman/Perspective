@@ -8,13 +8,14 @@
 
 #include "PRSModeWorldSubsystem.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPerspectiveModeChanged, const struct FPerspectiveModeChangedArgs&, NewPerspectiveArgs);
+
 UCLASS()
 class PERSPECTIVE_API UPRSModeWorldSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 	
 public:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPerspectiveModeChanged, const struct FPerspectiveModeChangedArgs&, NewPerspectiveArgs);
 	UPROPERTY(BlueprintAssignable, Category="Perspective")
 	FPerspectiveModeChanged OnPerspectiveModeChanged;
 	
@@ -22,7 +23,9 @@ public:
 	FORCEINLINE EPerspectiveMode GetMode() const { return Mode; }
 
 	UFUNCTION(BlueprintCallable)
-	void Switch(const FRotator& NewControlRotation = FRotator::ZeroRotator);
+	void Switch(const FRotator& NewControlRotation = FRotator::ZeroRotator,
+		const bool bOverridePlayerCharacterX = false, const float PlayerCharacterXOverride = 0.f,
+		const bool bOverridePlayerCharacterY = false, const float PlayerCharacterYOverride = 0.f);
 
 private:
 	EPerspectiveMode Mode = EPerspectiveMode::ThreeDimensional;

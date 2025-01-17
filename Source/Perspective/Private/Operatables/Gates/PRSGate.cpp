@@ -14,19 +14,19 @@ APRSGate::APRSGate()
 	RootComp = CreateDefaultSubobject<USceneComponent>("Root");
 	SetRootComponent(RootComp);
 	
-	BackBoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Back Box"));
+	BackBoxComp = CreateDefaultSubobject<UBoxComponent>("Back Box");
 	BackBoxComp->SetupAttachment(GetRootComponent());
 	BackBoxComp->SetBoxExtent(FVector(50.f, 100.f, 100.f));
 	BackBoxComp->SetRelativeLocation(FVector(-55.f, 0.f, 100.f));
 	BackBoxComp->bEditableWhenInherited = false;
 	
-	FrontBoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Front Box"));
+	FrontBoxComp = CreateDefaultSubobject<UBoxComponent>("Front Box");
 	FrontBoxComp->SetupAttachment(GetRootComponent());
 	FrontBoxComp->SetBoxExtent(FVector(50.f, 100.f, 100.f));
 	FrontBoxComp->SetRelativeLocation(FVector(55.f, 0.f, 100.f));
 	FrontBoxComp->bEditableWhenInherited = false;
 	
-	GateMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gate Static Mesh"));
+	GateMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("Gate Static Mesh");
 	GateMeshComp->SetupAttachment(GetRootComponent());
 	GateMeshComp->SetCollisionProfileName(UAVCollisionProfileStatics::OverlapAllDynamic_ProfileName);
 }
@@ -100,7 +100,12 @@ void APRSGate::GateMeshOnEndOverlap(UPrimitiveComponent* OverlappedComponent, AA
 
 	NewRotation = ExitGateSide == EGateSide::Front ? NewRotation : NewRotation + FRotator(0.f, 180.f, 0.f);
 	
-	GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->Switch(NewRotation);
+	GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->Switch(
+		NewRotation,
+		true,
+		(ExitGateSide == EGateSide::Front ? FrontBoxComp : BackBoxComp)->GetComponentLocation().X,
+		true,
+		(ExitGateSide == EGateSide::Front ? FrontBoxComp : BackBoxComp)->GetComponentLocation().Y);
 	UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
 
 	EnterGateSide = EGateSide::None;

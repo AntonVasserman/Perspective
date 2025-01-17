@@ -6,7 +6,8 @@
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Subsystems/PerspectiveModeChangedArgs.h"
 
-void UPRSModeWorldSubsystem::Switch(const FRotator& NewControlRotation)
+void UPRSModeWorldSubsystem::Switch(const FRotator& NewControlRotation, const bool bOverridePlayerCharacterX, const float PlayerCharacterXOverride,
+		const bool bOverridePlayerCharacterY, const float PlayerCharacterYOverride)
 {
 	Mode = Mode == EPerspectiveMode::TwoDimensional ?
 		EPerspectiveMode::ThreeDimensional :
@@ -16,5 +17,6 @@ void UPRSModeWorldSubsystem::Switch(const FRotator& NewControlRotation)
 		UPRSStatics::GetMaskingMaterialParameterCollection(),
 		UPRSStatics::GetMaskingMaterialParameterCollectionMaskParameterName(),
 		Mode == EPerspectiveMode::TwoDimensional ? 1.f : 0.f);
-	OnPerspectiveModeChanged.Broadcast(FPerspectiveModeChangedArgs(Mode, NewControlRotation));
+	OnPerspectiveModeChanged.Broadcast(FPerspectiveModeChangedArgs(Mode, NewControlRotation, bOverridePlayerCharacterX, PlayerCharacterXOverride,
+		bOverridePlayerCharacterY, PlayerCharacterYOverride));
 }

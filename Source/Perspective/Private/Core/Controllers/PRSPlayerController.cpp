@@ -153,6 +153,15 @@ void APRSPlayerController::OnPerspectiveModeChanged(const FPerspectiveModeChange
 		// Save previous Pitch rotation to restore it upon exiting 2D mode
 		PreviousPitchRotation = GetControlRotation().Pitch;
 		SetControlRotation(NewPerspectiveArgs.NewControlRotation);
+		if (NewPerspectiveArgs.bOverridePlayerCharacterX || NewPerspectiveArgs.bOverridePlayerCharacterY)
+		{
+			const FVector& CharacterCurrentLocation = PossessedCharacter->GetActorLocation();
+			const FVector& NewCharacterLocation = FVector(
+				NewPerspectiveArgs.bOverridePlayerCharacterX ? NewPerspectiveArgs.PlayerCharacterXOverride : CharacterCurrentLocation.X,
+				NewPerspectiveArgs.bOverridePlayerCharacterY ? NewPerspectiveArgs.PlayerCharacterYOverride : CharacterCurrentLocation.Y,
+				CharacterCurrentLocation.Z);
+			PossessedCharacter->SetActorLocation(NewCharacterLocation);
+		}
 	}
 	else if (NewPerspectiveArgs.Mode == EPerspectiveMode::ThreeDimensional)
 	{
