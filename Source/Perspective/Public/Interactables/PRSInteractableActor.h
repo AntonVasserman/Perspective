@@ -21,8 +21,11 @@ public:
 	APRSInteractableActor();
 	
 	void Interact();
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	virtual bool IsInteractable() { return bInteractable; }
+
+	virtual void Highlight() { }
+	virtual void UnHighlight() { }
 
 protected:
 	UFUNCTION(BlueprintCallable)

@@ -158,6 +158,7 @@ void APRSCharacter::LineTraceForInteractableActor()
 					IsValid(HitInteractableActor))
 				{
 					InteractableActor = HitInteractableActor;
+					InteractableActor->Highlight();
 					return;
 				}
 			}
@@ -166,6 +167,7 @@ void APRSCharacter::LineTraceForInteractableActor()
 
 	if (InteractableActor != nullptr)
 	{
+		InteractableActor->UnHighlight();
 		InteractableActor = nullptr;
 	}
 }
