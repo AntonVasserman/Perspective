@@ -1,5 +1,7 @@
 # Perspective Metrics Doc
 
+Interactables Highlight Color: (0.6, 1.0, 1.0)
+
 ## 3Cs Metrics
 
 | Parameter                         | Value |

@@ -18,7 +18,7 @@
 
 ## Controls
 
-| Action          | Mouse & Keyboard | Controller (TODO)                         |
+| Action          | Mouse & Keyboard | Controller                                |
 |-----------------|------------------|-------------------------------------------|
 | Crouch (Toggle) | Left Ctrl        | Gamepad Face Button - Right               |
 | Interact        | E                | Gamepad Face Button - Left                |
