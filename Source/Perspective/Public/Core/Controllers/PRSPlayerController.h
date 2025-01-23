@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
-#include "Core/Utility/PRSInputStatics.h"
 #include "GameFramework/PlayerController.h"
 
 #include "PRSPlayerController.generated.h"
@@ -33,18 +32,21 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
-	UInputMappingContext* DefaultMappingContext = UPRSInputStatics::GetDefaultInputMappingContext();
+	UInputMappingContext* DefaultMappingContext = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
-	UInputAction* CrouchAction = UPRSInputStatics::GetCrouchInputAction();
+	UInputAction* CrouchAction = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
-	UInputAction* InteractAction = UPRSInputStatics::GetInteractInputAction();
+	UInputAction* InteractAction = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
-	UInputAction* LookAction = UPRSInputStatics::GetLookInputAction();
+	UInputAction* LookAction = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
-	UInputAction* MoveAction = UPRSInputStatics::GetMoveInputAction();
+	UInputAction* MoveAction = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
-	UInputAction* SprintAction = UPRSInputStatics::GetSprintInputAction();
+	UInputAction* SprintAction = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
+	UForceFeedbackEffect* InteractForceFeedbackEffect = nullptr;
+	
 	UPROPERTY(EditAnywhere, Category = "Config | Look")
 	float BaseLookUpRate = 60.f;
 
@@ -54,6 +56,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Config | Look")
 	float LookMultiplierForMoveControls = 2.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Perspective", meta=(AllowPrivateAccess="true"))
+	UForceFeedbackEffect* PerspectiveChangedForceFeedbackEffect = nullptr;
+	
 	UPROPERTY()
 	class UPRSModeWorldSubsystem* PerspectiveModeWorldSubsystem;
 	

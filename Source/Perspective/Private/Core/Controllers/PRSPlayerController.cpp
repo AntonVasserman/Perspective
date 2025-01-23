@@ -22,6 +22,7 @@ void APRSPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	check(DefaultMappingContext);
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
@@ -51,11 +52,17 @@ void APRSPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	
-	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+
+	check(LookAction);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestLookAction);
+	check(MoveAction);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestMoveAction);
+	check(CrouchAction);
 	EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestCrouchAction);
+	check(InteractAction);
 	EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestInteractionAction);
+	check(SprintAction);
 	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestSprintAction);
 }
 
@@ -170,10 +177,12 @@ void APRSPlayerController::OnPerspectiveModeChanged(const FPerspectiveModeChange
 	}
 
 	bAwaitingPerspectiveChangeHandling = !bAwaitingPerspectiveChangeHandling;
-	ClientPlayForceFeedback(UPRSInputStatics::GetModeChangedForceFeedbackEffect());
+	// No need to check the feedback here for nullptr, as it is allowed to be nullptr in ClientPlayForceFeedback.
+	ClientPlayForceFeedback(PerspectiveChangedForceFeedbackEffect);
 }
 
 void APRSPlayerController::OnPlayerCharacterInteracted()
 {
-	ClientPlayForceFeedback(UPRSInputStatics::GetInteractForceFeedbackEffect());
+	// No need to check the feedback here for nullptr, as it is allowed to be nullptr in ClientPlayForceFeedback.
+	ClientPlayForceFeedback(InteractForceFeedbackEffect);
 }
