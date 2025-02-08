@@ -45,7 +45,6 @@ void APRSGate::Operate_Implementation()
 	bEnabled = !bEnabled;
 	GateMeshComp->SetHiddenInGame(!bEnabled);
 	UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), EnableDisableSound, GetActorLocation(), GetActorRotation());
-	SetOperatability(true);
 }
 
 void APRSGate::GateMeshOnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
