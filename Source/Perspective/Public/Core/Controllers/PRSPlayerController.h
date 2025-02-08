@@ -24,7 +24,6 @@ protected:
 	virtual void OnUnPossess() override;
 	virtual void SetupInputComponent() override;
 
-	void RequestCrouchAction();
 	void RequestInteractionAction();
 	void RequestLookAction(const FInputActionValue& InputActionValue);
 	void RequestMoveAction(const FInputActionValue& InputActionValue);
@@ -33,8 +32,6 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
 	UInputMappingContext* DefaultMappingContext = nullptr;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
-	UInputAction* CrouchAction = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))
 	UInputAction* InteractAction = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Input", meta=(AllowPrivateAccess="true"))

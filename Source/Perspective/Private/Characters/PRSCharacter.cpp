@@ -30,8 +30,6 @@ APRSCharacter::APRSCharacter()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->bCanWalkOffLedges = true;
 	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
-	GetCharacterMovement()->SetCrouchedHalfHeight(72.5f);
-	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 	GetCharacterMovement()->SetWalkableFloorAngle(46.f);
 	
 	// Setup Spring Arm Component

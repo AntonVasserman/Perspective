@@ -21,7 +21,6 @@ public:
 	FOnInteracted OnInteracted;
 	
 	APRSCharacter();
-	FORCEINLINE virtual bool CanCrouch() const override { return !IsFalling() && !IsInteracting() && Super::CanCrouch(); }
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool CanMove() const { return !IsInteracting(); }
 	UFUNCTION(BlueprintPure)
