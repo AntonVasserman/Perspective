@@ -35,6 +35,8 @@ void APRSInteractableButton::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	checkf(ButtonClickSound, TEXT("Config | Sound: ButtonClickSound is not set"))
+	
 	for (APRSOperatableActor* OperatableActor : OperatableActors)
 	{
 		if (OperatableActor != nullptr)

@@ -22,11 +22,20 @@ protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	bool bEnabled = true;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
-	class USoundCue* SwitchSound = UPRSSoundStatics::GetSwitchablePlatformSwitchSoundCue();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
+	USoundCue* SwitchSound = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Material")
+	TObjectPtr<UMaterialInterface> PlatformEnabledMaterial = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Material")
+	TObjectPtr<UMaterialInterface> PlatformDisabledMaterial = nullptr;
+	
+	virtual void BeginPlay() override;
+
 private:
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = true))
-	TObjectPtr<class UStaticMeshComponent> StaticMeshComp = nullptr;
+	TObjectPtr<UStaticMeshComponent> StaticMeshComp = nullptr;
 	
 	void UpdatePlatform();
 };

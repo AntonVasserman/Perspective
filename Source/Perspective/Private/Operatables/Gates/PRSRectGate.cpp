@@ -80,6 +80,9 @@ void APRSRectGate::BeginPlay()
 {
 	Super::BeginPlay();
 
+	checkf(PerspectiveModeChangedSoundCue, TEXT("Config | Sound: PerspectiveModeChangedSoundCue is not set"));
+	checkf(EnableDisableSound, TEXT("Config | Sound: EnableDisableSound is not set"));
+	
 	CenterRectComp->OnComponentBeginOverlap.AddDynamic(this, &APRSRectGate::CenterRectCompOnComponentBeginOverlap);
 	CenterRectComp->OnComponentEndOverlap.AddDynamic(this, &APRSRectGate::CenterRectCompOnComponentEndOverlap);
 

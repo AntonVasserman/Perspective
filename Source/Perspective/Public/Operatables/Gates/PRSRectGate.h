@@ -30,11 +30,11 @@ protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	bool bCloseOnPassthrough = false;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Config | Sound")
-	USoundCue* PerspectiveModeChangedSoundCue = UPRSSoundStatics::GetModeChangedSoundCue();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
+	USoundCue* PerspectiveModeChangedSoundCue = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
-	USoundCue* EnableDisableSound = UPRSSoundStatics::GetGateEnableDisableSoundCue();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
+	USoundCue* EnableDisableSound = nullptr;
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config | Panels")
 	bool bFrontPanelEnabled = true;

@@ -27,6 +27,8 @@ void APRSRotatingDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	checkf(OpenCloseSound, TEXT("Config | Sound: OpenCloseSound is not set"));
+	
 	RotationDelta = FRotator(0.f, bCounterClockwise ? -90.f : 90.f, 0.f);
 	OriginalRotation = GetActorRotation();
 	NextRotation = OriginalRotation + RotationDelta;

@@ -44,8 +44,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	FRotator RotationDelta = FRotator::ZeroRotator;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
-	class USoundCue* OpenCloseSound = UPRSSoundStatics::GetRotatingDoorOpenCloseSoundCue();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
+	USoundCue* OpenCloseSound = nullptr;
 	
 	UPROPERTY(BlueprintReadWrite)
 	ERotatingDoorState CurrentState = ERotatingDoorState::Static;

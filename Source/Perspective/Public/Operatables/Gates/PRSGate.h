@@ -29,10 +29,10 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
-	USoundCue* PerspectiveModeChangedSoundCue = UPRSSoundStatics::GetModeChangedSoundCue();
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Sound")
-	USoundCue* EnableDisableSound = UPRSSoundStatics::GetGateEnableDisableSoundCue();
+	USoundCue* PerspectiveModeChangedSoundCue = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
+	USoundCue* EnableDisableSound = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Collision")
 	TObjectPtr<UBoxComponent> BackBoxComp = nullptr;
@@ -40,6 +40,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Collision")
 	TObjectPtr<UBoxComponent> FrontBoxComp = nullptr;
 	
+	virtual void BeginPlay() override;
+
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 	TObjectPtr<USceneComponent> RootComp = nullptr;

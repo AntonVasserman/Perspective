@@ -34,7 +34,7 @@ APRSGate::APRSGate()
 void APRSGate::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
+	
 	GateMeshComp->OnComponentBeginOverlap.AddDynamic(this, &APRSGate::GateMeshOnBeginOverlap);
 	GateMeshComp->OnComponentEndOverlap.AddDynamic(this, &APRSGate::GateMeshOnEndOverlap);
 }
@@ -45,6 +45,14 @@ void APRSGate::Operate_Implementation()
 	bEnabled = !bEnabled;
 	GateMeshComp->SetHiddenInGame(!bEnabled);
 	UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), EnableDisableSound, GetActorLocation(), GetActorRotation());
+}
+
+void APRSGate::BeginPlay()
+{
+	Super::BeginPlay();
+
+	checkf(PerspectiveModeChangedSoundCue, TEXT("Config | Sound: PerspectiveModeChangedSoundCue is not set"));
+	checkf(EnableDisableSound, TEXT("Config | Sound: EnableDisableSound is not set"));
 }
 
 void APRSGate::GateMeshOnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,

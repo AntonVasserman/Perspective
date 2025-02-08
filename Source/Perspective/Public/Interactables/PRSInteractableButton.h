@@ -33,7 +33,7 @@ protected:
 	bool bRepressable = false;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
-	class USoundCue* ButtonClickSound = UPRSSoundStatics::GetButtonClickSoundCue();
+	USoundCue* ButtonClickSound = nullptr;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	TArray<class APRSOperatableActor*> OperatableActors;

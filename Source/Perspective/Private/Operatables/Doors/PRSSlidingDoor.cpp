@@ -35,6 +35,8 @@ void APRSSlidingDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	checkf(OpenCloseSound, TEXT("Config | Sound: OpenCloseSound is not set"));
+	
 	if (bOpenOnGameStart && !bCloseOnOpened)
 	{
 		CurrentState = ESlidingDoorState::Opening;

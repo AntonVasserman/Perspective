@@ -18,11 +18,6 @@ public:
 		return LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube"));
 	}
 
-	FORCEINLINE static UMaterialInterface* GetPanelMaterial()
-	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Operatables/Gates/M_Gate.M_Gate"));
-	}
-	
 	FORCEINLINE static UMaterialInterface* GetPanelGreenMaterial()
 	{
 		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Operatables/Gates/M_Gate_Green.M_Gate_Green"));
@@ -36,16 +31,6 @@ public:
 	FORCEINLINE static UMaterialInterface* GetPanelRedMaterial()
 	{
 		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Operatables/Gates/M_Gate_Red.M_Gate_Red"));
-	}
-
-	FORCEINLINE static UMaterialInterface* GetPlatformEnabledMaterial()
-	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Operatables/Platforms/MI_SwitchablePlatform_Enabled.MI_SwitchablePlatform_Enabled"));
-	}
-
-	FORCEINLINE static UMaterialInterface* GetPlatformDisabledMaterial()
-	{
-		return LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Perspective/Operatables/Platforms/MI_SwitchablePlatform_Disabled.MI_SwitchablePlatform_Disabled"));
 	}
 
 	FORCEINLINE static UMaterialParameterCollection* GetMaskingMaterialParameterCollection()
