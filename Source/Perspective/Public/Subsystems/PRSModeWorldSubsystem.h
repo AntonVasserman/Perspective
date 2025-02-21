@@ -16,7 +16,7 @@ class PERSPECTIVE_API UPRSModeWorldSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintAssignable, Category="Perspective")
+	UPROPERTY(BlueprintAssignable, Category = "Perspective")
 	FPerspectiveModeChanged OnPerspectiveModeChanged;
 	
 	UFUNCTION(BlueprintCallable)

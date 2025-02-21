@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 
-#include "PerspectiveMode.generated.h"
-
 UENUM(BlueprintType)
 enum class EPerspectiveMode : uint8
 {
