@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Operatables/ColorGate/GateColor.h"
+#include "GateColor.h"
 #include "Subsystems/WorldSubsystem.h"
-#include "PRSBagColorWorldSubsystem.generated.h"
+#include "PRSColoredGateWorldSubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGateColorChanged, EGateColor, NewGateColor);
 
 UCLASS()
-class PERSPECTIVE_API UPRSBagColorWorldSubsystem : public UWorldSubsystem
+class PERSPECTIVE_API UPRSColoredGateWorldSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 
@@ -18,6 +18,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FGateColorChanged OnGateColorChanged;
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE EGateColor GetCurrentColor() const { return CurrentGateColor; }
+	
 	UFUNCTION(BlueprintCallable)
 	void SetColor(EGateColor NewGateColor);
 	
