@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "PRSDoor.h"
-#include "Core/Utility/PRSSoundStatics.h"
 #include "GameFramework/Actor.h"
 #include "PRSSlidingDoor.generated.h"
 
@@ -32,7 +31,7 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
-	USoundCue* OpenCloseSound = nullptr;
+	USoundBase* OpenCloseSound = nullptr;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	bool bCloseOnOpened = false;

@@ -3,8 +3,7 @@
 #include "Interactables/PRSInteractableButton.h"
 
 #include "Operatables/PRSOperatableActor.h"
-#include "Core/Utility/PRSSoundStatics.h"
-#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 static TAutoConsoleVariable CVarDisplayOperatableToInteractableLineTrace(
 	TEXT("PRS.OpeartionComponent.Debug.OperatableToInteractableLineTrace"),
@@ -63,7 +62,7 @@ void APRSInteractableButton::Tick(float DeltaSeconds)
 
 void APRSInteractableButton::Interact_Implementation()
 {
-	UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), ButtonClickSound, GetActorLocation(), GetActorRotation());
+	UGameplayStatics::PlaySoundAtLocation(this, ButtonClickSound, GetActorLocation(), GetActorRotation());
 	SetInteractable(false);
 }
 

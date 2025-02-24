@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Operatables/PRSOperatableActor.h"
-#include "Core/Utility/PRSSoundStatics.h"
 #include "PRSSwitchablePlatform.generated.h"
 
 UCLASS()
@@ -23,7 +22,7 @@ protected:
 	bool bEnabled = true;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
-	USoundCue* SwitchSound = nullptr;
+	USoundBase* SwitchSound = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Material")
 	TObjectPtr<UMaterialInterface> PlatformEnabledMaterial = nullptr;

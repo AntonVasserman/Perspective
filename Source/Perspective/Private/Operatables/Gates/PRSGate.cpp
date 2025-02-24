@@ -44,14 +44,14 @@ void APRSGate::Operate_Implementation()
 	SetOperatability(false);
 	bEnabled = !bEnabled;
 	GateMeshComp->SetHiddenInGame(!bEnabled);
-	UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), EnableDisableSound, GetActorLocation(), GetActorRotation());
+	UGameplayStatics::PlaySoundAtLocation(this, EnableDisableSound, GetActorLocation(), GetActorRotation());
 }
 
 void APRSGate::BeginPlay()
 {
 	Super::BeginPlay();
 
-	checkf(PerspectiveModeChangedSoundCue, TEXT("Config | Sound: PerspectiveModeChangedSoundCue is not set"));
+	checkf(PerspectiveModeChangedSound, TEXT("Config | Sound: PerspectiveModeChangedSound is not set"));
 	checkf(EnableDisableSound, TEXT("Config | Sound: EnableDisableSound is not set"));
 }
 
@@ -113,7 +113,7 @@ void APRSGate::GateMeshOnEndOverlap(UPrimitiveComponent* OverlappedComponent, AA
 		(ExitGateSide == EGateSide::Front ? FrontBoxComp : BackBoxComp)->GetComponentLocation().X,
 		true,
 		(ExitGateSide == EGateSide::Front ? FrontBoxComp : BackBoxComp)->GetComponentLocation().Y);
-	UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSoundCue);
+	UGameplayStatics::PlaySound2D(this, PerspectiveModeChangedSound);
 
 	EnterGateSide = EGateSide::None;
 	ExitGateSide = EGateSide::None;

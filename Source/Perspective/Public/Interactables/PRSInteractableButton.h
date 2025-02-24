@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Interactables/PRSInteractableActor.h"
-#include "Core/Utility/PRSSoundStatics.h"
 #include "GameFramework/Actor.h"
 
 #include "PRSInteractableButton.generated.h"
@@ -33,7 +32,7 @@ protected:
 	bool bRepressable = false;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
-	USoundCue* ButtonClickSound = nullptr;
+	USoundBase* ButtonClickSound = nullptr;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	TArray<class APRSOperatableActor*> OperatableActors;

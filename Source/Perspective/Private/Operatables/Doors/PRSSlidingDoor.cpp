@@ -2,8 +2,7 @@
 
 #include "Operatables/Doors/PRSSlidingDoor.h"
 
-#include "Core/Utility/PRSSoundStatics.h"
-#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 void APRSSlidingDoor::Operate_Implementation()
 {
@@ -12,14 +11,14 @@ void APRSSlidingDoor::Operate_Implementation()
 	{
 	case ESlidingDoorState::Closed:
 		CurrentState = ESlidingDoorState::Opening;
-		UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), OpenCloseSound, GetActorLocation(), GetActorRotation(), 1.f,
+		UGameplayStatics::PlaySoundAtLocation(this, OpenCloseSound, GetActorLocation(), GetActorRotation(), 1.f,
 			OpenCloseSound->Duration / DoorOpenDuration);
 		break;
 	case ESlidingDoorState::Closing:
 		break;
 	case ESlidingDoorState::Open:
 		CurrentState = ESlidingDoorState::Closing;
-		UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), OpenCloseSound, GetActorLocation(), GetActorRotation(), 1.f,
+		UGameplayStatics::PlaySoundAtLocation(this, OpenCloseSound, GetActorLocation(), GetActorRotation(), 1.f,
 			OpenCloseSound->Duration / DoorOpenDuration);
 		break;
 	case ESlidingDoorState::Opening:

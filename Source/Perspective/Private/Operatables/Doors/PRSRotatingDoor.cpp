@@ -2,7 +2,7 @@
 
 #include "Operatables/Doors/PRSRotatingDoor.h"
 
-#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 void APRSRotatingDoor::Operate_Implementation()
 {
@@ -11,7 +11,7 @@ void APRSRotatingDoor::Operate_Implementation()
 	{
 	case ERotatingDoorState::Static:
 		CurrentState = ERotatingDoorState::Rotating;
-		UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), OpenCloseSound, GetActorLocation(), GetActorRotation(), 1.f,
+		UGameplayStatics::PlaySoundAtLocation(this, OpenCloseSound, GetActorLocation(), GetActorRotation(), 1.f,
 			OpenCloseSound->Duration / DoorOpenDuration);
 		break;
 	case ERotatingDoorState::Rotating:

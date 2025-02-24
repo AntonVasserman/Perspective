@@ -5,7 +5,7 @@
 #include "AVCollisionProfileStatics.h"
 #include "Core/Utility/PRSStatics.h"
 #include "Engine/StaticMesh.h"
-#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 APRSSwitchablePlatform::APRSSwitchablePlatform()
 {
@@ -22,7 +22,7 @@ void APRSSwitchablePlatform::Operate_Implementation()
 {
 	SetOperatability(false);
 	bEnabled = !bEnabled;
-	UPRSSoundStatics::PlaySoundAtLocation(GetWorld(), SwitchSound, GetActorLocation(), GetActorRotation());
+	UGameplayStatics::PlaySoundAtLocation(this, SwitchSound, GetActorLocation(), GetActorRotation());
 	UpdatePlatform();
 }
 

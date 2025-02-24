@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Operatables//PRSOperatableActor.h"
-#include "Core/Utility/PRSSoundStatics.h"
 #include "GameFramework/Actor.h"
 #include "PRSGate.generated.h"
 
@@ -29,10 +28,10 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
-	USoundCue* PerspectiveModeChangedSoundCue = nullptr;
+	USoundBase* PerspectiveModeChangedSound = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
-	USoundCue* EnableDisableSound = nullptr;
+	USoundBase* EnableDisableSound = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Collision")
 	TObjectPtr<UBoxComponent> BackBoxComp = nullptr;
