@@ -24,6 +24,7 @@ void APRSSwitchablePlatform::Operate_Implementation()
 	bEnabled = !bEnabled;
 	UGameplayStatics::PlaySoundAtLocation(this, SwitchSound, GetActorLocation(), GetActorRotation());
 	UpdatePlatform();
+	SetOperatability(true);
 }
 
 void APRSSwitchablePlatform::BeginPlay()

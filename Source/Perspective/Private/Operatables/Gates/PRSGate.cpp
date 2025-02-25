@@ -45,6 +45,7 @@ void APRSGate::Operate_Implementation()
 	bEnabled = !bEnabled;
 	GateMeshComp->SetHiddenInGame(!bEnabled);
 	UGameplayStatics::PlaySoundAtLocation(this, EnableDisableSound, GetActorLocation(), GetActorRotation());
+	SetOperatability(true);
 }
 
 void APRSGate::BeginPlay()
