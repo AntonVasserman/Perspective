@@ -20,8 +20,6 @@ public:
 	FOnResetButtonRequested OnResetButtonRequested;
 	APRSInteractableButton();
 
-	virtual void Highlight() override;
-	virtual void UnHighlight() override;
 	virtual void PostInitializeComponents() override;
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void ResetButton() const { OnResetButtonRequested.Broadcast(); }
@@ -42,12 +40,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void TryEnableInteraction();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void Highlight_Implementation();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void UnHighlight_Implementation();
-	
 private:
 	UFUNCTION()
 	void OnOperationStateChanged(const bool bOperatable);

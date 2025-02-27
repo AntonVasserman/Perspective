@@ -16,20 +16,6 @@ APRSInteractableButton::APRSInteractableButton()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void APRSInteractableButton::Highlight()
-{
-	Super::Highlight();
-
-	Highlight_Implementation();
-}
-
-void APRSInteractableButton::UnHighlight()
-{
-	Super::UnHighlight();
-
-	UnHighlight_Implementation();
-}
-
 void APRSInteractableButton::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();

@@ -24,8 +24,11 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	virtual bool IsInteractable() { return bInteractable; }
 
-	virtual void Highlight() { }
-	virtual void UnHighlight() { }
+	UFUNCTION(BlueprintNativeEvent)
+	void Highlight();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void UnHighlight();
 
 protected:
 	UFUNCTION(BlueprintCallable)

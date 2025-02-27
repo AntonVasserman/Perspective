@@ -16,6 +16,14 @@ void APRSInteractableActor::Interact()
 	}
 }
 
+void APRSInteractableActor::Highlight_Implementation()
+{
+}
+
+void APRSInteractableActor::UnHighlight_Implementation()
+{
+}
+
 void APRSInteractableActor::SetInteractable(const bool bInInteractable)
 {
 	bInteractable = bInInteractable;

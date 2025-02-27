@@ -150,7 +150,7 @@ void APRSCharacter::LineTraceForInteractableActor()
 			const float DotProduct = FVector::DotProduct(HitActor->GetActorForwardVector(), HitActorToImpactDirection);
 
 			// Convert dot product to angle in degrees (everything in (0, 90) will result in the interactable facing us)
-			if (FMath::RadiansToDegrees(FMath::Acos(DotProduct)) < 90.f)
+			if (true || FMath::RadiansToDegrees(FMath::Acos(DotProduct)) < 90.f)
 			{
 				if (APRSInteractableActor* HitInteractableActor = Cast<APRSInteractableActor>(HitActor);
 					IsValid(HitInteractableActor))
