@@ -136,7 +136,14 @@ void APRSPlayerController::RequestMoveAction(const FInputActionValue& InputActio
 
 void APRSPlayerController::RequestSprintAction(const FInputActionValue& InputActionValue)
 {
-	PossessedCharacter->Sprint();
+	if (PossessedCharacter->IsSprinting())
+	{
+		PossessedCharacter->StopSprint();
+	}
+	else
+	{
+		PossessedCharacter->Sprint();
+	}
 }
 
 void APRSPlayerController::OnPerspectiveModeChanged(const FPerspectiveModeChangedArgs& NewPerspectiveArgs)

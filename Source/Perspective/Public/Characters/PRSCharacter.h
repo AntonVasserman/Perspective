@@ -32,6 +32,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool IsInteracting() const { return bInteracting; }
 	FORCEINLINE bool IsMoving() const { return UKismetMathLibrary::VSizeXY(GetVelocity()) != 0.f; }
+	FORCEINLINE bool IsSprinting() const { return bSprinting; }
 	void Sprint();
 	void StopSprint();
 

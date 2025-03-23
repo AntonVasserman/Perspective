@@ -71,7 +71,8 @@ void APRSCharacter::Tick(float DeltaTime)
 		DrawDebugString(GetWorld(), FVector(0.f, 0.f, 50.f), TEXT("Press 'E' to Interact"), this, FColor::Red, 0.f);
 	}
 
-	if (bSprinting && !IsMoving())
+	// If sprinting and current speed is lower than regular running speed minus some delta then turn of sprinting
+	if (bSprinting && UKismetMathLibrary::VSizeXY(GetVelocity()) < 500.f - 0.1f)
 	{
 		StopSprint();
 	}
