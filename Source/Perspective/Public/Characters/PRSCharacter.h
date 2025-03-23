@@ -39,27 +39,33 @@ public:
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	class APRSInteractableActor* InteractableActor = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config | Animation")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Animation")
 	UAnimMontage* InteractionAnimMontage;
 	FOnMontageEnded MontageEndedDelegate;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config | Character Movement")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config | Character Movement")
 	float CanWalkOffLedgesHeight = 1100.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Config | Character Movement")
-	float SprintSpeedMultiplier = 2.f;
-	
+
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
 private:
 	bool bInteracting = false;
 	bool bSprinting = false;
-	float WalkSpeed = 0.f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USpringArmComponent> SpringArmComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> CameraComp;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Config | Character Movement", meta = (AllowPrivateAccess = "true"))
+	float MinWalkSpeed = 20.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Config | Character Movement", meta = (AllowPrivateAccess = "true"))
+	float RunSpeed = 500.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Config | Character Movement", meta = (AllowPrivateAccess = "true"))
+	float SprintSpeed = 1000.f;
 	
 	void LineTraceForInteractableActor();
 	void LineTraceForLedges();

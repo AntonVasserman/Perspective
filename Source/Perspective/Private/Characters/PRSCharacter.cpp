@@ -24,8 +24,8 @@ APRSCharacter::APRSCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = 500.f;
-	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+	GetCharacterMovement()->MinAnalogWalkSpeed = MinWalkSpeed;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->bCanWalkOffLedges = true;
@@ -94,16 +94,13 @@ void APRSCharacter::Interact()
 
 void APRSCharacter::Sprint()
 {
-	if (!bSprinting)
-	{
-		GetCharacterMovement()->MaxWalkSpeed *= SprintSpeedMultiplier;
-		bSprinting = true;
-	}
+	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+	bSprinting = true;
 }
 
 void APRSCharacter::StopSprint()
 {
-	GetCharacterMovement()->MaxWalkSpeed /= SprintSpeedMultiplier;
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	bSprinting = false;
 }
 
