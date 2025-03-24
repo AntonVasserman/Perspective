@@ -58,6 +58,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> CameraComp;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation | Motion Warping", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UMotionWarpingComponent> MotionWarpingComp;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Config | Character Movement", meta = (AllowPrivateAccess = "true"))
 	float MinWalkSpeed = 20.f;
 	

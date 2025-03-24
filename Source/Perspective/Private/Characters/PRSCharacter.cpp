@@ -2,12 +2,14 @@
 
 #include "Characters/PRSCharacter.h"
 
+#include "MotionWarpingComponent.h"
+#include "Animation/PRSCharacterAnimationConstants.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Interactables/PRSInteractableActor.h"
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Interactables/PRSInteractableActor.h"
 #include "Subsystems/PerspectiveModeChangedArgs.h"
 #include "Subsystems/PRSModeWorldSubsystem.h"
 
@@ -46,6 +48,9 @@ APRSCharacter::APRSCharacter()
 	CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
 	CameraComp->SetRelativeRotation(FRotator(-5.f, -4.f, 0.f));
 	CameraComp->bUsePawnControlRotation = false;
+
+	// Setup Motion Warping Component
+	MotionWarpingComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("Motion Warping"));
 }
 
 void APRSCharacter::BeginPlay()
@@ -238,7 +243,7 @@ void APRSCharacter::OnMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted)
 
 void APRSCharacter::OnNotifyBeginReceived(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
 {
-	if (NotifyName == FName(TEXT("Interacted")))
+	if (NotifyName == FPRSCharacterAnimationConstants::InteractedNotifyName)
 	{
 		// We do the check again, in case the player somehow moved away from the interactable actor
 		if (InteractableActor != nullptr)

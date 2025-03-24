@@ -8,6 +8,6 @@ public class Perspective : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "AVUtilities", "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+		PublicDependencyModuleNames.AddRange(new string[] { "AVUtilities", "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "MotionWarping" });
 	}
 }
