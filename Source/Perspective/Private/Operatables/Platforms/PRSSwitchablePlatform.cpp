@@ -12,6 +12,15 @@ APRSSwitchablePlatform::APRSSwitchablePlatform()
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComp");
 }
 
+void APRSSwitchablePlatform::UpdatePlatform()
+{
+	StaticMeshComp->SetCollisionProfileName(
+		bEnabled ? UAVCollisionProfileStatics::BlockAll_ProfileName : UAVCollisionProfileStatics::NoCollision_ProfileName, true);
+	StaticMeshComp->SetMaterial(0, bEnabled ? PlatformEnabledMaterial : PlatformDisabledMaterial);
+}
+
+//~ APRSOperatableActor Begin
+
 void APRSSwitchablePlatform::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
@@ -34,9 +43,5 @@ void APRSSwitchablePlatform::BeginPlay()
 	checkf(SwitchSound, TEXT("Config | Sound: SwitchSound is not set"));
 }
 
-void APRSSwitchablePlatform::UpdatePlatform()
-{
-	StaticMeshComp->SetCollisionProfileName(
-		bEnabled ? UAVCollisionProfileStatics::BlockAll_ProfileName : UAVCollisionProfileStatics::NoCollision_ProfileName, true);
-	StaticMeshComp->SetMaterial(0, bEnabled ? PlatformEnabledMaterial : PlatformDisabledMaterial);
-}
+//~ APRSOperatableActor End
+

@@ -20,10 +20,8 @@ public:
 	FOnResetButtonRequested OnResetButtonRequested;
 	APRSInteractableButton();
 
-	virtual void PostInitializeComponents() override;
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void ResetButton() const { OnResetButtonRequested.Broadcast(); }
-	virtual void Tick(float DeltaSeconds) override;
 
 protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
@@ -34,13 +32,19 @@ protected:
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	TArray<class APRSOperatableActor*> OperatableActors;
-
-	virtual void Interact_Implementation() override;
-
+	
 	UFUNCTION(BlueprintCallable)
 	void TryEnableInteraction();
 
 private:
 	UFUNCTION()
 	void OnOperationStateChanged(const bool bOperatable);
+
+	//~ APRSInteractableActor Begin
+public:
+	virtual void PostInitializeComponents() override;
+	virtual void Tick(float DeltaSeconds) override;
+protected:
+	virtual void Interact_Implementation() override;
+	//~ APRSInteractableActor End
 };

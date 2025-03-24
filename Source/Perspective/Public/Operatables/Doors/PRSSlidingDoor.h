@@ -27,8 +27,6 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnSlidingDoorStateChanged OnDoorStateChanged;
 
-	virtual void Operate_Implementation() override;
-
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
 	USoundBase* OpenCloseSound = nullptr;
@@ -42,5 +40,10 @@ protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	bool bOpenOnGameStart = false;
 	
+	//~ APRSDoor Begin
+public:
+	virtual void Operate_Implementation() override;
+protected:
 	virtual void BeginPlay() override;
+	//~ APRSDoor End
 };

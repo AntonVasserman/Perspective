@@ -34,9 +34,13 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SetInteractable(const bool bInInteractable);
 
+	// TODO: see if there is a more correct way to implement this...
 	UFUNCTION()
 	virtual void Interact_Implementation() { }
 
 private:
 	bool bInteractable = true;
+
+	//~ AActor Begin
+	//~ AActor End
 };

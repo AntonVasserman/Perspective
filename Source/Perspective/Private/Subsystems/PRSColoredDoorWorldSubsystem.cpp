@@ -39,6 +39,8 @@ int32 UPRSColoredDoorWorldSubsystem::GetKeyCount(EDoorColor KeyColor)
 	return KeyColorCountMap[KeyColor];
 }
 
+//~ UWorldSubsystem Begin
+
 void UPRSColoredDoorWorldSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
@@ -48,3 +50,5 @@ void UPRSColoredDoorWorldSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 	KeyColorCountMap.Add(EDoorColor::EDC_Red, 0);
 	KeyColorCountMap.Add(EDoorColor::EDC_Yellow, 0);
 }
+
+//~ UWorldSubsystem End

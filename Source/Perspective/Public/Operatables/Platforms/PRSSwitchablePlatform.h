@@ -13,9 +13,6 @@ class PERSPECTIVE_API APRSSwitchablePlatform : public APRSOperatableActor
 
 public:
 	APRSSwitchablePlatform();
-	
-	virtual void OnConstruction(const FTransform& Transform) override;
-	virtual void Operate_Implementation() override;
 
 protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
@@ -30,11 +27,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Material")
 	TObjectPtr<UMaterialInterface> PlatformDisabledMaterial = nullptr;
 	
-	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UStaticMeshComponent> StaticMeshComp = nullptr;
 	
 	void UpdatePlatform();
+
+	//~ APRSOperatableActor Begin
+public:
+	virtual void OnConstruction(const FTransform& Transform) override;
+	virtual void Operate_Implementation() override;
+protected:
+	virtual void BeginPlay() override;
+	//~ APRSOperatableActor End
 };

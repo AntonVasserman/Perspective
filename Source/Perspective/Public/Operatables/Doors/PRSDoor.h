@@ -15,4 +15,7 @@ class PERSPECTIVE_API APRSDoor : public APRSOperatableActor
 protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Config")
 	float DoorOpenDuration = 2.5f;
+
+	//~ APRSOperatableActor Begin
+	//~ APRSOperatableActor Eng
 };

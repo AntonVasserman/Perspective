@@ -23,8 +23,6 @@ class PERSPECTIVE_API APRSGate : public APRSOperatableActor
 	
 public:
 	APRSGate();
-	virtual void PostInitializeComponents() override;
-	virtual void Operate_Implementation() override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Sound")
@@ -38,8 +36,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Collision")
 	TObjectPtr<UBoxComponent> FrontBoxComp = nullptr;
-	
-	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -58,4 +54,13 @@ private:
 	
 	UFUNCTION()
 	void GateMeshOnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	//~ APRSOperatableActor Begin
+	// TODO: Do I need both PostInit and BeginPlay here???
+public:
+	virtual void PostInitializeComponents() override;
+	virtual void Operate_Implementation() override;
+protected:
+	virtual void BeginPlay() override;
+	//~ APRSOperatableActor End
 };

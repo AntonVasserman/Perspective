@@ -15,15 +15,7 @@ UCLASS()
 class PERSPECTIVE_API APRSPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-public:
-	virtual void Tick(float DeltaSeconds) override;
-	
 protected:
-	virtual void BeginPlay() override;
-	virtual void OnPossess(APawn* InPawn) override;
-	virtual void OnUnPossess() override;
-	virtual void SetupInputComponent() override;
-
 	void RequestInteractionAction();
 	void RequestLookAction(const FInputActionValue& InputActionValue);
 	void RequestMoveAction(const FInputActionValue& InputActionValue);
@@ -72,4 +64,14 @@ private:
 
 	UFUNCTION()
 	void OnPlayerCharacterInteracted();
+
+	//~ APlayerController Begin
+public:
+	virtual void Tick(float DeltaSeconds) override;
+protected:
+	virtual void BeginPlay() override;
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
+	virtual void SetupInputComponent() override;
+	//~ APlayerController End
 };

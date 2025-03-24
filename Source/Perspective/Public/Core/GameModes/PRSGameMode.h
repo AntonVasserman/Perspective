@@ -14,6 +14,9 @@ class APRSGameMode : public AGameModeBase
 
 public:
 	APRSGameMode();
+
+	//~ AGameModeBase Begin
+	//~ AGameModeBase End
 };
 
 

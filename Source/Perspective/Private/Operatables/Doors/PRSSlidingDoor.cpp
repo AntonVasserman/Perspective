@@ -4,6 +4,8 @@
 
 #include "Kismet/GameplayStatics.h"
 
+//~ APRSDoor Begin
+
 void APRSSlidingDoor::Operate_Implementation()
 {
 	SetOperatability(false);
@@ -42,3 +44,5 @@ void APRSSlidingDoor::BeginPlay()
 		OnDoorStateChanged.Broadcast(CurrentState);
 	}
 }
+
+//~ APRSDoor End

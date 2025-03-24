@@ -4,6 +4,8 @@
 
 #include "Kismet/GameplayStatics.h"
 
+//~ APRSDoor Begin
+
 void APRSRotatingDoor::Operate_Implementation()
 {
 	SetOperatability(false);
@@ -33,3 +35,5 @@ void APRSRotatingDoor::BeginPlay()
 	OriginalRotation = GetActorRotation();
 	NextRotation = OriginalRotation + RotationDelta;
 }
+
+//~ APRSDoor End

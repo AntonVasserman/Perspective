@@ -5,3 +5,6 @@
 APRSGameMode::APRSGameMode()
 {
 }
+
+//~ AGameModeBase Begin
+//~ AGameModeBase End

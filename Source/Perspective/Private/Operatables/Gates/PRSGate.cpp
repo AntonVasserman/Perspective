@@ -31,31 +31,6 @@ APRSGate::APRSGate()
 	GateMeshComp->SetCollisionProfileName(UAVCollisionProfileStatics::OverlapAllDynamic_ProfileName);
 }
 
-void APRSGate::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-	
-	GateMeshComp->OnComponentBeginOverlap.AddDynamic(this, &APRSGate::GateMeshOnBeginOverlap);
-	GateMeshComp->OnComponentEndOverlap.AddDynamic(this, &APRSGate::GateMeshOnEndOverlap);
-}
-
-void APRSGate::Operate_Implementation()
-{
-	SetOperatability(false);
-	bEnabled = !bEnabled;
-	GateMeshComp->SetHiddenInGame(!bEnabled);
-	UGameplayStatics::PlaySoundAtLocation(this, EnableDisableSound, GetActorLocation(), GetActorRotation());
-	SetOperatability(true);
-}
-
-void APRSGate::BeginPlay()
-{
-	Super::BeginPlay();
-
-	checkf(PerspectiveModeChangedSound, TEXT("Config | Sound: PerspectiveModeChangedSound is not set"));
-	checkf(EnableDisableSound, TEXT("Config | Sound: EnableDisableSound is not set"));
-}
-
 void APRSGate::GateMeshOnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
                                       int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -119,3 +94,33 @@ void APRSGate::GateMeshOnEndOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	EnterGateSide = EGateSide::None;
 	ExitGateSide = EGateSide::None;
 }
+
+//~ APRSOperatableActor Begin
+
+void APRSGate::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	
+	GateMeshComp->OnComponentBeginOverlap.AddDynamic(this, &APRSGate::GateMeshOnBeginOverlap);
+	GateMeshComp->OnComponentEndOverlap.AddDynamic(this, &APRSGate::GateMeshOnEndOverlap);
+}
+
+void APRSGate::Operate_Implementation()
+{
+	SetOperatability(false);
+	bEnabled = !bEnabled;
+	GateMeshComp->SetHiddenInGame(!bEnabled);
+	UGameplayStatics::PlaySoundAtLocation(this, EnableDisableSound, GetActorLocation(), GetActorRotation());
+	SetOperatability(true);
+}
+
+void APRSGate::BeginPlay()
+{
+	Super::BeginPlay();
+
+	checkf(PerspectiveModeChangedSound, TEXT("Config | Sound: PerspectiveModeChangedSound is not set"));
+	checkf(EnableDisableSound, TEXT("Config | Sound: EnableDisableSound is not set"));
+}
+
+//~ APRSOperatableActor End
+

@@ -16,6 +16,7 @@ class PERSPECTIVE_API UPRSModeWorldSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 	
 public:
+	// TODO: check if this is used...
 	UPROPERTY(BlueprintAssignable, Category = "Perspective")
 	FPerspectiveModeChanged OnPerspectiveModeChanged;
 	
@@ -29,4 +30,8 @@ public:
 
 private:
 	EPerspectiveMode Mode = EPerspectiveMode::ThreeDimensional;
+
+	//~ UWorldSubsystem Begin
+	//~ UWorldSubsystem End
+
 };

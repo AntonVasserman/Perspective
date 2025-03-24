@@ -16,6 +16,44 @@ APRSInteractableButton::APRSInteractableButton()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void APRSInteractableButton::TryEnableInteraction()
+{
+	for (const APRSOperatableActor* OperatableActor : OperatableActors)
+	{
+		if (!OperatableActor->IsOperatable())
+		{
+			return;
+		}
+
+		SetInteractable(true);
+	}
+}
+
+void APRSInteractableButton::OnOperationStateChanged(const bool bOperatable)
+{
+	if (!bOperatable)
+	{
+		SetInteractable(false);
+		return;
+	}
+	
+	for (const APRSOperatableActor* OperatableActor : OperatableActors)
+	{
+		if (!OperatableActor->IsOperatable())
+		{
+			return;
+		}
+
+		if (bRepressable)
+		{
+			ResetButton();
+		}
+	}
+}
+
+//~ APRSInteractableActor Begin
+
+// TODO: Consider using BeginPlay instead...
 void APRSInteractableButton::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -52,37 +90,4 @@ void APRSInteractableButton::Interact_Implementation()
 	SetInteractable(false);
 }
 
-void APRSInteractableButton::TryEnableInteraction()
-{
-	for (const APRSOperatableActor* OperatableActor : OperatableActors)
-	{
-		if (!OperatableActor->IsOperatable())
-		{
-			return;
-		}
-
-		SetInteractable(true);
-	}
-}
-
-void APRSInteractableButton::OnOperationStateChanged(const bool bOperatable)
-{
-	if (!bOperatable)
-	{
-		SetInteractable(false);
-		return;
-	}
-	
-	for (const APRSOperatableActor* OperatableActor : OperatableActors)
-	{
-		if (!OperatableActor->IsOperatable())
-		{
-			return;
-		}
-
-		if (bRepressable)
-		{
-			ResetButton();
-		}
-	}
-}
+//~ APRSInteractableActor End

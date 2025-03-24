@@ -24,7 +24,8 @@ public:
 protected:
 	UFUNCTION(BlueprintCallable)
 	void SetOperatability(const bool bInOperatable);
-	
+
+	// TODO: See if this is the correct way for this... I think there is an abstract specifier for Function...
 	UFUNCTION()
 	virtual void Operate_Implementation() { }
 	

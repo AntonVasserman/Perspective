@@ -28,3 +28,6 @@ void APRSInteractableActor::SetInteractable(const bool bInInteractable)
 {
 	bInteractable = bInInteractable;
 }
+
+//~ AActor Begin
+//~ AActor End

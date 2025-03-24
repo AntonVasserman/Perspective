@@ -8,62 +8,6 @@
 #include "Subsystems/PerspectiveModeChangedArgs.h"
 #include "Subsystems/PRSModeWorldSubsystem.h"
 
-void APRSPlayerController::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	if (bAwaitingPerspectiveChangeHandling && (!PossessedCharacter->IsMoving() || bMovementInputChanged))
-	{
-		bAwaitingPerspectiveChangeHandling = false;
-	}
-}
-
-void APRSPlayerController::BeginPlay()
-{
-	Super::BeginPlay();
-
-	check(DefaultMappingContext);
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-	{
-		Subsystem->AddMappingContext(DefaultMappingContext, 0);
-	}
-
-	PerspectiveModeWorldSubsystem = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>();
-	PerspectiveModeWorldSubsystem->OnPerspectiveModeChanged.AddDynamic(this, &APRSPlayerController::OnPerspectiveModeChanged);
-}
-
-void APRSPlayerController::OnPossess(APawn* InPawn)
-{
-	Super::OnPossess(InPawn);
-
-	PossessedCharacter = Cast<APRSCharacter>(InPawn);
-
-	PossessedCharacter->OnInteracted.AddDynamic(this, &APRSPlayerController::OnPlayerCharacterInteracted);
-}
-
-void APRSPlayerController::OnUnPossess()
-{
-	Super::OnUnPossess();
-
-	PossessedCharacter = nullptr;
-}
-
-void APRSPlayerController::SetupInputComponent()
-{
-	Super::SetupInputComponent();
-	
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
-
-	check(LookAction);
-	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestLookAction);
-	check(MoveAction);
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestMoveAction);
-	check(InteractAction);
-	EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestInteractionAction);
-	check(SprintAction);
-	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestSprintAction);
-}
-
 void APRSPlayerController::RequestInteractionAction()
 {
 	if (!PossessedCharacter->CanInteract())
@@ -179,3 +123,63 @@ void APRSPlayerController::OnPlayerCharacterInteracted()
 	// No need to check the feedback here for nullptr, as it is allowed to be nullptr in ClientPlayForceFeedback.
 	ClientPlayForceFeedback(InteractForceFeedbackEffect);
 }
+
+//~ APlayerController Begin
+
+void APRSPlayerController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (bAwaitingPerspectiveChangeHandling && (!PossessedCharacter->IsMoving() || bMovementInputChanged))
+	{
+		bAwaitingPerspectiveChangeHandling = false;
+	}
+}
+
+void APRSPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	check(DefaultMappingContext);
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->AddMappingContext(DefaultMappingContext, 0);
+	}
+
+	PerspectiveModeWorldSubsystem = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>();
+	PerspectiveModeWorldSubsystem->OnPerspectiveModeChanged.AddDynamic(this, &APRSPlayerController::OnPerspectiveModeChanged);
+}
+
+void APRSPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	PossessedCharacter = Cast<APRSCharacter>(InPawn);
+
+	PossessedCharacter->OnInteracted.AddDynamic(this, &APRSPlayerController::OnPlayerCharacterInteracted);
+}
+
+void APRSPlayerController::OnUnPossess()
+{
+	Super::OnUnPossess();
+
+	PossessedCharacter = nullptr;
+}
+
+void APRSPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+	
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+
+	check(LookAction);
+	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestLookAction);
+	check(MoveAction);
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APRSPlayerController::RequestMoveAction);
+	check(InteractAction);
+	EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestInteractionAction);
+	check(SprintAction);
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &APRSPlayerController::RequestSprintAction);
+}
+
+//~ APlayerController End

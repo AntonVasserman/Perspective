@@ -25,8 +25,6 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnRotatingDoorStateChanged OnRotationStateChanged;
 
-	virtual void Operate_Implementation() override;
-
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	FRotator OriginalRotation = FRotator::ZeroRotator;
@@ -49,5 +47,10 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	ERotatingDoorState CurrentState = ERotatingDoorState::Static;
 	
+	//~ APRSDoor Begin
+public:
+	virtual void Operate_Implementation() override;
+protected:
 	virtual void BeginPlay() override;
+	//~ APRSDoor End
 };

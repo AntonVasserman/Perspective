@@ -40,11 +40,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32 GetKeyCount(EDoorColor KeyColor);
 
-	//~ Begin UWorldSubsystem
-	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
-	//~ End UWorldSubsystem
-	
 private:
 	EDoorColor CurrentBagColor = EDoorColor::EDC_None;
 	TMap<EDoorColor, uint32> KeyColorCountMap;
+	
+	//~ UWorldSubsystem Begin
+public:
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
+	//~ UWorldSubsystem End
 };

@@ -11,10 +11,6 @@ class PERSPECTIVE_API UPRSCharacterAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 
-public:
-	virtual void NativeInitializeAnimation() override;
-	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
-
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	class APRSCharacter* OwnerCharacter;
@@ -39,4 +35,10 @@ private:
 	void EvaluateFalling();
 	void EvaluateSpeed();
 	void EvaluateInteracting();
+
+	//~ UAnimInstance Begin
+public:
+	virtual void NativeInitializeAnimation() override;
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+	//~ UAnimInstance End
 };
