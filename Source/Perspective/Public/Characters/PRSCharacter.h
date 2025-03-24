@@ -10,6 +10,8 @@
 
 #include "PRSCharacter.generated.h"
 
+class APRSInteractableActor;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteracted);
 
 UCLASS(config=Game)
@@ -21,6 +23,7 @@ public:
 	FOnInteracted OnInteracted;
 	
 	APRSCharacter();
+	
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool CanMove() const { return !IsInteracting(); }
 	UFUNCTION(BlueprintPure)
@@ -38,15 +41,12 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadWrite)
-	class APRSInteractableActor* InteractableActor = nullptr;
+	APRSInteractableActor* InteractionTarget = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Config | Animation")
 	UAnimMontage* InteractionAnimMontage;
 	FOnMontageEnded MontageEndedDelegate;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config | Character Movement")
 	float CanWalkOffLedgesHeight = 1100.f;
-
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
 
 private:
 	bool bInteracting = false;
@@ -69,8 +69,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Config | Character Movement", meta = (AllowPrivateAccess = "true"))
 	float SprintSpeed = 1000.f;
-	
-	void LineTraceForInteractableActor();
+
+	// TODO: Refactor namings here... (Should all those 'On' be called 'On'?)
+	void LineTraceForInteractionTarget();
 	void LineTraceForLedges();
 	UFUNCTION()
 	void OnPerspectiveModeChanged(const struct FPerspectiveModeChangedArgs& PerspectiveModeArgs);
@@ -78,5 +79,13 @@ private:
 	UFUNCTION()
 	void OnNotifyBeginReceived(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
 	bool PlayInteractionMontage();
+	void SetInteractionTarget(APRSInteractableActor* InteractionTarget);
+	void ResetInteractionTarget();
+
+	//~ ACharacter Begin
+protected:
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	//~ ACharacter End
 };
 

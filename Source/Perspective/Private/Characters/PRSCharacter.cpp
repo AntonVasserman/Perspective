@@ -53,39 +53,9 @@ APRSCharacter::APRSCharacter()
 	MotionWarpingComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("Motion Warping"));
 }
 
-void APRSCharacter::BeginPlay()
-{
-	// Call the base class  
-	Super::BeginPlay();
-
-	UPRSModeWorldSubsystem* PerspectiveModeWorldSubsystem = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>();
-	PerspectiveModeWorldSubsystem->OnPerspectiveModeChanged.AddDynamic(this, &APRSCharacter::OnPerspectiveModeChanged);
-	
-	MontageEndedDelegate.BindUObject(this, &APRSCharacter::OnMontageEnded);
-}
-
-void APRSCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	LineTraceForLedges();
-	LineTraceForInteractableActor();
-
-	if (InteractableActor != nullptr && InteractableActor->IsInteractable())
-	{
-		DrawDebugString(GetWorld(), FVector(0.f, 0.f, 50.f), TEXT("Press 'E' to Interact"), this, FColor::Red, 0.f);
-	}
-
-	// If sprinting and current speed is lower than regular running speed minus some delta then turn of sprinting
-	if (bSprinting && UKismetMathLibrary::VSizeXY(GetVelocity()) < 500.f - 0.1f)
-	{
-		StopSprint();
-	}
-}
-
 void APRSCharacter::Interact()
 {
-	if (InteractableActor != nullptr && InteractableActor->IsInteractable())
+	if (InteractionTarget != nullptr && InteractionTarget->IsInteractable())
 	{
 		bInteracting = true;
 		
@@ -109,7 +79,7 @@ void APRSCharacter::StopSprint()
 	bSprinting = false;
 }
 
-void APRSCharacter::LineTraceForInteractableActor()
+void APRSCharacter::LineTraceForInteractionTarget()
 {
 	// Get Current Game Perspective Mode
 	const EPerspectiveMode CurrentPerspectiveMode = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->GetMode();
@@ -143,7 +113,8 @@ void APRSCharacter::LineTraceForInteractableActor()
 	TraceParams.bTraceComplex = true;
 
 	// Perform the line trace
-	if (FHitResult HitResult; GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, TraceParams))
+	if (FHitResult HitResult;
+		GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, TraceParams))
 	{
 		if (AActor* HitActor = HitResult.GetActor();
 			IsValid(HitActor))
@@ -153,23 +124,32 @@ void APRSCharacter::LineTraceForInteractableActor()
 			const float DotProduct = FVector::DotProduct(HitActor->GetActorForwardVector(), HitActorToImpactDirection);
 
 			// Convert dot product to angle in degrees (everything in (0, 90) will result in the interactable facing us)
-			if (true || FMath::RadiansToDegrees(FMath::Acos(DotProduct)) < 90.f)
+			if (FMath::RadiansToDegrees(FMath::Acos(DotProduct)) < 90.f)
 			{
 				if (APRSInteractableActor* HitInteractableActor = Cast<APRSInteractableActor>(HitActor);
 					IsValid(HitInteractableActor))
 				{
-					InteractableActor = HitInteractableActor;
-					InteractableActor->Highlight();
+					if (HitInteractableActor != InteractionTarget)
+					{
+						SetInteractionTarget(HitInteractableActor);
+					}
+					
 					return;
 				}
 			}
+
+			if (InteractionTarget != nullptr)
+			{
+				ResetInteractionTarget();
+			}
 		}
 	}
-
-	if (InteractableActor != nullptr)
+	else
 	{
-		InteractableActor->UnHighlight();
-		InteractableActor = nullptr;
+		if (InteractionTarget != nullptr)
+		{
+			ResetInteractionTarget();
+		}
 	}
 }
 
@@ -236,6 +216,9 @@ void APRSCharacter::OnPerspectiveModeChanged(const FPerspectiveModeChangedArgs& 
 	}
 }
 
+// TODO: Why do we have to add/remove this event.
+// Why not add it once on begin play and let it run for all MontageNotifies...
+// This should be fine since APRSCharacter::OnNotifyBeginReceived is generic
 void APRSCharacter::OnMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted)
 {
 	GetMesh()->GetAnimInstance()->OnPlayMontageNotifyBegin.RemoveDynamic(this, &APRSCharacter::OnNotifyBeginReceived);
@@ -246,9 +229,9 @@ void APRSCharacter::OnNotifyBeginReceived(FName NotifyName, const FBranchingPoin
 	if (NotifyName == FPRSCharacterAnimationConstants::InteractedNotifyName)
 	{
 		// We do the check again, in case the player somehow moved away from the interactable actor
-		if (InteractableActor != nullptr)
+		if (InteractionTarget != nullptr)
 		{
-			InteractableActor->Interact();
+			InteractionTarget->Interact();
 			OnInteracted.Broadcast();
 		}
 
@@ -269,3 +252,51 @@ bool APRSCharacter::PlayInteractionMontage()
 
 	return bPlayedSuccessfully;
 }
+
+void APRSCharacter::SetInteractionTarget(APRSInteractableActor* InInteractionTarget)
+{
+	InteractionTarget = InInteractionTarget;
+	MotionWarpingComp->AddOrUpdateWarpTargetFromLocation(FPRSCharacterAnimationConstants::InteractionTargetWarpTargetName, InteractionTarget->GetActorLocation());
+	InteractionTarget->Highlight();
+}
+
+void APRSCharacter::ResetInteractionTarget()
+{
+	InteractionTarget->UnHighlight();
+	MotionWarpingComp->RemoveWarpTarget(FPRSCharacterAnimationConstants::InteractionTargetWarpTargetName);
+	InteractionTarget = nullptr;
+}
+
+//~ ACharacter Begin
+
+void APRSCharacter::BeginPlay()
+{
+	// Call the base class  
+	Super::BeginPlay();
+
+	UPRSModeWorldSubsystem* PerspectiveModeWorldSubsystem = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>();
+	PerspectiveModeWorldSubsystem->OnPerspectiveModeChanged.AddDynamic(this, &APRSCharacter::OnPerspectiveModeChanged);
+	
+	MontageEndedDelegate.BindUObject(this, &APRSCharacter::OnMontageEnded);
+}
+
+void APRSCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	LineTraceForLedges();
+	LineTraceForInteractionTarget();
+
+	if (InteractionTarget != nullptr && InteractionTarget->IsInteractable())
+	{
+		DrawDebugString(GetWorld(), FVector(0.f, 0.f, 50.f), TEXT("Press 'E' to Interact"), this, FColor::Red, 0.f);
+	}
+
+	// If sprinting and current speed is lower than regular running speed minus some delta then turn of sprinting
+	if (bSprinting && UKismetMathLibrary::VSizeXY(GetVelocity()) < 500.f - 0.1f)
+	{
+		StopSprint();
+	}
+}
+
+//~ ACharacter End
