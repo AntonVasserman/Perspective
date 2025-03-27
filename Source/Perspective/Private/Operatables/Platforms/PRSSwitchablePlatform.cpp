@@ -3,7 +3,6 @@
 #include "Operatables/Platforms/PRSSwitchablePlatform.h"
 
 #include "AVCollisionProfileStatics.h"
-#include "Core/Utility/PRSStatics.h"
 #include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"
 

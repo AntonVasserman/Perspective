@@ -36,7 +36,7 @@ APRSCharacter::APRSCharacter()
 	
 	// Setup Spring Arm Component
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
-	SpringArmComp->SetupAttachment(RootComponent);
+	SpringArmComp->SetupAttachment(GetRootComponent());
 	SpringArmComp->TargetArmLength = 300.0f;
 	SpringArmComp->SocketOffset = FVector(0.f, 75.f, 70.f);
 	SpringArmComp->bUsePawnControlRotation = true;
@@ -79,34 +79,46 @@ void APRSCharacter::StopSprint()
 	bSprinting = false;
 }
 
+void APRSCharacter::SetInteractionTarget(APRSInteractableActor* InInteractionTarget)
+{
+	if (InteractionTarget != nullptr && InteractionTarget != InInteractionTarget)
+	{
+		UnsetInteractionTarget(InteractionTarget);
+	}
+	
+	InteractionTarget = InInteractionTarget;
+	InteractionTarget->Highlight();
+	MotionWarpingComp->AddOrUpdateWarpTargetFromLocation(FPRSCharacterAnimationConstants::InteractionTargetWarpTargetName, InteractionTarget->GetActorLocation());
+}
+
+void APRSCharacter::UnsetInteractionTarget(APRSInteractableActor* InInteractionTarget)
+{
+	if (InteractionTarget != InInteractionTarget)
+	{
+		return;
+	}
+	
+	InteractionTarget->UnHighlight();
+	MotionWarpingComp->RemoveWarpTarget(FPRSCharacterAnimationConstants::InteractionTargetWarpTargetName);
+	InteractionTarget = nullptr;
+}
+
 void APRSCharacter::LineTraceForInteractionTarget()
 {
-	// Get Current Game Perspective Mode
-	const EPerspectiveMode CurrentPerspectiveMode = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->GetMode();
+	// We do not detect interactables using Line Traces in 3D mode, only 2D mode
+	if (const EPerspectiveMode CurrentPerspectiveMode = GetWorld()->GetSubsystem<UPRSModeWorldSubsystem>()->GetMode();
+		CurrentPerspectiveMode == EPerspectiveMode::ThreeDimensional)
+	{
+		return;
+	}
 	
 	// Get the start and end points for the line trace
 	const float TraceAxisOffset = GetCapsuleComponent()->GetScaledCapsuleRadius();;
 
-	float TraceUnits;
-	FVector Start;
-	FVector End;
+	constexpr float TraceUnits = 10000.f;
+	const FVector Start = GetActorLocation() + FVector(0.f, TraceAxisOffset, TraceAxisOffset);
+	const FVector End = Start + CameraComp->GetForwardVector() * TraceUnits;
 
-	switch (CurrentPerspectiveMode)
-	{
-		case EPerspectiveMode::TwoDimensional:
-			TraceUnits = 10000.f;
-			Start = GetActorLocation() + FVector(0.f, TraceAxisOffset, TraceAxisOffset);
-			End = Start + CameraComp->GetForwardVector() * TraceUnits;
-			break;
-		case EPerspectiveMode::ThreeDimensional:
-			TraceUnits = 150.f;
-			Start = GetActorLocation() + FVector(0.f, 0.f, TraceAxisOffset);
-			End = Start + GetActorForwardVector() * TraceUnits;
-			break;
-		default:
-			break;
-	}
-	
 	// Line trace parameters
 	FCollisionQueryParams TraceParams(FName(TEXT("Trace")), true, this);
 	TraceParams.bReturnPhysicalMaterial = false;
@@ -140,7 +152,7 @@ void APRSCharacter::LineTraceForInteractionTarget()
 
 			if (InteractionTarget != nullptr)
 			{
-				ResetInteractionTarget();
+				UnsetInteractionTarget(InteractionTarget);
 			}
 		}
 	}
@@ -148,7 +160,7 @@ void APRSCharacter::LineTraceForInteractionTarget()
 	{
 		if (InteractionTarget != nullptr)
 		{
-			ResetInteractionTarget();
+			UnsetInteractionTarget(InteractionTarget);
 		}
 	}
 }
@@ -253,20 +265,6 @@ bool APRSCharacter::PlayInteractionMontage()
 	return bPlayedSuccessfully;
 }
 
-void APRSCharacter::SetInteractionTarget(APRSInteractableActor* InInteractionTarget)
-{
-	InteractionTarget = InInteractionTarget;
-	MotionWarpingComp->AddOrUpdateWarpTargetFromLocation(FPRSCharacterAnimationConstants::InteractionTargetWarpTargetName, InteractionTarget->GetActorLocation());
-	InteractionTarget->Highlight();
-}
-
-void APRSCharacter::ResetInteractionTarget()
-{
-	InteractionTarget->UnHighlight();
-	MotionWarpingComp->RemoveWarpTarget(FPRSCharacterAnimationConstants::InteractionTargetWarpTargetName);
-	InteractionTarget = nullptr;
-}
-
 //~ ACharacter Begin
 
 void APRSCharacter::BeginPlay()
@@ -287,9 +285,21 @@ void APRSCharacter::Tick(float DeltaTime)
 	LineTraceForLedges();
 	LineTraceForInteractionTarget();
 
+	// TODO: This should be part of the highlight logic, and I believe it should be in the InteractableActor, instead of here...
 	if (InteractionTarget != nullptr && InteractionTarget->IsInteractable())
 	{
+		if (!InteractionTarget->IsHighlighted())
+		{
+			InteractionTarget->Highlight();
+		}
 		DrawDebugString(GetWorld(), FVector(0.f, 0.f, 50.f), TEXT("Press 'E' to Interact"), this, FColor::Red, 0.f);
+	}
+	if (InteractionTarget != nullptr && !InteractionTarget->IsInteractable())
+	{
+		if (InteractionTarget->IsHighlighted())
+		{
+			InteractionTarget->UnHighlight();
+		}
 	}
 
 	// If sprinting and current speed is lower than regular running speed minus some delta then turn of sprinting

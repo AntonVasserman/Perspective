@@ -38,6 +38,8 @@ public:
 	FORCEINLINE bool IsSprinting() const { return bSprinting; }
 	void Sprint();
 	void StopSprint();
+	void SetInteractionTarget(APRSInteractableActor* InteractionTarget);
+	void UnsetInteractionTarget(APRSInteractableActor* InInteractionTarget);
 
 protected:
 	UPROPERTY(BlueprintReadWrite)
@@ -79,8 +81,6 @@ private:
 	UFUNCTION()
 	void OnNotifyBeginReceived(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
 	bool PlayInteractionMontage();
-	void SetInteractionTarget(APRSInteractableActor* InteractionTarget);
-	void ResetInteractionTarget();
 
 	//~ ACharacter Begin
 protected:

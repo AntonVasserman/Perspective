@@ -7,6 +7,8 @@
 
 #include "PRSInteractableActor.generated.h"
 
+class UBoxComponent;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionSucceeded);
 
 UCLASS(Abstract)
@@ -22,13 +24,14 @@ public:
 	
 	void Interact();
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	virtual bool IsInteractable() { return bInteractable; }
-
-	UFUNCTION(BlueprintNativeEvent)
+	FORCEINLINE bool IsInteractable() const { return bInteractable; }
 	void Highlight();
-
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Highlight")
+	void Highlight_BP();
 	void UnHighlight();
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "UnHighlight")
+	void UnHighlight_BP();
+	FORCEINLINE bool IsHighlighted() const { return bHighlighted; }
 
 protected:
 	UFUNCTION(BlueprintCallable)
@@ -40,7 +43,21 @@ protected:
 
 private:
 	bool bInteractable = true;
+	bool bHighlighted = false;
+	
+	UPROPERTY(VisibleInstanceOnly, meta=(AllowPrivateAccess=true))
+	TObjectPtr<USceneComponent> DefaultRootSceneComp;
+	
+	UPROPERTY(VisibleInstanceOnly, meta=(AllowPrivateAccess=true))
+	TObjectPtr<UBoxComponent> BoxCollisionComp;
 
+	UFUNCTION()
+	void OnBoxCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnBoxCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	
 	//~ AActor Begin
+public:
+	virtual void PostInitializeComponents() override;
 	//~ AActor End
 };
