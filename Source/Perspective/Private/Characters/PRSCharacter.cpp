@@ -302,7 +302,7 @@ void APRSCharacter::Tick(float DeltaTime)
 		}
 	}
 
-	// If sprinting and current speed is lower than regular running speed minus some delta then turn of sprinting
+	// If sprinting and current speed is lower than regular running speed minus some delta then turn off sprinting
 	if (bSprinting && UKismetMathLibrary::VSizeXY(GetVelocity()) < 500.f - 0.1f)
 	{
 		StopSprint();
